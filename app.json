@@ -1,0 +1,27 @@
+{
+  "expo": {
+    "name": "Smartwebs Homeowner",
+    "slug": "sw-homeowner",
+    "githubUrl": "https://github.com/longhuynh/sw-homeowner",
+    "sdkVersion": "31.0.0",
+    "icon": "./icon.png",
+    "orientation": "portrait",
+    "loading": {
+      "icon": "./icon.png"
+    },
+    "androidStatusBar": {
+      "backgroundColor": "#ffffff"
+    },
+    "ios": {
+      "bundleIdentifier": "com.smartwebs.homeowner",
+      "buildNumber": "0.1.0",
+      "supportsTablet": true
+    },
+    "android": {
+      "package": "com.smartwebs.homeowner",
+      "versionCode": 16
+    },
+    "version": "0.1.0",
+    "description": ""
+  }
+}

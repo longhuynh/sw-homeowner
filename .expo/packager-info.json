@@ -1,0 +1,9 @@
+{
+  "packagerPort": 19001,
+  "packagerPid": 20800,
+  "expoServerNgrokUrl": "https://dn-wun.anonymous.sw-homeowner.exp.direct",
+  "packagerNgrokUrl": "https://packager.dn-wun.anonymous.sw-homeowner.exp.direct",
+  "ngrokPid": 3760,
+  "devToolsPort": 19002,
+  "expoServerPort": null
+}
