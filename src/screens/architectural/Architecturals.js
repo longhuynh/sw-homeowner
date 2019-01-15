@@ -3,9 +3,9 @@ import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-export class WorkOrders extends React.Component {
+export class Architecturals extends React.Component {
   static navigationOptions = {
-    title: 'Work Order'.toUpperCase(),
+    title: 'Arc/Arb'.toUpperCase(),
   };
 
   state = {
@@ -13,70 +13,38 @@ export class WorkOrders extends React.Component {
       items: [
         {
           id: 1,
-          category: 'Pool',
-          subCategory: 'Cleaning',
-          status: 'Assigned',
+          name: 'Pool & Desk',
+          status: 'In Review',
           createdDate: '02/11/2018'
         },
         {
           id: 2,
-          category: 'Pipe',
-          subCategory: 'Repair',
-          status: 'Closed',
+          name: 'Shed',
+          status: 'Approved',
           createdDate: '02/11/2018'
         },
         {
           id: 3,
-          category: 'Pool',
-          subCategory: 'Cleaning',
-          status: 'Assigned',
+          name: 'Pool',
+          status: 'Declined',
           createdDate: '02/11/2018'
         },
         {
           id: 4,
-          category: 'Pipe',
-          subCategory: 'Repair',
-          status: 'Closed',
+          name: 'Arbor',
+          status: 'Created',
           createdDate: '02/11/2018'
-        },
-        {
-          id: 5,
-          category: 'Pool',
-          subCategory: 'Cleaning',
-          status: 'Assigned',
-          createdDate: '02/11/2018'
-        },
-        {
-          id: 6,
-          category: 'Pipe',
-          subCategory: 'Repair',
-          status: 'Closed',
-          createdDate: '02/11/2018'
-        },
-        {
-          id: 7,
-          category: 'Pool',
-          subCategory: 'Cleaning',
-          status: 'Assigned',
-          createdDate: '02/11/2018'
-        },
-        {
-          id: 8,
-          category: 'Pipe',
-          subCategory: 'Repair',
-          status: 'Closed',
-          createdDate: '02/11/2018'
-        },
+        },      
       ],
     },
   };
 
   renderStatItem = (item) => (
     <TouchableOpacity key={item.id}
-        onPress={() => this.props.navigation.navigate('WorkOrder', { id: item.id })}>
+        onPress={() => this.props.navigation.navigate('Architectural', { id: item.id })}>
        <SwCard style={styles.card}>
         <View style={styles.content}>
-          <SwText swType='header2'>{`${item.category} - ${item.subCategory}`}</SwText>
+          <SwText swType='header2'>{`${item.name}`}</SwText>
           <View style={styles.detail}>
             <SwText swType='secondary2'>{item.status}</SwText>
             <View style={styles.itemDate}>

@@ -34,6 +34,35 @@ export const MainRoutes = [
     ],
   },
   {
+    id: 'ArchitecturalMenu',
+    title: 'Architecturals',
+    icon: FontIcons.article,
+    screen: Screens.Architectural,
+    children: [
+      {
+        id: 'Architecturals',
+        title: 'Arc/Arb',
+        description: 'Overview',
+        screen: Screens.Architecturals,
+        children: [],
+      },     
+      {
+        id: 'Architectural',
+        title: 'Arc/Arb Detail',
+        description: 'Detail',
+        screen: Screens.Architectural,
+        children: [],
+      }, 
+      {
+        id: 'ArchitecturalStatus',
+        title: 'Status',
+        description: 'Status',
+        screen: Screens.ArchitecturalStatus,
+        children: [],
+      },     
+    ],
+  },
+  {
     id: 'SocialMenu',
     title: 'Social',
     icon: FontIcons.profile,
@@ -138,8 +167,8 @@ export const MainRoutes = [
     ],
   },
   {
-    id: 'Dashboards',
-    title: 'Dashboards',
+    id: 'Dashboard',
+    title: 'Dashboard',
     icon: FontIcons.dashboard,
     screen: Screens.Dashboard,
     children: [],

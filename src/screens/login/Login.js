@@ -56,7 +56,7 @@ export class Login extends React.Component {
       showLoading: !showLoading,
     });
   
-    this.props.navigation.navigate('Profile');
+    this.props.navigation.navigate('Dashboard');
   }
 
   getImageBackgroundSource = () => (

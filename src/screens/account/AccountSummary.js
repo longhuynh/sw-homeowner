@@ -10,7 +10,7 @@ export class AccountSummary extends React.Component {
 
   state = {
     data: {
-      statItems: [
+      items: [
         {
           name: 'Balance',
           value: '$4,512',
@@ -41,10 +41,10 @@ export class AccountSummary extends React.Component {
 
   renderStatItem = (item) => (
     <TouchableOpacity onPress={() => { }} key={item.name}>
-      <View style={[styles.statItemContainer, { backgroundColor: item.background }]} >
+      <View style={[styles.itemContainer, { backgroundColor: item.background }]} >
         <View>
-          <SwText swType='header2' style={styles.statItemValue}>{item.name}</SwText>
-          <SwText swType='secondary3' style={styles.statItemName}>{item.value}</SwText>
+          <SwText swType='header2' style={styles.itemValue}>{item.name}</SwText>
+          <SwText swType='secondary3' style={styles.itemName}>{item.value}</SwText>
         </View>
         <Icon name={item.icon} size={50} color='white' />
       </View>
@@ -54,8 +54,8 @@ export class AccountSummary extends React.Component {
   render = () => {
     return (
       <ScrollView style={styles.screen}>
-        <View style={styles.statItems} >
-          {this.state.data.statItems.map(this.renderStatItem)}
+        <View style={styles.items} >
+          {this.state.data.items.map(this.renderStatItem)}
         </View>
       </ScrollView>
     );
@@ -67,11 +67,11 @@ const styles = SwStyleSheet.create(theme => ({
     backgroundColor: theme.colors.screen.scroll,
     paddingHorizontal: 20,
   },
-  statItems: {
+  items: {
     justifyContent: 'space-between',
     marginVertical: 20,
   },
-  statItemContainer: {
+  itemContainer: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderRadius: 3,
@@ -79,15 +79,15 @@ const styles = SwStyleSheet.create(theme => ({
     paddingVertical: 15,
     marginBottom: 20
   },
-  statItemIcon: {
+  itemIcon: {
     alignSelf: 'center',
     marginLeft: 10,
     color: 'white',
   },
-  statItemValue: {
+  itemValue: {
     color: 'white',
   },
-  statItemName: {
+  itemName: {
     color: 'white',
   },
 }));

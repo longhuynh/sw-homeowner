@@ -9,3 +9,4 @@ export * from './login';
 export * from './ecommerce';
 export * from './theme';
 export * from './work-order';
+export * from './architectural';

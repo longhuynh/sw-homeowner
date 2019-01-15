@@ -10,7 +10,7 @@ export class Dashboard extends React.Component {
 
   state = {
     data: {
-      statItems: [
+      items: [
         {
           name: 'Balance',
           screen: 'Account',
@@ -19,22 +19,23 @@ export class Dashboard extends React.Component {
           background: 'rgb(134, 19, 136)'
         },
         {
-          name: 'Arc/ARB',
-          screen: 'Account',
-          value: '2,256',
+          name: 'Arc/Arb',
+          screen: 'Architecturals',
+          value: '4',
           icon: 'legal',
           background: 'rgb(59, 157, 214)'
         },
         {
           name: 'Work Orders',
-          screen: 'WorkOrderOverview',
-          value: '1,124',
+          screen: 'WorkOrders',
+          value: '12',
           icon: 'wrench',
           background: 'rgb(255, 127, 29)'
         },
         {
           name: 'Violations',
-          value: '1,124',
+          screen: 'Violations',
+          value: '5',
           icon: 'warning',
           background: 'rgb(102, 188, 69)'
         }
@@ -46,15 +47,14 @@ export class Dashboard extends React.Component {
     this.props.navigation.navigate(screen);
   }
 
-
   renderStatItem = (item) => (
-    <TouchableOpacity onPress={() => {this.gotoScreen(item.screen) }} key={item.name}>
-      <View style={[styles.statItemContainer, { backgroundColor: item.background }]} >
+    <TouchableOpacity onPress={() => {this.gotoScreen(item.screen) }} key={item.screen}>
+      <View style={[styles.container, { backgroundColor: item.background }]} >
         <View>
-          <SwText swType='header2' style={styles.statItemValue}>{item.name}</SwText>
-          <SwText swType='secondary3' style={styles.statItemName}>{item.value}</SwText>
+          <SwText swType='header2' style={styles.name}>{item.name}</SwText>
+          <SwText swType='secondary2' style={styles.value}>{item.value}</SwText>
         </View>
-        <Icon name={item.icon} size={50} color='white' />
+        <Icon name={item.icon} size={50} style={styles.icon} />
       </View>
     </TouchableOpacity>
   );
@@ -62,8 +62,8 @@ export class Dashboard extends React.Component {
   render = () => {
     return (
       <ScrollView style={styles.screen}>
-        <View style={styles.statItems} >
-          {this.state.data.statItems.map(this.renderStatItem)}
+        <View style={styles.items} >
+          {this.state.data.items.map(this.renderStatItem)}
         </View>
       </ScrollView>
     );
@@ -75,11 +75,11 @@ const styles = SwStyleSheet.create(theme => ({
     backgroundColor: theme.colors.screen.scroll,
     paddingHorizontal: 20,
   },
-  statItems: {
+  items: {
     justifyContent: 'space-between',
     marginVertical: 20,
   },
-  statItemContainer: {
+  container: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderRadius: 3,
@@ -87,15 +87,15 @@ const styles = SwStyleSheet.create(theme => ({
     paddingVertical: 15,
     marginBottom: 20
   },
-  statItemIcon: {
+  icon: {
     alignSelf: 'center',
     marginLeft: 10,
     color: 'white',
   },
-  statItemValue: {
+  value: {
     color: 'white',
   },
-  statItemName: {
+  name: {
     color: 'white',
   },
 }));
