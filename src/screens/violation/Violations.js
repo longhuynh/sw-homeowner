@@ -1,0 +1,88 @@
+import React from 'react';
+import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
+import Icon from 'react-native-vector-icons/FontAwesome';
+
+export class Violations extends React.Component {
+  static navigationOptions = {
+    title: 'Violations'.toUpperCase(),
+  };
+
+  state = {
+    data: {
+      items: [
+        {
+          id: 1,
+          category: 'Lanscape',
+          subCategory: 'Mowing',  
+          createdDate: '02/11/2018'
+        },
+        {
+          id: 2,
+          category: 'Parking',
+          subCategory: 'Boat',
+          createdDate: '02/11/2018'
+        },
+        {
+          id: 3,
+          category: 'Animal & Pet',
+          subCategory: 'Dog',
+          createdDate: '02/11/2018'
+        }
+      ],
+    },
+  };
+
+  renderStatItem = (item) => (
+    <TouchableOpacity key={item.id}
+        onPress={() => this.props.navigation.navigate('Violation', { id: item.id })}>
+       <SwCard style={styles.card}>
+        <View style={styles.content}>
+          <SwText swType='header2'>{`${item.category} - ${item.subCategory}`}</SwText>
+          <View style={styles.detail}>           
+            <View style={styles.itemDate}>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{item.createdDate}</SwText>
+            </View>
+          </View>
+        </View>
+      </SwCard>
+    </TouchableOpacity>
+  );
+
+  render = () => {
+    return (
+      <ScrollView style={styles.screen}>
+        <View style={styles.items} >
+          {this.state.data.items.map(this.renderStatItem)}
+        </View>
+      </ScrollView>
+    );
+  }
+}
+
+const styles = SwStyleSheet.create(theme => ({
+  screen: {
+    backgroundColor: theme.colors.screen.scroll,
+    paddingHorizontal: 20,
+  },
+  items: {
+    justifyContent: 'space-between',
+    marginVertical: 20,
+  },
+  card: {
+    borderRadius: 3,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    marginBottom: 20,
+  },
+  content: {
+    flex: 1,
+    alignItems: 'stretch'
+  },
+  detail: {
+    flexDirection: 'row'
+  },
+  itemDate: {
+    flex: 1
+  },
+}));

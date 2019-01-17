@@ -25,7 +25,7 @@ export class Architectural extends React.Component {
           icon: 'star'
         },
         {
-          name: 'Photos/Documents',
+          name: 'Pics/Docs',
           screen: 'Documents',
           value: '5',
           icon: 'camera'

@@ -12,6 +12,28 @@ export const MainRoutes = [
     children: [],
   },
   {
+    id: 'ViolationMenu',
+    title: 'Violation',
+    icon: FontIcons.article,
+    screen: Screens.Violations,
+    children: [
+      {
+        id: 'Violations',
+        title: 'Violations',
+        description: 'Overview',
+        screen: Screens.Violations,
+        children: [],
+      },     
+      {
+        id: 'Violation',
+        title: 'Violation Detail',
+        description: 'Detail',
+        screen: Screens.Violation,
+        children: [],
+      },   
+    ],
+  },
+  {
     id: 'WorkOrderMenu',
     title: 'Work Orders',
     icon: FontIcons.article,
