@@ -145,7 +145,7 @@ export class Login extends React.Component {
                 buttonStyle={{
                   height: 50,
                   width: 250,
-                  backgroundColor: 'black',
+                  backgroundColor: 'transparent',
                   borderWidth: 2,
                   borderColor: 'white',
                   borderRadius: 30,
