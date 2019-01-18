@@ -31,6 +31,13 @@ export const MainRoutes = [
         screen: Screens.Violation,
         children: [],
       },   
+      {
+        id: 'ViolationMap',
+        title: 'Map',
+        description: 'Map',
+        screen: Screens.ViolationMap,
+        children: [],
+      },   
     ],
   },
   {
