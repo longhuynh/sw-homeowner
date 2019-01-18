@@ -13,7 +13,7 @@ export class Dashboard extends React.Component {
       items: [
         {
           name: 'Balance',
-          screen: 'Account',
+          screen: 'AccountSummary',
           value: '$4,512',
           icon: 'money',
           background: 'rgb(134, 19, 136)'

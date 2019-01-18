@@ -1,93 +1,111 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
-import { SwText, SwStyleSheet, SwTheme } from 'sw-react-native-ui';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { ScrollView, View, StyleSheet } from 'react-native';
+import { SwText, SwTextInput, SwButton, SwTheme, SwStyleSheet } from 'sw-react-native-ui';
+import { data } from '../../data/DataProvider';
+import { GradientButton } from '../../components/index';
+import { scale } from '../../utils/scale';
 
 export class AccountSummary extends React.Component {
   static navigationOptions = {
-    title: 'Dashboard'.toUpperCase(),
+    title: 'Account Summary'.toUpperCase(),
   };
+
+  user = data.getUser();
 
   state = {
-    data: {
-      items: [
-        {
-          name: 'Balance',
-          value: '$4,512',
-          icon: 'money',
-          background: 'rgb(134, 19, 136)'
-        },
-        {
-          name: 'Arc/ARB',
-          value: '2,256',
-          icon: 'legal',
-          background: 'rgb(59, 157, 214)'
-        },
-        {
-          name: 'Work Orders',
-          value: '1,124',
-          icon: 'wrench',
-          background: 'rgb(255, 127, 29)'
-        },
-        {
-          name: 'Violations',
-          value: '1,124',
-          icon: 'warning',
-          background: 'rgb(102, 188, 69)'
-        }
-      ],
-    },
+    balance: '25.00'
   };
 
-  renderStatItem = (item) => (
-    <TouchableOpacity onPress={() => { }} key={item.name}>
-      <View style={[styles.itemContainer, { backgroundColor: item.background }]} >
-        <View>
-          <SwText swType='header2' style={styles.itemValue}>{item.name}</SwText>
-          <SwText swType='secondary3' style={styles.itemName}>{item.value}</SwText>
-        </View>
-        <Icon name={item.icon} size={50} color='white' />
-      </View>
-    </TouchableOpacity>
-  );
+  onPayButtonPressed = () => {
+    this.props.navigation.navigate('AccountPayment');
+  };
 
-  render = () => {
-    return (
-      <ScrollView style={styles.screen}>
-        <View style={styles.items} >
-          {this.state.data.items.map(this.renderStatItem)}
+  render = () => (
+    <ScrollView style={styles.root}>
+      <View style={styles.section}>
+        <View style={[styles.row, styles.heading]}>
+          <SwText swType='header6 primary'>BALANCE</SwText>
         </View>
-      </ScrollView>
-    );
-  }
+        <View style={styles.row}>
+          <SwTextInput
+            label='Amount Due'
+            returnKeyType='next'
+            value={this.state.balance}
+            swType='right clear'
+            editable={false}
+            selectTextOnFocus={false}
+            color='white'
+          />
+        </View>
+      </View>
+
+      <GradientButton
+        swType='small'
+        style={styles.payButton}
+        text='PAY'
+        onPress={this.onPayButtonPressed}
+      />
+
+      <View style={styles.section}>
+        <View style={[styles.row, styles.heading]}>
+          <SwText swType='header6 primary'>TRANSACTIONS</SwText>
+        </View>
+      </View>
+
+      <View style={styles.section}>
+        <View style={[styles.row, styles.heading]}>
+          <SwText swType='header6 primary'>CALL HISTORY</SwText>
+        </View>
+      </View>
+
+    </ScrollView>
+  );
 }
 
 const styles = SwStyleSheet.create(theme => ({
-  screen: {
-    backgroundColor: theme.colors.screen.scroll,
-    paddingHorizontal: 20,
+  root: {
+    backgroundColor: theme.colors.screen.base,
   },
-  items: {
-    justifyContent: 'space-between',
-    marginVertical: 20,
+  header: {
+    backgroundColor: theme.colors.screen.neutral,
+    paddingVertical: 25,
   },
-  itemContainer: {
+
+  bordered: {
+    borderBottomWidth: 1,
+    borderColor: theme.colors.border.base,
+  },
+  section: {
+    marginVertical: 25,
+  },
+  heading: {
+    paddingBottom: 12.5,
+  },
+  headerRow: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderRadius: 3,
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    marginBottom: 20
   },
-  itemIcon: {
+  row: {
+    flexDirection: 'row',
+    paddingHorizontal: 17.5,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.border.base,
+    alignItems: 'center',
+  },
+  buttons: {
+    flex: 1,
+  },
+  circleButton: {
+    marginTop: scale(27.5),
     alignSelf: 'center',
-    marginLeft: 10,
-    color: 'white',
   },
-  itemValue: {
-    color: 'white',
+  button: {
+    alignSelf: 'center',
+    width: scale(120),
+    marginBottom: scale(16),
   },
-  itemName: {
-    color: 'white',
+  payButton: {
+    width: scale(120),
+    marginRight: scale(20),
+    alignSelf: 'flex-end'
   },
 }));

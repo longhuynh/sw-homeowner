@@ -1,21 +1,9 @@
 import React from 'react';
-import {
-  ScrollView,
-  View,
-  StyleSheet,
+import { ScrollView, View, StyleSheet
 } from 'react-native';
-import {
-  SwText,
-  SwTextInput,
-  SwAvoidKeyboard,
-  SwTheme,
-  SwStyleSheet,
-} from 'sw-react-native-ui';
+import { SwText, SwTextInput, SwAvoidKeyboard, SwTheme, SwStyleSheet} from 'sw-react-native-ui';
 import { data } from '../../data/DataProvider';
-import {
-  Avatar,
-  SocialSetting,
-  GradientButton,
+import { Avatar, SocialSetting, GradientButton,
 } from '../../components/index';
 import { FontAwesome } from '../../assets/icons';
 

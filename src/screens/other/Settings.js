@@ -1,8 +1,5 @@
 import React from 'react';
-import {
-  ScrollView,
-  View,
-  TouchableOpacity,
+import { ScrollView, View, TouchableOpacity,
   StyleSheet,
 } from 'react-native';
 import {

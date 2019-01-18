@@ -21,6 +21,10 @@ export class AccountPayment extends React.Component {
     this.setState({ total: total.toString() });   
   };
 
+  onSubmitButtonPressed = () => {
+    this.props.navigation.navigate('AccountSummary');
+  };
+
   render = () => (
     <ScrollView style={styles.root}>
       <SwAvoidKeyboard>
@@ -60,7 +64,11 @@ export class AccountPayment extends React.Component {
           </View>      
         </View>     
 
-        <GradientButton swType='large' style={styles.button} text='SUBMIT' />
+        <GradientButton 
+          swType='large' 
+          style={styles.button} 
+          text='SUBMIT' 
+          onPress={this.onSubmitButtonPressed}/>
       </SwAvoidKeyboard>
     </ScrollView>
   );
