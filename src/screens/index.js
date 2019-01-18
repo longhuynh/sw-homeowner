@@ -8,6 +8,7 @@ export * from './messaging';
 export * from './login';
 export * from './ecommerce';
 export * from './theme';
+export * from './account';
 export * from './work-order';
 export * from './architectural';
 export * from './violation';

@@ -1,93 +1,98 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
-import { SwText, SwStyleSheet, SwTheme } from 'sw-react-native-ui';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { ScrollView, View, StyleSheet} from 'react-native';
+import { SwText, SwTextInput, SwAvoidKeyboard, SwStyleSheet } from 'sw-react-native-ui';
+import { GradientButton} from '../../components/index';
 
 export class AccountPayment extends React.Component {
   static navigationOptions = {
-    title: 'Account Payment'.toUpperCase(),
+    title: 'Account Payment '.toUpperCase(),
   };
 
   state = {
-    data: {
-      items: [
-        {
-          name: 'Balance',
-          value: '$4,512',
-          icon: 'money',
-          background: 'rgb(134, 19, 136)'
-        },
-        {
-          name: 'Arc/ARB',
-          value: '2,256',
-          icon: 'legal',
-          background: 'rgb(59, 157, 214)'
-        },
-        {
-          name: 'Work Orders',
-          value: '1,124',
-          icon: 'wrench',
-          background: 'rgb(255, 127, 29)'
-        },
-        {
-          name: 'Violations',
-          value: '1,124',
-          icon: 'warning',
-          background: 'rgb(102, 188, 69)'
-        }
-      ],
-    },
+    amountDue: '25.00',
+    convenienceFee: '3.35',
+    total: '28.35' 
   };
 
-  renderStatItem = (item) => (
-    <TouchableOpacity onPress={() => { }} key={item.name}>
-      <View style={[styles.itemContainer, { backgroundColor: item.background }]} >
-        <View>
-          <SwText swType='header2' style={styles.itemValue}>{item.name}</SwText>
-          <SwText swType='secondary3' style={styles.itemName}>{item.value}</SwText>
-        </View>
-        <Icon name={item.icon} size={50} color='white' />
-      </View>
-    </TouchableOpacity>
-  );
+  onAmountDueInputChanged = (text) => {
+    this.setState({ amountDue: text });    
 
-  render = () => {
-    return (
-      <ScrollView style={styles.screen}>
-        <View style={styles.items} >
-          {this.state.data.items.map(this.renderStatItem)}
-        </View>
-      </ScrollView>
-    );
-  }
+    var total = parseFloat(text) + 3.35;
+    this.setState({ total: total.toString() });   
+  };
+
+  render = () => (
+    <ScrollView style={styles.root}>
+      <SwAvoidKeyboard>
+        <View style={styles.section}>
+          <View style={[styles.row, styles.heading]}>
+            <SwText swType='header6 primary'>PAYMENT INFO</SwText>
+          </View>
+          <View style={styles.row}>
+            <SwTextInput
+              label='Amount Due'
+              keyboardType='decimal-pad'
+              returnKeyType='next'
+              value={this.state.amountDue}
+              swType='right clear'
+              onChangeText={this.onAmountDueInputChanged}
+            />
+          </View>
+          <View style={[styles.row, styles.bordered]}>
+            <SwTextInput
+              label='Convenience Fee'
+              editable={false}
+              returnKeyType='next'
+              value={this.state.convenienceFee}
+              swType='right clear'
+            />
+          </View>
+          <View style={styles.row}>
+            <SwTextInput
+              label='Total'
+              returnKeyType='next'
+              editable={false}
+              value={this.state.total}
+              swType='right clear'
+              autoCapitalize='none'
+              autoCorrect={false}
+            />
+          </View>      
+        </View>     
+
+        <GradientButton swType='large' style={styles.button} text='SUBMIT' />
+      </SwAvoidKeyboard>
+    </ScrollView>
+  );
 }
 
 const styles = SwStyleSheet.create(theme => ({
-  screen: {
-    backgroundColor: theme.colors.screen.scroll,
-    paddingHorizontal: 20,
+  root: {
+    backgroundColor: theme.colors.screen.base,
   },
-  items: {
-    justifyContent: 'space-between',
-    marginVertical: 20,
+  bordered: {
+    borderBottomWidth: 2,
+    borderColor: theme.colors.border.base,
   },
-  itemContainer: {
+  header: {
+    backgroundColor: theme.colors.screen.neutral,
+    paddingVertical: 25,
+  },
+  section: {
+    marginVertical: 25,
+  },
+  heading: {
+    paddingBottom: 12.5,
+  },
+  row: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    borderRadius: 3,
-    paddingHorizontal: 15,
-    paddingVertical: 15,
-    marginBottom: 20
+    paddingHorizontal: 17.5,
+    borderBottomWidth: StyleSheet.hairlineWidth,
+    borderColor: theme.colors.border.base,
+    alignItems: 'center',
   },
-  itemIcon: {
-    alignSelf: 'center',
-    marginLeft: 10,
-    color: 'white',
-  },
-  itemValue: {
-    color: 'white',
-  },
-  itemName: {
-    color: 'white',
+  button: {
+    marginHorizontal: 16,
+    marginBottom: 32,
   },
 }));
