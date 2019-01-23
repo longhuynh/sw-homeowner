@@ -23,7 +23,7 @@ export class Comments extends React.Component {
 
   constructor(props) {
     super(props);
-    const postId = this.props.navigation.getParam('postId', undefined);
+    const postId = this.props.navigation.getParam('postId', 1);
     this.state = {
       data: data.getComments(postId),
     };

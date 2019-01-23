@@ -1,6 +1,6 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet } from 'react-native';
-import { SwText, SwTextInput, SwButton, SwTheme, SwStyleSheet } from 'sw-react-native-ui';
+import { SwText, SwTextInput, SwTabSet, SwTab, SwButton, SwTheme, SwStyleSheet } from 'sw-react-native-ui';
 import { data } from '../../data/DataProvider';
 import { GradientButton } from '../../components/index';
 import { scale } from '../../utils/scale';
@@ -47,17 +47,15 @@ export class AccountSummary extends React.Component {
       />
 
       <View style={styles.section}>
-        <View style={[styles.row, styles.heading]}>
-          <SwText swType='header6 primary'>TRANSACTIONS</SwText>
-        </View>
+        <SwTabSet style={styles.container}>
+          <SwTab title='TRANSACTIONS' swType='header6 primary'>
+            <SwText>All transactions</SwText>
+          </SwTab>
+          <SwTab title='CALL HISTORY' swType='header6 primary'>
+            <SwText>All call histories</SwText>
+          </SwTab>
+        </SwTabSet>
       </View>
-
-      <View style={styles.section}>
-        <View style={[styles.row, styles.heading]}>
-          <SwText swType='header6 primary'>CALL HISTORY</SwText>
-        </View>
-      </View>
-
     </ScrollView>
   );
 }

@@ -5,14 +5,7 @@ import NavigationType from '../../config/navigation/NavigationType';
 import { Font } from 'expo';
 import { Input, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-import {
-  View,
-  Text,
-  Keyboard,
-  ImageBackground,
-  Dimensions
-} from 'react-native';
+import { View, Text, Keyboard, ImageBackground, Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -56,7 +49,7 @@ export class Login extends React.Component {
       showLoading: !showLoading,
     });
   
-    this.props.navigation.navigate('AccountSummary');
+    this.props.navigation.navigate('Violation');
   }
 
   getImageBackgroundSource = () => (

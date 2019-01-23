@@ -53,7 +53,7 @@ export class Architectural extends React.Component {
           <SwText swType='header2'>{item.name}</SwText>
           <SwText swType='secondary2'>{item.value}</SwText>
         </View>
-        <Icon name={item.icon} size={50}  style={styles.icon} />
+        <Icon name={item.icon} size={50} style={styles.icon} />
       </View>
       </SwCard>
     </TouchableOpacity>

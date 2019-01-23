@@ -1,16 +1,7 @@
 import React from 'react';
-import { ScrollView, View, TouchableOpacity,
-  StyleSheet,
-} from 'react-native';
-import {
-  SwText,
-  SwStyleSheet,
-  SwTheme,
-} from 'sw-react-native-ui';
-import {
-  SwSwitch,
-  FindFriends,
-} from '../../components/index';
+import { ScrollView, View, TouchableOpacity, StyleSheet} from 'react-native';
+import { SwText, SwStyleSheet, SwTheme} from 'sw-react-native-ui';
+import { SwSwitch, FindFriends } from '../../components/index';
 import { FontAwesome } from '../../assets/icons';
 
 export class Settings extends React.Component {
