@@ -1,23 +1,9 @@
 import React from 'react';
-import {
-  TouchableHighlight,
-  View,
-  ScrollView,
-  Platform,
-  StyleSheet,
-} from 'react-native';
-import {
-  SwStyleSheet,
-  SwText,
-  SwTheme,
-} from 'sw-react-native-ui';
+import { TouchableHighlight, View, ScrollView, Platform, StyleSheet} from 'react-native';
+import { SwStyleSheet, SwText, SwTheme} from 'sw-react-native-ui';
 import { data } from '../../data/DataProvider';
-import {
-  Avatar,
-  GradientButton
-} from '../../components/index';
-
-import { MainRoutes } from '../../config/navigation/Routes';
+import { Avatar} from '../../components/index';
+import { MenuRoutes } from '../../config/navigation/Routes';
 import { FontAwesome } from '../../assets/icons';
 import NavigationType from '../../config/navigation/NavigationType';
 
@@ -56,7 +42,7 @@ export class SideMenu extends React.Component {
     />
   );
 
-  renderMenu = () => MainRoutes.map(this.renderMenuItem);
+  renderMenu = () => MenuRoutes.map(this.renderMenuItem);
 
   renderMenuItem = (item) => (
     <TouchableHighlight
@@ -80,8 +66,7 @@ export class SideMenu extends React.Component {
 
   render = () => (
     <View style={styles.root}>
-      <ScrollView 
-        showsVerticalScrollIndicator={false}>
+      <ScrollView showsVerticalScrollIndicator={false}>
         <TouchableHighlight   
           underlayColor={SwTheme.current.colors.button.underlay}
           activeOpacity={1}

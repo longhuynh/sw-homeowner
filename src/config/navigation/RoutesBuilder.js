@@ -15,7 +15,7 @@ const routeMapping = (route) => ({
   desciption: route.desciption
 });
 
-(MenuRoutes).forEach(route => {
+(MainRoutes).forEach(route => {
   flatRoutes[route.id] = routeMapping(route);
   main[route.id] = routeMapping(route);
   route.children.forEach(nestedRoute => {
@@ -50,7 +50,7 @@ const DrawerRoutes = Object.keys(main).reduce((routes, name) => {
 
 export const AppRoutes = DrawerRoutes;
 
-export const NavigationRoutes = _.find(MainRoutes, { id: 'NavigationMenu' }).children;
-export const SocialRoutes = _.find(MainRoutes, { id: 'SocialMenu' }).children;
-export const ArticleRoutes = _.find(MainRoutes, { id: 'ArticlesMenu' }).children;
-export const MessagingRoutes = _.find(MainRoutes, { id: 'MessagingMenu' }).children;
+// export const NavigationRoutes = _.find(MainRoutes, { id: 'NavigationMenu' }).children;
+// export const SocialRoutes = _.find(MainRoutes, { id: 'SocialMenu' }).children;
+// export const ArticleRoutes = _.find(MainRoutes, { id: 'ArticlesMenu' }).children;
+// export const MessagingRoutes = _.find(MainRoutes, { id: 'MessagingMenu' }).children;
