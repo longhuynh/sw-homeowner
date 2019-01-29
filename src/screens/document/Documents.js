@@ -1,16 +1,16 @@
 
 import React from 'react';
-import { View, ScrollView, FlatList, StyleSheet, Dimensions } from 'react-native';
-import { SwText, SwStyleSheet, SwButton, SwCard, SwTheme } from 'sw-react-native-ui';
+import { View, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
+import { Badge} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { scale, scaleVertical } from '../../utils/scale';
-
 
 const screenHeight = Dimensions.get('window').height - 200;
 
 export class Documents extends React.Component {
   static navigationOptions = {
-    title: 'Document'.toUpperCase(),
+    title: 'Documents'.toUpperCase(),
   };
 
   constructor(props) {
@@ -88,29 +88,6 @@ export class Documents extends React.Component {
     userCreated: 'Jim Smith',
     dateCreated: '6/3/2018',
     url: '',
-  }, {
-    id: 13,
-    fileName: 'Word Order Form',
-    format: 'PDF',
-    userCreated: 'Home Owner',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  {
-    id: 23,
-    fileName: 'Photo 1',
-    format: 'png',
-    userCreated: 'Jim Smith',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  {
-    id: 33,
-    fileName: 'Photo 2',
-    format: 'gif',
-    userCreated: 'Jim Smith',
-    dateCreated: '6/3/2018',
-    url: '',
   },
   ];
 
@@ -143,8 +120,12 @@ export class Documents extends React.Component {
 
   render = () => (
     <View style={styles.screen}>
-      <View style={styles.container} >
+      <View style={styles.container} >     
         <SwCard style={styles.card}>
+          <Badge value={this.data.length} status="success" textStyle={{ fontSize: 25 }} 
+                badgeStyle={{width: 50, height:50, borderRadius: 300 }} 
+                containerStyle={{ position: 'absolute', top: -15, right: -15 }}/>
+
           <View style={styles.top}>
             <View style={styles.row}>
               <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onCameraButtonPressed() }}>
