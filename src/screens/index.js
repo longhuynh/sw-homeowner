@@ -12,3 +12,4 @@ export * from './account';
 export * from './work-order';
 export * from './architectural';
 export * from './violation';
+export * from './document';

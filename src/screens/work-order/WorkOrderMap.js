@@ -34,32 +34,32 @@ export class WorkOrderMap extends React.Component {
   };
 
   constructor(props) {
-    super(props);   
+    super(props);
   }
 
   render = () => {
     return (
       <View style={styles.container}>
-      <MapView
-        ref={ref => { this.map = ref; }}
-        style={styles.map}
-        initialRegion={{
-          latitude: LATITUDE,
-          longitude: LONGITUDE,
-          latitudeDelta: LATITUDE_DELTA,
-          longitudeDelta: LONGITUDE_DELTA,
-        }}
-      >
-        {Markers.map((marker, i) => (
-          <Marker
-            key={i}
-            coordinate={marker.coordinate}            
-          >
-            <Image source={require('../../assets/images/houses/bldgBlack.png')} />
-          </Marker>
-        ))}
-      </MapView>
-    </View>
+        <MapView
+          ref={ref => { this.map = ref; }}
+          style={styles.map}
+          initialRegion={{
+            latitude: LATITUDE,
+            longitude: LONGITUDE,
+            latitudeDelta: LATITUDE_DELTA,
+            longitudeDelta: LONGITUDE_DELTA,
+          }}
+        >
+          {Markers.map((marker, i) => (
+            <Marker
+              key={i}
+              coordinate={marker.coordinate}
+            >
+              <Image source={require('../../assets/images/houses/bldgBlack.png')} />
+            </Marker>
+          ))}
+        </MapView>
+      </View>
     );
   }
 }

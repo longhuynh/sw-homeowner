@@ -230,7 +230,6 @@ export const MainRoutes = [
       },
     ],
   },
-
   {
     id: 'NavigationMenu',
     icon: FontIcons.navigation,
@@ -257,6 +256,13 @@ export const MainRoutes = [
         children: [],
       },
     ],
+  },
+  {
+    id: 'Documents',
+    title: 'Documents',
+    icon: FontIcons.other,
+    screen: Screens.Documents,
+    children: [],
   },
   {
     id: 'Settings',

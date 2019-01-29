@@ -26,7 +26,7 @@
     "react-native-linear-gradient": "2.5.3",
     "react-native-progress-bar": "0.1.2",
     "react-native-switch-pro": "1.0.2-beta",
-    "react-native-elements": "^1.0.0-beta7",
+    "react-native-elements": "1.0.0",
     "react-navigation": "2.11.2",
     "victory-native": "31.0.0"
   },

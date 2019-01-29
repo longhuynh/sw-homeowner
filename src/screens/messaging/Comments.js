@@ -31,11 +31,6 @@ export class Comments extends React.Component {
 
   extractItemKey = (item) => `${item.id}`;
 
-  onItemPressed = (item) => {
-    const navigationParams = { id: item.user.id };
-    this.props.navigation.navigate('Profile', navigationParams);
-  };
-
   onCommentInputChanged = (text) => {
     this.setState({ comment: text });
   };
@@ -75,7 +70,7 @@ export class Comments extends React.Component {
       
       <GradientButton swType='small' style={styles.saveButton} text='Save' onPress={this.onSaveButtonPressed} />
 
-      <FlatList       
+      <FlatList
         data={this.state.data}
         extraData={this.state}
         ItemSeparatorComponent={this.renderSeparator}

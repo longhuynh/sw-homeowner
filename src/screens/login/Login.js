@@ -49,7 +49,7 @@ export class Login extends React.Component {
       showLoading: !showLoading,
     });
   
-    this.props.navigation.navigate('WorkOrderMap');
+    this.props.navigation.navigate('Documents');
   }
 
   getImageBackgroundSource = () => (
