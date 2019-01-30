@@ -113,7 +113,7 @@ export class Documents extends React.Component {
           <SwText swType='secondary4 hintColor'>
           </SwText>
         </View>
-        <SwText swType='primary3 mediumLine'>{`${item.userCreated}`} ({`${item.userCreated}`})</SwText>
+        <SwText swType='primary3 mediumLine'>{`${item.dateCreated}`} ({`${item.userCreated}`})</SwText>
       </View>
     </View>
   );
