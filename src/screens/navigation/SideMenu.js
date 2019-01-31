@@ -93,6 +93,7 @@ const styles = SwStyleSheet.create(theme => ({
     borderColor: theme.colors.border.base,
   },
   root: {
+    flex: 1,
     paddingTop: Platform.OS === 'ios' ? 20 : 0,
     backgroundColor: theme.colors.screen.base,
   },

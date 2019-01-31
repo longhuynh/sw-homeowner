@@ -38,7 +38,6 @@ export class AccountSummary extends React.Component {
     ]
   };
 
-
   onPayButtonPressed = () => {
     this.props.navigation.navigate('AccountPayment');
   };
