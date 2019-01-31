@@ -1,7 +1,7 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet} from 'react-native';
+import { ScrollView, View, StyleSheet } from 'react-native';
 import { SwText, SwTextInput, SwAvoidKeyboard, SwStyleSheet } from 'sw-react-native-ui';
-import { GradientButton} from '../../components/index';
+import { GradientButton } from '../../components/index';
 
 export class AccountPayment extends React.Component {
   static navigationOptions = {
@@ -11,14 +11,14 @@ export class AccountPayment extends React.Component {
   state = {
     amountDue: '25.00',
     convenienceFee: '3.35',
-    total: '28.35' 
+    total: '28.35'
   };
 
   onAmountDueInputChanged = (text) => {
-    this.setState({ amountDue: text });    
+    this.setState({ amountDue: text });
 
     var total = parseFloat(text) + 3.35;
-    this.setState({ total: total.toString() });   
+    this.setState({ total: total.toString() });
   };
 
   onSubmitButtonPressed = () => {
@@ -26,8 +26,8 @@ export class AccountPayment extends React.Component {
   };
 
   render = () => (
-    <ScrollView style={styles.root}>
-      <SwAvoidKeyboard>
+    <View style={styles.root}>
+      <View style={styles.container}>
         <View style={styles.section}>
           <View style={[styles.row, styles.heading]}>
             <SwText swType='header6 primary'>PAYMENT INFO</SwText>
@@ -61,21 +61,28 @@ export class AccountPayment extends React.Component {
               autoCapitalize='none'
               autoCorrect={false}
             />
-          </View>      
-        </View>     
+          </View>
+        </View>
 
-        <GradientButton 
-          swType='large' 
-          style={styles.button} 
-          text='SUBMIT' 
-          onPress={this.onSubmitButtonPressed}/>
-      </SwAvoidKeyboard>
-    </ScrollView>
+        <GradientButton
+          swType='large'
+          style={styles.button}
+          text='SUBMIT'
+          onPress={this.onSubmitButtonPressed} />
+      </View>
+    </View>
   );
 }
 
 const styles = SwStyleSheet.create(theme => ({
   root: {
+    flex: 1,
+    backgroundColor: theme.colors.screen.scroll,
+  },
+  container: {
+    flex: 1,
+    marginHorizontal: 17,
+    marginVertical: 17,
     backgroundColor: theme.colors.screen.base,
   },
   bordered: {
