@@ -49,7 +49,7 @@ export class Login extends React.Component {
       showLoading: !showLoading,
     });
   
-    this.props.navigation.navigate('AccountSummary');
+    this.props.navigation.navigate('Architecturals');
   }
 
   getImageBackgroundSource = () => (

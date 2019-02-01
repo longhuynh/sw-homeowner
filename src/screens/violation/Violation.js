@@ -26,7 +26,7 @@ export class Violation extends React.Component {
   }
 
   onDocumentsButtonPressed() {
-    this.props.navigation.navigate('Chat');
+    this.props.navigation.navigate('Documents');
   }
 
   render = () => (
