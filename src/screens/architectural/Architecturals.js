@@ -51,9 +51,9 @@ export class Architecturals extends React.Component {
     <TouchableOpacity key={item.id}
         onPress={() => this.props.navigation.navigate('Architectural', { id: item.id })}>
        <SwCard style={styles.card}>
-       <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15  }}
+       {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15  }}
           badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
-          containerStyle={{ position: 'absolute', top: -10, right: -10, }} />
+          containerStyle={{ position: 'absolute', top: -10, right: -10, }} /> */}
         <View style={styles.content}>
           <SwText swType='header2'>{`${item.name}`}</SwText>
           <View style={styles.detail}>
@@ -81,7 +81,7 @@ export class Architecturals extends React.Component {
 const styles = SwStyleSheet.create(theme => ({
   screen: {
     backgroundColor: theme.colors.screen.scroll,
-    paddingLeft: 20,
+    paddingHorizontal: 20,
   },
   items: {
     justifyContent: 'space-between',
@@ -92,7 +92,6 @@ const styles = SwStyleSheet.create(theme => ({
     paddingHorizontal: 15,
     paddingVertical: 15,
     marginBottom: 20,
-    marginRight: 20
   },
   content: {
     flex: 1,

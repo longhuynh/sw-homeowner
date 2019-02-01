@@ -278,6 +278,13 @@ export const MainRoutes = [
     screen: Screens.Themes,
     children: [],
   },
+  {
+    id: 'CameraExample',
+    title: 'CameraExample',
+    icon: FontIcons.theme,
+    screen: Screens.CameraExample,
+    children: [],
+  },
 ];
 
 export const MenuRoutes =  [
