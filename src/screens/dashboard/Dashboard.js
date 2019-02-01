@@ -52,7 +52,7 @@ export class Dashboard extends React.Component {
       <View style={[styles.container, { backgroundColor: item.background }]} >
         <View>
           <SwText swType='header2' style={styles.name}>{item.name}</SwText>
-          <SwText swType='secondary2' style={styles.value}>{item.value}</SwText>
+          <SwText swType='secondary1' style={styles.value}>{item.value}</SwText>
         </View>
         <Icon name={item.icon} size={50} style={styles.icon} />
       </View>

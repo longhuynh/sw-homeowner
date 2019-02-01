@@ -1,12 +1,17 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
 import { Camera, Permissions } from 'expo';
+import NavigationType from '../../config/navigation/NavigationType';
 
 export class CameraExample extends React.Component {
-  static navigationOptions = {
-    title: 'Camera Example'.toUpperCase(),
+  static propTypes = {
+    navigation: NavigationType.isRequired,
   };
 
+  static navigationOptions = {
+    header: null,
+  };
+  
   state = {
     hasCameraPermission: null,
     type: Camera.Constants.Type.back,
