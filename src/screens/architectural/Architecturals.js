@@ -58,7 +58,7 @@ export class Architecturals extends React.Component {
           <SwText swType='header2'>{`${item.name}`}</SwText>
           <View style={styles.detail}>
             <SwText swType='secondary2'>{item.status}</SwText>
-            <View style={styles.itemDate}>
+            <View style={styles.date}>
               <SwText style={{ textAlign: 'right' }} swType='secondary2'>{item.createdDate}</SwText>
             </View>
           </View>
@@ -101,7 +101,7 @@ const styles = SwStyleSheet.create(theme => ({
   detail: {
     flexDirection: 'row'
   },
-  itemDate: {
+  date: {
     flex: 1
   },
 }));

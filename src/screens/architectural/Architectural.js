@@ -92,7 +92,7 @@ const styles = SwStyleSheet.create(theme => ({
   detail: {
     flexDirection: 'row'
   },
-  itemDate: {
+  date: {
     flex: 1
   },
   icon: {

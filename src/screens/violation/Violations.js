@@ -49,7 +49,7 @@ export class Violations extends React.Component {
         <View style={styles.content}>
           <SwText swType='header2'>{`${item.category} - ${item.subCategory}`}</SwText>
           <View style={styles.detail}>           
-            <View style={styles.itemDate}>
+            <View style={styles.date}>
               <SwText style={{ textAlign: 'right' }} swType='secondary2'>{item.createdDate}</SwText>
             </View>
           </View>
@@ -92,7 +92,7 @@ const styles = SwStyleSheet.create(theme => ({
   detail: {
     flexDirection: 'row'
   },
-  itemDate: {
+  date: {
     flex: 1
   },
 }));
