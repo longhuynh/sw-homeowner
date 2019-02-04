@@ -12,9 +12,67 @@ export const MainRoutes = [
     children: [],
   },
   {
+    id: 'Dashboard',
+    title: 'Dashboard',
+    icon: FontIcons.dashboard,
+    screen: Screens.Dashboard,
+    children: [],
+  },
+  {
+    id: 'AccountMenu',
+    title: 'Account',
+    icon: FontIcons.login,
+    screen: Screens.AccountSummary,
+    children: [
+      {
+        id: 'AccountSummary',
+        title: 'Account',
+        description: 'Summary',
+        screen: Screens.AccountSummary,
+        children: [],
+      },     
+      {
+        id: 'AccountPayment',
+        title: 'Account',
+        description: 'Payment',
+        screen: Screens.AccountPayment,
+        children: [],
+      },   
+    ],
+  },
+  {
+    id: 'ViolationMenu',
+    title: 'Violation',
+    icon: FontIcons.article,
+    screen: Screens.Violations,
+    children: [
+      {
+        id: 'Violations',
+        title: 'Violations',
+        description: 'Overview',
+        screen: Screens.Violations,
+        children: [],
+      },     
+      {
+        id: 'Violation',
+        title: 'Violation Detail',
+        description: 'Detail',
+        screen: Screens.Violation,
+        children: [],
+      },   
+      {
+        id: 'ViolationMap',
+        title: 'Map',
+        description: 'Map',
+        screen: Screens.ViolationMap,
+        children: [],
+      },   
+    ],
+  },
+  {
     id: 'WorkOrderMenu',
     title: 'Work Orders',
-    icon: FontIcons.article,
+    icon: FontIcons.mail,
     screen: Screens.WorkOrders,
     children: [
       {
@@ -30,7 +88,42 @@ export const MainRoutes = [
         description: 'Detail',
         screen: Screens.WorkOrder,
         children: [],
+      },       {
+        id: 'WorkOrderMap',
+        title: 'Map',
+        description: 'Map',
+        screen: Screens.WorkOrderMap,
+        children: [],
       },   
+    ],
+  },
+  {
+    id: 'ArchitecturalMenu',
+    title: 'Architecturals',
+    icon: FontIcons.profile,
+    screen: Screens.Architectural,
+    children: [
+      {
+        id: 'Architecturals',
+        title: 'Arc/Arb',
+        description: 'Overview',
+        screen: Screens.Architecturals,
+        children: [],
+      },     
+      {
+        id: 'Architectural',
+        title: 'Arc/Arb Detail',
+        description: 'Detail',
+        screen: Screens.Architectural,
+        children: [],
+      }, 
+      {
+        id: 'ArchitecturalStatus',
+        title: 'Status',
+        description: 'Status',
+        screen: Screens.ArchitecturalStatus,
+        children: [],
+      },     
     ],
   },
   {
@@ -138,13 +231,6 @@ export const MainRoutes = [
     ],
   },
   {
-    id: 'Dashboards',
-    title: 'Dashboards',
-    icon: FontIcons.dashboard,
-    screen: Screens.Dashboard,
-    children: [],
-  },
-  {
     id: 'NavigationMenu',
     icon: FontIcons.navigation,
     title: 'Navigation',
@@ -172,6 +258,13 @@ export const MainRoutes = [
     ],
   },
   {
+    id: 'Documents',
+    title: 'Documents',
+    icon: FontIcons.other,
+    screen: Screens.Documents,
+    children: [],
+  },
+  {
     id: 'Settings',
     title: 'Settings',
     icon: FontIcons.other,
@@ -185,14 +278,56 @@ export const MainRoutes = [
     screen: Screens.Themes,
     children: [],
   },
+  {
+    id: 'CameraExample',
+    title: 'CameraExample',
+    icon: FontIcons.theme,
+    screen: Screens.CameraExample,
+    children: [],
+  },
 ];
 
-const menuRoutes = _.cloneDeep(MainRoutes);
-menuRoutes.unshift({
-  id: 'GridV2',
-  title: 'Start',
-  screen: Screens.GridV2,
-  children: [],
-});
-
-export const MenuRoutes = menuRoutes;
+export const MenuRoutes =  [
+  {
+    id: 'Dashboard',
+    title: 'Dashboard',
+    icon: FontIcons.dashboard,
+    screen: Screens.Dashboard,
+    children: [],
+  },
+  {
+    id: 'AccountMenu',
+    title: 'Account',
+    icon: FontIcons.login,
+    screen: Screens.AccountSummary,
+    children: [],
+  },
+  {
+    id: 'ViolationMenu',
+    title: 'Violation',
+    icon: FontIcons.article,
+    screen: Screens.Violations,
+    children: [],
+  },
+  {
+    id: 'WorkOrderMenu',
+    title: 'Work Orders',
+    icon: FontIcons.mail,
+    screen: Screens.WorkOrders,
+    children: [],
+  },
+  {
+    id: 'ArchitecturalMenu',
+    title: 'Architecturals',
+    icon: FontIcons.profile,
+    screen: Screens.Architectural,
+    children: [],
+  },
+  {
+    id: 'Settings',
+    title: 'Settings',
+    icon: FontIcons.other,
+    screen: Screens.Settings,
+    children: [],
+  },
+];;

@@ -1,17 +1,6 @@
 import React from 'react';
-import {
-  ScrollView,
-  View,
-  StyleSheet,
-} from 'react-native';
-import {
-  SwText,
-  SwTextInput,
-  SwAvoidKeyboard,
-  SwTabSet,
-  SwTab,
-  SwStyleSheet,
-} from 'sw-react-native-ui';
+import {ScrollView, View, StyleSheet} from 'react-native';
+import {SwText, SwTextInput, SwAvoidKeyboard, SwTabSet, SwTab, SwStyleSheet} from 'sw-react-native-ui';
 import { data } from '../../data/DataProvider';
 import { Avatar, GradientButton } from '../../components/index';
 import { UnitInfo } from './tab/UnitInfo';

@@ -1,18 +1,11 @@
 import React from 'react';
-import { SwAvoidKeyboard, SwStyleSheet} from 'sw-react-native-ui';
+import { SwAvoidKeyboard, SwStyleSheet } from 'sw-react-native-ui';
 import { scaleVertical } from '../../utils/scale';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Font } from 'expo';
 import { Input, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-import {
-  View,
-  Text,
-  Keyboard,
-  ImageBackground,
-  Dimensions
-} from 'react-native';
+import { View, Text, Keyboard, ImageBackground, Dimensions } from 'react-native';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -22,7 +15,6 @@ export class Login extends React.Component {
     super(props);
 
     this.state = {
-      fontLoaded: false,
       username: '',
       password: '',
       loginFailed: false,
@@ -38,29 +30,18 @@ export class Login extends React.Component {
     header: null,
   };
 
-  async componentDidMount() {
-    await Font.loadAsync({
-      georgia: require('../../assets/fonts/Georgia.ttf'),
-      regular: require('../../assets/fonts/Montserrat-Regular.ttf'),
-      light: require('../../assets/fonts/Montserrat-Light.ttf'),
-      bold: require('../../assets/fonts/Montserrat-Bold.ttf'),
-    });
-
-    this.setState({ fontLoaded: true });
-  }
-
   submitLoginCredentials() {
     const { showLoading } = this.state;
 
     this.setState({
       showLoading: !showLoading,
     });
-  
-    this.props.navigation.navigate('Profile');
+
+    this.props.navigation.navigate('Dashboard');
   }
 
   getImageBackgroundSource = () => (
-      require('../../assets/images/wallpaper_4.jpg')
+    require('../../assets/images/wallpaper_4.jpg')
   );
 
   render = () => {
@@ -73,7 +54,6 @@ export class Login extends React.Component {
         onResponderRelease={() => Keyboard.dismiss()}>
         <View style={styles.container}>
           <ImageBackground source={this.getImageBackgroundSource()} style={styles.bgImage}>
-          {this.state.fontLoaded ? (
             <View style={styles.loginView}>
               <View style={styles.loginTitle}>
                 <View style={{ flexDirection: 'row' }}>
@@ -84,7 +64,7 @@ export class Login extends React.Component {
                 </View>
               </View>
               <View style={styles.loginInput}>
-              <Input
+                <Input
                   leftIcon={
                     <Icon
                       name='user-o'
@@ -164,14 +144,11 @@ export class Login extends React.Component {
                   onPress={() => console.log('Account created')}
                 /> */}
               </View>
-            </View> 
-            ) : (
-              <Text>Loading...</Text>
-            )}
+            </View>
           </ImageBackground>
-        </View> 
+        </View>
       </SwAvoidKeyboard>
-   );
+    );
   }
 }
 
@@ -203,7 +180,7 @@ const styles = SwStyleSheet.create(theme => ({
     justifyContent: 'center',
   },
   button: {
-    
+
   },
   container: {
     flex: 1,
@@ -231,7 +208,7 @@ const styles = SwStyleSheet.create(theme => ({
   welcomeText: {
     color: 'white',
     fontSize: 30
-  },  
+  },
   loginInput: {
     flex: 1,
     justifyContent: 'center',

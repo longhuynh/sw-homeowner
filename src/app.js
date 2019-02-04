@@ -1,10 +1,7 @@
 import React from 'react';
 import { View, Image } from 'react-native';
 import { AppLoading, Asset, Font } from 'expo';
-import {
-  createDrawerNavigator,
-  createStackNavigator,
-} from 'react-navigation';
+import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 
 import { withSwTheme } from 'sw-react-native-ui';
@@ -78,6 +75,7 @@ export default class App extends React.Component {
 
   loadAssets = async () => {
     await Font.loadAsync({
+      'MaterialIcons': require('./assets/fonts/MaterialIcons.ttf'),
       'FontAwesome': require('./assets/fonts/FontAwesome.ttf'),
       'Icomoon': require('./assets/fonts/Icomoon.ttf'),
       'Righteous-Regular': require('./assets/fonts/Righteous-Regular.ttf'),

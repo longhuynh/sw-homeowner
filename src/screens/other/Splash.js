@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  StyleSheet,
-  Image,
-  View,
-  Dimensions,
-  StatusBar,
-} from 'react-native';
-import { SwText, SwTheme } from 'sw-react-native-ui';
+import { StyleSheet, Image, View, Dimensions, StatusBar} from 'react-native';
+import { SwTheme } from 'sw-react-native-ui';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { ProgressBar } from '../../components/index';
 import { SwHomeOwnerTheme } from '../../config/Theme';

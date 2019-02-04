@@ -11,21 +11,23 @@
     "test": "jest"
   },
   "dependencies": {
-    "@expo/vector-icons": "8.0.0",
+    "@expo/vector-icons": "9.0.0",
     "expo": "31.0.6",
     "expo-analytics": "1.0.7",
     "hoist-non-react-statics": "3.2.1",
     "lodash": "4.17.11",
     "moment": "2.23.0",
     "prop-types": "15.6.2",
-    "sw-react-native-ui": "0.6.4",
+    "sw-react-native-ui": "0.6.8",
     "react": "16.6.3",
     "react-native": "0.57.8",
+    "react-native-maps": "0.23.0",
+    "react-native-table-component": "1.2.0",
     "react-native-keyboard-spacer": "0.4.1",
     "react-native-linear-gradient": "2.5.3",
     "react-native-progress-bar": "0.1.2",
     "react-native-switch-pro": "1.0.2-beta",
-    "react-native-elements": "^1.0.0-beta7",
+    "react-native-elements": "1.0.0",
     "react-navigation": "2.11.2",
     "victory-native": "31.0.0"
   },
@@ -46,5 +48,5 @@
   "jest": {
     "preset": "jest-expo"
   },
-  "main": "./src/app.js"
+  "main": "./src/App.js"
 }

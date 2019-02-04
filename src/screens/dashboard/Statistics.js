@@ -23,7 +23,7 @@
 
 //   state = {
 //     data: {
-//       statItems: [
+//       items: [
 //         {
 //           name: 'Stars',
 //           value: '4,512',
@@ -47,12 +47,12 @@
 //   };
 
 //   renderStatItem = (item) => (
-//     <View style={[styles.statItemContainer, { backgroundColor: item.background }]} key={item.name}>
+//     <View style={[styles.itemContainer, { backgroundColor: item.background }]} key={item.name}>
 //       <View>
-//         <SwText swType='header6' style={styles.statItemValue}>{item.value}</SwText>
-//         <SwText swType='secondary7' style={styles.statItemName}>{item.name}</SwText>
+//         <SwText swType='header6' style={styles.itemValue}>{item.value}</SwText>
+//         <SwText swType='secondary7' style={styles.itemName}>{item.name}</SwText>
 //       </View>
-//       <SwText swType='awesome hero' style={styles.statItemIcon}>{FontAwesome[item.icon]}</SwText>
+//       <SwText swType='awesome hero' style={styles.itemIcon}>{FontAwesome[item.icon]}</SwText>
 //     </View>
 //   );
 
@@ -60,8 +60,8 @@
 //     const chartBackgroundStyle = { backgroundColor: SwTheme.current.colors.control.background };
 //     return (
 //       <ScrollView style={styles.screen}>
-//         <View style={styles.statItems}>
-//           {this.state.data.statItems.map(this.renderStatItem)}
+//         <View style={styles.items}>
+//           {this.state.data.items.map(this.renderStatItem)}
 //         </View>
 //         <View style={[styles.chartBlock, chartBackgroundStyle]}>
 //           <DoughnutChart />
@@ -85,27 +85,27 @@
 //     backgroundColor: theme.colors.screen.scroll,
 //     paddingHorizontal: 15,
 //   },
-//   statItems: {
+//   items: {
 //     flexDirection: 'row',
 //     justifyContent: 'space-between',
 //     marginVertical: 15,
 //   },
-//   statItemContainer: {
+//   itemContainer: {
 //     flexDirection: 'row',
 //     justifyContent: 'space-between',
 //     borderRadius: 3,
 //     paddingHorizontal: 10,
 //     paddingVertical: 10,
 //   },
-//   statItemIcon: {
+//   itemIcon: {
 //     alignSelf: 'center',
 //     marginLeft: 10,
 //     color: 'white',
 //   },
-//   statItemValue: {
+//   itemValue: {
 //     color: 'white',
 //   },
-//   statItemName: {
+//   itemName: {
 //     color: 'white',
 //   },
 //   chartBlock: {

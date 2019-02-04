@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { Badge, Icon } from 'react-native-elements';
 
 export class WorkOrders extends React.Component {
   static navigationOptions = {
@@ -16,6 +16,8 @@ export class WorkOrders extends React.Component {
           category: 'Pool',
           subCategory: 'Cleaning',
           status: 'Assigned',
+          icon: 'check',
+          iconStatus: 'success',
           createdDate: '02/11/2018'
         },
         {
@@ -23,6 +25,8 @@ export class WorkOrders extends React.Component {
           category: 'Pipe',
           subCategory: 'Repair',
           status: 'Closed',
+          icon: 'close',
+          iconStatus: 'error',
           createdDate: '02/11/2018'
         },
         {
@@ -30,6 +34,8 @@ export class WorkOrders extends React.Component {
           category: 'Pool',
           subCategory: 'Cleaning',
           status: 'Assigned',
+          icon: 'check',
+          iconStatus: 'success',
           createdDate: '02/11/2018'
         },
         {
@@ -37,6 +43,8 @@ export class WorkOrders extends React.Component {
           category: 'Pipe',
           subCategory: 'Repair',
           status: 'Closed',
+          icon: 'close',
+          iconStatus: 'error',
           createdDate: '02/11/2018'
         },
         {
@@ -44,6 +52,8 @@ export class WorkOrders extends React.Component {
           category: 'Pool',
           subCategory: 'Cleaning',
           status: 'Assigned',
+          icon: 'check',
+          iconStatus: 'success',
           createdDate: '02/11/2018'
         },
         {
@@ -51,6 +61,8 @@ export class WorkOrders extends React.Component {
           category: 'Pipe',
           subCategory: 'Repair',
           status: 'Closed',
+          icon: 'close',
+          iconStatus: 'error',
           createdDate: '02/11/2018'
         },
         {
@@ -58,29 +70,27 @@ export class WorkOrders extends React.Component {
           category: 'Pool',
           subCategory: 'Cleaning',
           status: 'Assigned',
+          icon: 'check',
+          iconStatus: 'success',
           createdDate: '02/11/2018'
-        },
-        {
-          id: 8,
-          category: 'Pipe',
-          subCategory: 'Repair',
-          status: 'Closed',
-          createdDate: '02/11/2018'
-        },
+        }
       ],
     },
   };
 
   renderStatItem = (item) => (
     <TouchableOpacity key={item.id}
-        onPress={() => this.props.navigation.navigate('WorkOrder', { id: item.id })}>
-       <SwCard style={styles.card}>
+      onPress={() => this.props.navigation.navigate('WorkOrder', { id: item.id })}>
+      <SwCard style={styles.card}>
+        {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15 }}
+          badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
+          containerStyle={{ position: 'absolute', top: -10, right: -10, }} /> */}
         <View style={styles.content}>
-          <SwText swType='header3'>{`${item.category} - ${item.subCategory}`}</SwText>
+          <SwText swType='header2'>{`${item.category} - ${item.subCategory}`}</SwText>
           <View style={styles.detail}>
-            <SwText swType='secondary3'>{item.status}</SwText>
-            <View style={styles.itemDate}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary3'>{item.createdDate}</SwText>
+            <SwText swType='secondary2'>{item.status}</SwText>
+            <View style={styles.date}>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{item.createdDate}</SwText>
             </View>
           </View>
         </View>
@@ -121,7 +131,7 @@ const styles = SwStyleSheet.create(theme => ({
   detail: {
     flexDirection: 'row'
   },
-  itemDate: {
+  date: {
     flex: 1
   },
 }));

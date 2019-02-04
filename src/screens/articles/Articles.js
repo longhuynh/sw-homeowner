@@ -66,13 +66,13 @@ export class Articles extends React.Component {
 const styles = SwStyleSheet.create(theme => ({
   container: {
     backgroundColor: theme.colors.screen.scroll,
-    paddingVertical: 8,
-    paddingHorizontal: 14,
+    paddingVertical: 10,
+    paddingHorizontal: 15,
   },
   card: {
-    marginVertical: 8,
+    marginVertical: 10,
   },
   post: {
-    marginTop: 13,
+    marginTop: 10,
   },
 }));
