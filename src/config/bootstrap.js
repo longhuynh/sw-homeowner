@@ -1,6 +1,4 @@
-import {
-  StatusBar,
-  StyleSheet,
+import { StatusBar, StyleSheet,
 } from 'react-native';
 import { SwTheme } from 'sw-react-native-ui';
 import { SwHomeOwnerTheme } from './Theme';
@@ -8,14 +6,11 @@ import { AvatarTypes } from '../components/avatar/types';
 import { GradientButtonTypes } from '../components/gradient-button/types';
 import { SwitchTypes } from '../components/switch/types';
 import { SocialBarTypes } from '../components/social-bar/types';
-import { scale, scaleVertical } from '../utils/scale';
 
 export const bootstrap = () => {
   SwTheme.setTheme(SwHomeOwnerTheme, null);
 
-  /*
-   SwText types
-   */
+  // SwText types
 
   SwTheme.setType('SwText', 'basic', {
     fontFamily: theme => theme.fonts.family.bold,
@@ -43,7 +38,7 @@ export const bootstrap = () => {
   });
 
   SwTheme.setType('SwText', 'hero', {
-    fontSize: scale(33),
+    fontSize: 33,
   });
 
   SwTheme.setType('SwText', 'menuIcon', {
@@ -188,8 +183,8 @@ export const bootstrap = () => {
   });
 
   SwTheme.setType('SwButton', 'icon', {
-    height: scale(56),
-    width: scale(56),
+    height: 56,
+    width: 56,
     borderColor: theme => theme.colors.border.base,
     backgroundColor: theme => theme.colors.control.background,
     borderWidth: 1,
@@ -200,9 +195,9 @@ export const bootstrap = () => {
   });
 
   SwTheme.setType('SwButton', 'social', {
-    height: scale(62),
-    width: scale(62),
-    borderRadius: scale(31),
+    height: 62,
+    width: 62,
+    borderRadius: 31,
     borderColor: theme => theme.colors.border.accent,
     borderWidth: 1,
     backgroundColor: theme => theme.colors.control.background,
@@ -249,8 +244,8 @@ export const bootstrap = () => {
     placeholderTextColor: theme => theme.colors.input.text,
     input: {
       marginVertical: {
-        ios: scaleVertical(15),
-        android: scaleVertical(4),
+        ios: 15,
+        android: 4,
       },
     },
   });
@@ -260,8 +255,8 @@ export const bootstrap = () => {
     input: {
       textAlign: 'right',
       marginTop: {
-        ios: scaleVertical(18),
-        android: scaleVertical(11),
+        ios: 18,
+        android: 11,
       },
     },
     label: {
@@ -305,7 +300,7 @@ export const bootstrap = () => {
       right: 0,
     },
     input: {
-      marginRight: scale(46),
+      marginRight: 46,
     },
   });
 
@@ -459,15 +454,15 @@ export const bootstrap = () => {
       justifyContent: 'space-between',
       paddingHorizontal: 14,
       alignItems: 'center',
-      paddingBottom: scaleVertical(46),
+      paddingBottom: 46,
     },
     content: {
       alignItems: 'center',
       paddingVertical: 0,
     },
     footer: {
-      paddingBottom: scaleVertical(14),
-      paddingTop: scaleVertical(16),
+      paddingBottom: 14,
+      paddingTop: 16,
       paddingHorizontal: 14,
       alignItems: 'flex-end',
     },

@@ -5,7 +5,6 @@ import _ from 'lodash';
 import { FontAwesome } from '../../assets/icons';
 import { data } from '../../data/DataProvider';
 import { Avatar } from '../../components/avatar/Avatar';
-import { scale } from '../../utils/scale';
 import NavigationType from '../../config/navigation/NavigationType';
 
 const moment = require('moment');
@@ -176,7 +175,7 @@ const styles = SwStyleSheet.create(theme => ({
     alignSelf: 'flex-end',
   },
   balloon: {
-    maxWidth: scale(250),
+    maxWidth: 250,
     paddingHorizontal: 15,
     paddingTop: 10,
     paddingBottom: 15,

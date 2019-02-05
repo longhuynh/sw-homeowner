@@ -1,8 +1,6 @@
 import React from 'react';
 import { SwAvoidKeyboard, SwStyleSheet } from 'sw-react-native-ui';
-import { scaleVertical } from '../../utils/scale';
 import NavigationType from '../../config/navigation/NavigationType';
-import { Font } from 'expo';
 import { Input, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { View, Text, Keyboard, ImageBackground, Dimensions } from 'react-native';
@@ -83,7 +81,7 @@ export class Login extends React.Component {
                   autoCorrect={false}
                   keyboardType='default'
                   returnKeyType='next'
-                  ref={input => (this.emailInput = input)}
+                  ref={input => (this.usernameInput = input)}
                   onSubmitEditing={() => {
                     this.passwordInput.focus();
                   }}
@@ -158,7 +156,7 @@ const styles = SwStyleSheet.create(theme => ({
     justifyContent: 'space-between'
   },
   header: {
-    paddingBottom: scaleVertical(10),
+    paddingBottom: 10,
     alignItems: 'center',
     justifyContent: 'center',
     flex: 1
@@ -171,7 +169,7 @@ const styles = SwStyleSheet.create(theme => ({
   },
   buttons: {
     flexDirection: 'row',
-    marginBottom: scaleVertical(24),
+    marginBottom: 24,
     marginHorizontal: 24,
     justifyContent: 'space-around',
   },

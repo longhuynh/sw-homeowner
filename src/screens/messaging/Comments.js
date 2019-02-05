@@ -4,7 +4,6 @@ import { SwStyleSheet, SwText, SwTextInput} from 'sw-react-native-ui';
 import { data } from '../../data/DataProvider';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
-import { scale } from '../../utils/scale';
 
 const moment = require('moment');
 
@@ -109,10 +108,10 @@ const styles = SwStyleSheet.create(theme => ({
     paddingRight: 15,
   },
   saveButton: {
-    width: scale(120),
-    marginTop: scale(10),
-    marginRight: scale(20),
-    marginBottom: scale(10),
+    width: 120,
+    marginTop: 10,
+    marginRight: 20,
+    marginBottom: 10,
     alignSelf: 'flex-end'
   },
 }));

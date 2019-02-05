@@ -3,9 +3,8 @@ import React from 'react';
 import { View, ScrollView, StyleSheet, Dimensions } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { scale, scaleVertical } from '../../utils/scale';
 
-const screenHeight = Dimensions.get('window').height - 200;
+const screenHeight = Dimensions.get('window').height - 120;
 
 export class Violation extends React.Component {
   static navigationOptions = {
@@ -90,7 +89,7 @@ const styles = SwStyleSheet.create(theme => ({
   },
   card: {
     borderRadius: 3,
-    height: scaleVertical(screenHeight),
+    height: screenHeight,
     paddingHorizontal: 15,
   },
   header: {
@@ -116,7 +115,9 @@ const styles = SwStyleSheet.create(theme => ({
     marginVertical: 14,
   }, 
   circleButton: {
-    marginTop: scale(27.5),
+    width: 65,
+    height: 65,
+    marginTop: 27.5,
     alignSelf: 'center',
   },
   stageButton: {

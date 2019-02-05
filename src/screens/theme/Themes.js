@@ -1,19 +1,9 @@
 import React from 'react';
-import {
-  View,
-  Image,
-  StatusBar,
-  Platform,
-} from 'react-native';
-import {
-  SwText,
-  SwTheme,
-  SwStyleSheet,
-} from 'sw-react-native-ui';
+import { View, Image, StatusBar, Platform } from 'react-native';
+import { SwText, SwTheme, SwStyleSheet} from 'sw-react-native-ui';
 import { SwDarkTheme } from '../../config/DarkTheme';
 import { SwHomeOwnerTheme } from '../../config/Theme';
 import { GradientButton } from '../../components/gradient-button/GradientButton';
-import { scale, scaleVertical } from '../../utils/scale';
 
 export class Themes extends React.Component {
   static navigationOptions = {
@@ -62,16 +52,16 @@ const styles = SwStyleSheet.create(theme => ({
   root: {
     backgroundColor: theme.colors.screen.base,
     flex: 1,
-    paddingHorizontal: scale(72),
+    paddingHorizontal: 72,
 
   },
   image: {
-    height: scaleVertical(160),
+    height: 160,
   },
   container: {
     flex: 1,
     alignItems: 'center',
     justifyContent: 'space-between',
-    paddingVertical: scaleVertical(20),
+    paddingVertical: 20,
   },
 }));

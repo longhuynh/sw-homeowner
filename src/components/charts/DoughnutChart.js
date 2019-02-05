@@ -8,7 +8,6 @@
 // } from 'sw-react-native-ui';
 // import { VictoryPie } from 'victory-native';
 // import { Svg, Text as SvgText } from 'react-native-svg';
-// import { scale } from '../../utils/scale';
 
 // export class DoughnutChart extends SwComponent {
 //   state = {
@@ -68,16 +67,16 @@
 //     <View>
 //       <SwText swType='header4'>AUDIENCE OVERVIEW</SwText>
 //       <View style={{ alignSelf: 'center' }}>
-//         <Svg width={scale(this.size)} height={scale(this.size)}>
+//         <Svg width={this.size} height={this.size}>
 //           <VictoryPie
 //             labels={[]}
-//             width={scale(this.size)}
-//             height={scale(this.size)}
+//             width={this.size}
+//             height={this.size}
 //             colorScale={this.computeColors()}
 //             data={this.state.data}
 //             standalone={false}
-//             padding={scale(25)}
-//             innerRadius={scale(70)}
+//             padding={25}
+//             innerRadius={70)}
 //             events={[{
 //               target: 'data',
 //               eventHandlers: {
@@ -88,10 +87,10 @@
 //           <SvgText
 //             textAnchor='middle'
 //             verticalAnchor='middle'
-//             x={scale(this.size / 2)}
-//             y={scale(this.size / 2)}
-//             height={scale(this.fontSize)}
-//             fontSize={scale(this.fontSize)}
+//             x={this.size / 2}
+//             y={this.size / 2}
+//             height={this.fontSize}
+//             fontSize={this.fontSize}
 //             fontFamily={SwTheme.current.fonts.family.regular}
 //             stroke={SwTheme.current.colors.text.base}
 //             fill={SwTheme.current.colors.text.base}>

@@ -1,23 +1,10 @@
 import React from 'react';
-import {
-  View,
-  Keyboard,
-  TouchableOpacity,
-} from 'react-native';
-import {
-  SwText,
-  SwTextInput,
-  SwStyleSheet,
-  SwAvoidKeyboard,
-} from 'sw-react-native-ui';
+import { View, Keyboard, TouchableOpacity} from 'react-native';
+import { SwText, SwTextInput, SwStyleSheet, SwAvoidKeyboard} from 'sw-react-native-ui';
 import { GradientButton } from '../../components/index';
 import { PasswordTextInput } from '../../components/PasswordTextInput';
-import {
-  DatePicker,
-  DatePart,
-} from '../../components/picker/DatePicker';
+import { DatePicker, DatePart} from '../../components/picker/DatePicker';
 import { CardInput } from '../../components/CardInput';
-import { scale } from '../../utils/scale';
 import NavigationType from '../../config/navigation/NavigationType';
 
 export class AddToCardForm extends React.Component {
@@ -164,7 +151,7 @@ const styles = SwStyleSheet.create(theme => ({
     flex: 0.04,
   },
   balloon: {
-    maxWidth: scale(250),
+    maxWidth: 250,
     padding: 15,
     borderRadius: 100,
     borderWidth: 0.5,

@@ -3,7 +3,6 @@ import { ScrollView, View, StyleSheet, Dimensions } from 'react-native';
 import { SwText, SwTextInput, SwTabSet, SwTab, SwStyleSheet } from 'sw-react-native-ui';
 import { Table, Row, Rows } from 'react-native-table-component';
 import { GradientButton } from '../../components/index';
-import { scale, scaleVertical } from '../../utils/scale';
 
 const screenHeight = Dimensions.get('window').height - 350;
 
@@ -143,17 +142,17 @@ const styles = SwStyleSheet.create(theme => ({
     flex: 1,
   },
   circleButton: {
-    marginTop: scale(27.5),
+    marginTop: 27.5,
     alignSelf: 'center',
   },
   button: {
     alignSelf: 'center',
-    width: scale(120),
-    marginBottom: scale(16),
+    width: 120,
+    marginBottom: 16,
   },
   payButton: {
-    width: scale(120),
-    marginRight: scale(20),
+    width: 120,
+    marginRight: 20,
     alignSelf: 'flex-end'
   },
   tableHeader: {

@@ -4,9 +4,8 @@ import { View, FlatList, StyleSheet, Dimensions } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import { scale, scaleVertical } from '../../utils/scale';
 
-const screenHeight = Dimensions.get('window').height - 200;
+const screenHeight = Dimensions.get('window').height - 120;
 
 export class Documents extends React.Component {
   static navigationOptions = {
@@ -172,7 +171,7 @@ const styles = SwStyleSheet.create(theme => ({
   },
   card: {
     borderRadius: 3,
-    height: scaleVertical(screenHeight),
+    height: screenHeight,
     paddingHorizontal: 15,
   },
   header: {
@@ -201,8 +200,10 @@ const styles = SwStyleSheet.create(theme => ({
     backgroundColor: theme.colors.border.base,
   },
   circleButton: {
-    marginVertical: scale(20),
-    marginRight: scale(20),
+    width: 65,
+    height: 65,
+    marginVertical: 20,
+    marginRight: 20,
     alignSelf: 'center',
   },
   icon: {

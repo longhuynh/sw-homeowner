@@ -4,13 +4,12 @@ import { SwTheme } from 'sw-react-native-ui';
 import { StackActions, NavigationActions } from 'react-navigation';
 import { ProgressBar } from '../../components/index';
 import { SwHomeOwnerTheme } from '../../config/Theme';
-import { scale, scaleVertical } from '../../utils/scale';
 import NavigationType from '../../config/navigation/NavigationType';
 
 const delay = 500;
 
 const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height - 15;
+const screenHeight = Dimensions.get('window').height;
 
 export class SplashScreen extends React.Component {
   static propTypes = {
@@ -61,7 +60,7 @@ export class SplashScreen extends React.Component {
         color={SwTheme.current.colors.accent}
         style={styles.progress}
         progress={this.state.progress}
-        width={scale(screenWidth)}
+        width={screenWidth}
       />
     </View>
   );
@@ -75,7 +74,7 @@ const styles = StyleSheet.create({
   },
   image: {
     resizeMode: 'cover',
-    height: scaleVertical(screenHeight),
+    height: screenHeight - 3,
   },
   text: {
     alignItems: 'center',

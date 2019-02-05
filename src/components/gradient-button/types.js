@@ -1,12 +1,10 @@
-import { scaleVertical } from '../../utils/scale';
-
 export const GradientButtonTypes = (theme) => ({
   _base: {
     button: {
       alignItems: 'stretch',
       paddingVertical: 0,
       paddingHorizontal: 0,
-      height: scaleVertical(40),
+      height: 40,
       borderRadius: 20,
     },
     gradient: {
@@ -24,7 +22,7 @@ export const GradientButtonTypes = (theme) => ({
   large: {
     button: {
       alignSelf: 'stretch',
-      height: scaleVertical(56),
+      height: 56,
       borderRadius: 28,
     },
     gradient: {

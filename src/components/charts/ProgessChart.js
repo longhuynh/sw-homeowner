@@ -8,7 +8,6 @@
 // } from 'sw-react-native-ui';
 // import { VictoryPie } from 'victory-native';
 // import { Svg, Text as SvgText } from 'react-native-svg';
-// import { scale } from '../../utils/scale';
 
 // export class ProgressChart extends SwComponent {
 //   state = {
@@ -51,25 +50,25 @@
 //     <View>
 //       <SwText swType='header4'>FOLLOWERS</SwText>
 //       <View style={styles.chartContainer}>
-//         <Svg width={scale(this.size)} height={scale(this.size)}>
+//         <Svg width={this.size} height={this.size}>
 //           <VictoryPie
 //             labels={[]}
 //             padding={0}
 //             standalone={false}
-//             width={scale(this.size)}
-//             height={scale(this.size)}
+//             width={this.size}
+//             height={this.size}
 //             style={{ data: { fill: this.onChartFill } }}
 //             data={this.getChartData()}
-//             cornerRadius={scale(25)}
-//             innerRadius={scale(40)}
+//             cornerRadius={25}
+//             innerRadius={40}
 //           />
 //           <SvgText
 //             textAnchor='middle'
 //             verticalAnchor='middle'
-//             x={scale(this.size / 2)}
-//             y={scale(this.size / 2)}
-//             height={scale(this.fontSize)}
-//             fontSize={scale(this.fontSize)}
+//             x={this.size / 2}
+//             y={this.size / 2}
+//             height={this.fontSize}
+//             fontSize={this.fontSize}
 //             fontFamily={SwTheme.current.fonts.family.regular}
 //             stroke={SwTheme.current.colors.text.base}
 //             fill={SwTheme.current.colors.text.base}>

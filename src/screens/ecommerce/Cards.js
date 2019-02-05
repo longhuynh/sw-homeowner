@@ -17,7 +17,6 @@ import { LinearGradient } from 'expo';
 import { data } from '../../data/DataProvider';
 import { PasswordTextInput } from '../../components/PasswordTextInput';
 import { UIConstants } from '../../config/AppConstants';
-import { scaleVertical } from '../../utils/scale';
 
 export class Cards extends React.Component {
   static navigationOptions = {
@@ -196,11 +195,11 @@ const styles = SwStyleSheet.create(theme => ({
     paddingTop: 4,
   },
   date: {
-    marginTop: scaleVertical(20),
+    marginTop: 20,
   },
   footer: {
     marginTop: 8,
-    marginBottom: scaleVertical(16),
+    marginBottom: 16,
     alignItems: 'center',
   },
   button: {
@@ -209,7 +208,7 @@ const styles = SwStyleSheet.create(theme => ({
   },
   popup: {
     backgroundColor: theme.colors.screen.base,
-    marginTop: scaleVertical(70),
+    marginTop: 70,
     marginHorizontal: 37,
     borderRadius: 7,
   },
@@ -223,7 +222,7 @@ const styles = SwStyleSheet.create(theme => ({
     margin: 16,
   },
   popupHeader: {
-    marginBottom: scaleVertical(45),
+    marginBottom: 45,
   },
   popupButtons: {
     marginTop: 15,

@@ -4,7 +4,6 @@ import { SwText, SwTextInput, SwButton, SwTheme, SwStyleSheet } from 'sw-react-n
 import { data } from '../../data/DataProvider';
 import { Avatar, GradientButton } from '../../components/index';
 import { FontIcons } from '../../assets/icons';
-import { scale } from '../../utils/scale';
 
 export class Profile extends React.Component {
   static navigationOptions = {
@@ -155,18 +154,18 @@ const styles = SwStyleSheet.create(theme => ({
     flex: 1,
   },
   circleButton: {
-    marginTop: scale(27.5),
+    marginTop: 27.5,
     alignSelf: 'center',
   },
   button: {
     alignSelf: 'center',
-    width: scale(120),
-    marginBottom: scale(16),
+    width: 120,
+    marginBottom: 16,
   },
   logout: {
-    width: scale(120),
-    marginRight: scale(20),
-    marginBottom: scale(20),
+    width: 120,
+    marginRight: 20,
+    marginBottom: 20,
     alignSelf: 'flex-end'
   },
 }));
