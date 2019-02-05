@@ -87,7 +87,7 @@ export class AccountSummary extends React.Component {
         />
 
         <View style={styles.section}>
-          <ScrollView style={{height: screenHeight}}>
+          <ScrollView style={styles.tabContainer}>
             <SwTabSet>
               <SwTab title='TRANSACTIONS' swType='header6 primary'>
                 {this.renderTransactions()}
@@ -113,6 +113,10 @@ const styles = SwStyleSheet.create(theme => ({
     marginHorizontal: 17,
     marginVertical: 17,
     backgroundColor: theme.colors.screen.base,
+  },
+  tabContainer:{
+    height: screenHeight,
+    paddingHorizontal: 10
   },
   header: {
     backgroundColor: theme.colors.screen.neutral,
