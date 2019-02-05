@@ -1,10 +1,11 @@
 import React from 'react';
-import { FlatList, View, StyleSheet} from 'react-native';
-import { SwStyleSheet, SwText, SwTextInput} from 'sw-react-native-ui';
+import { FlatList, View, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { SwStyleSheet, SwText, SwTextInput, SwCard } from 'sw-react-native-ui';
 import { data } from '../../data/DataProvider';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
 
+const screenHeight = Dimensions.get('window').height - 120;
 const moment = require('moment');
 
 export class Comments extends React.Component {
@@ -43,11 +44,11 @@ export class Comments extends React.Component {
   };
 
   renderItem = ({ item }) => (
-    <View style={styles.container}>
+    <View style={styles.itemContainer}>
       <View style={styles.content}>
         <View style={styles.contentHeader}>
           <SwText swType='header5'>01/10/2019 ({`${item.user.firstName} ${item.user.lastName}`})</SwText>
-          <SwText swType='secondary4 hintColor'>            
+          <SwText swType='secondary4 hintColor'>
           </SwText>
         </View>
         <SwText swType='primary3 mediumLine'>{item.text}</SwText>
@@ -56,37 +57,51 @@ export class Comments extends React.Component {
   );
 
   render = () => (
-    <View style={styles.root}>    
-      <View style={styles.comment}>
-        <SwText swType='header5'>Add comment</SwText>
-        <SwTextInput          
-          value={this.state.comment}
-          swType='bordered clear'
-          onChangeText={this.onCommentInputChanged}
-          multiline = {true}
-          numberOfLines = {4}/>
-      </View>     
-      
-      <GradientButton swType='small' style={styles.saveButton} text='Save' onPress={this.onSaveButtonPressed} />
+    <ScrollView style={styles.screen}>
+      <View style={styles.container} >
+        <SwCard style={styles.card}>
+          <View style={styles.comment}>
+            <SwText swType='header5'>Add comment</SwText>
+            <SwTextInput
+              value={this.state.comment}
+              swType='bordered'
+              onChangeText={this.onCommentInputChanged}
+              multiline={true}
+              numberOfLines={4} />
+          </View>
 
-      <FlatList
-        data={this.state.data}
-        extraData={this.state}
-        ItemSeparatorComponent={this.renderSeparator}
-        keyExtractor={this.extractItemKey}
-        renderItem={this.renderItem}
-      />
-    </View>
+          <GradientButton swType='small' style={styles.saveButton} text='Save' onPress={this.onSaveButtonPressed} />
+
+          <FlatList
+            data={this.state.data}
+            extraData={this.state}
+            ItemSeparatorComponent={this.renderSeparator}
+            keyExtractor={this.extractItemKey}
+            renderItem={this.renderItem}
+          />
+        </SwCard>
+      </View>
+    </ScrollView>
   );
 }
 
 const styles = SwStyleSheet.create(theme => ({
-  root: {
-    backgroundColor: theme.colors.screen.base,
+  screen: {
+    backgroundColor: theme.colors.screen.scroll,
+    paddingHorizontal: 20,
   },
   container: {
-    paddingLeft: 15,
-    paddingRight: 15,
+    justifyContent: 'space-between',
+    marginVertical: 20,
+  },
+  card: {
+    borderRadius: 3,
+    height: screenHeight,
+    paddingHorizontal: 15,
+  },
+  itemContainer: {
+    paddingLeft: 5,
+    paddingRight: 5,
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'flex-start',
@@ -104,8 +119,8 @@ const styles = SwStyleSheet.create(theme => ({
     backgroundColor: theme.colors.border.base,
   },
   comment: {
-    paddingLeft: 15,
-    paddingRight: 15,
+    paddingLeft: 5,
+    paddingRight: 5,
   },
   saveButton: {
     width: 120,
