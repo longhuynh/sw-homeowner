@@ -119,6 +119,7 @@ const styles = SwStyleSheet.create(theme => ({
     backgroundColor: theme.colors.border.base,
   },
   comment: {
+    marginTop: 10,
     paddingLeft: 5,
     paddingRight: 5,
   },
