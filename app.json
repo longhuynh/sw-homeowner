@@ -9,6 +9,9 @@
     "loading": {
       "icon": "./icon.png"
     },
+    "assetBundlePatterns": [
+      "assets/*"
+    ],
     "androidStatusBar": {
       "backgroundColor": "#ffffff"
     },

@@ -16,7 +16,7 @@ data.populateData();
 
 const SwHomeOwnerApp = createStackNavigator({
   First: {
-    screen: Screens.Login,
+    screen: Screens.SplashScreen,
   },
   Home: {
     screen: createDrawerNavigator(

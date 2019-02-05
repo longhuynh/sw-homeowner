@@ -59,14 +59,14 @@ export class GalleryScreen extends React.Component {
     }
   };
 
-  renderPhoto = fileName => 
+  renderPhoto = fileName =>
     <Photo
       key={fileName}
       uri={`${PHOTOS_DIR}/${fileName}`}
       onSelectionToggle={this.toggleSelection}
     />;
 
-    render = () => {
+  render = () => {
     return (
       <View style={styles.container}>
         <View style={styles.navbar}>
