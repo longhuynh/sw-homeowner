@@ -284,6 +284,13 @@ export const MainRoutes = [
     icon: FontIcons.theme,
     screen: Screens.CameraExample,
     children: [],
+  }, 
+  {
+    id: 'CameraScreen',
+    title: 'CameraScreen',
+    icon: FontIcons.theme,
+    screen: Screens.CameraScreen,
+    children: [],
   },
 ];
 

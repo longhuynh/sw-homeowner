@@ -91,7 +91,7 @@ export class Documents extends React.Component {
   ];
 
   onCameraButtonPressed() {
-
+    this.props.navigation.navigate('CameraExample');
   }
 
   onUploadButtonPressed() {
