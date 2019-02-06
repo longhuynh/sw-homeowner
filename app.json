@@ -10,21 +10,22 @@
       "icon": "./icon.png"
     },
     "assetBundlePatterns": [
-      "assets/*"
+      "assets/*",
+      "assets/**/*"
     ],
     "androidStatusBar": {
       "backgroundColor": "#ffffff"
     },
     "ios": {
       "bundleIdentifier": "com.smartwebs.homeowner",
-      "buildNumber": "0.1.0",
+      "buildNumber": "0.2.0",
       "supportsTablet": true
     },
     "android": {
       "package": "com.smartwebs.homeowner",
-      "versionCode": 16
+      "versionCode": 18
     },
-    "version": "0.1.0",
+    "version": "0.2.0",
     "description": ""
   }
 }

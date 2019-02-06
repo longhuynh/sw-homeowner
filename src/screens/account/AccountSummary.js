@@ -163,12 +163,10 @@ const styles = SwStyleSheet.create(theme => ({
     height: 40
   },
   headerText: {
-    margin: 6,
     fontWeight: 'bold',
     color: theme.colors.text.base,
   },
   dataText: {
-    margin: 6,
     color: theme.colors.text.base,
   },
 }));

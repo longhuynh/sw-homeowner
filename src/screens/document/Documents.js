@@ -163,9 +163,9 @@ const styles = SwStyleSheet.create(theme => ({
     marginVertical: 20,
   },
   itemContainer: {
-    paddingLeft: 15,
-    paddingRight: 15,
-    paddingVertical: 12,
+    paddingLeft: 5,
+    paddingRight: 5,
+    paddingVertical: 10,
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
