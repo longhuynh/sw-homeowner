@@ -1,23 +1,8 @@
 import { Constants, Camera, FileSystem, Permissions, BarCodeScanner } from 'expo';
 import React from 'react';
-import {
-  Alert,
-  StyleSheet,
-  Text,
-  View,
-  TouchableOpacity,
-  Slider,
-  Platform
-} from 'react-native';
-import CameraScreen from './GalleryScreen';
-
-import {
-  Ionicons,
-  MaterialIcons,
-  Foundation,
-  MaterialCommunityIcons,
-  Octicons
-} from '@expo/vector-icons';
+import { Alert, StyleSheet,  Text, View, TouchableOpacity, Platform} from 'react-native';
+import GalleryScreen from './GalleryScreen';
+import { Ionicons,  MaterialIcons,  Foundation,  MaterialCommunityIcons,  Octicons} from '@expo/vector-icons';
 import NavigationType from '../../config/navigation/NavigationType';
 
 const landmarkSize = 2;
@@ -235,24 +220,27 @@ export class CameraScreen extends React.Component {
     );
   }
 
-  renderFaces = () =>
+  renderFaces = () => (
     <View style={styles.facesContainer} pointerEvents="none">
       {this.state.faces.map(this.renderFace)}
     </View>
+  );
 
-  renderLandmarks = () =>
+  renderLandmarks = () => (
     <View style={styles.facesContainer} pointerEvents="none">
       {this.state.faces.map(this.renderLandmarksOfFace)}
     </View>
+  );
 
-  renderNoPermissions = () =>
+  renderNoPermissions = () => (
     <View style={styles.noPermissions}>
       <Text style={{ color: 'white' }}>
         Camera permissions not granted - cannot open camera preview.
       </Text>
     </View>
+  );
 
-  renderTopBar = () =>
+  renderTopBar = () => (
     <View style={styles.topBar}>
       <TouchableOpacity style={styles.toggleButton} onPress={this.toggleFacing}>
         <Ionicons name="ios-reverse-camera" size={32} color="white" />
@@ -267,8 +255,9 @@ export class CameraScreen extends React.Component {
         <Text style={[styles.autoFocusLabel, { color: this.state.autoFocus === 'on' ? "white" : "#6b6b6b" }]}>AF</Text>
       </TouchableOpacity>
     </View>
+  );
 
-  renderBottomBar = () =>
+  renderBottomBar = () => (
     <View style={styles.bottomBar}>
       <TouchableOpacity style={styles.bottomButton} onPress={this.toggleMoreOptions}>
         <Octicons name="kebab-horizontal" size={30} color="white" />
@@ -288,77 +277,78 @@ export class CameraScreen extends React.Component {
         </View>
       </TouchableOpacity>
     </View>
+  );
 
-  renderMoreOptions = () =>
-    (
-      <View style={styles.options}>
-        <View style={styles.detectors}>
-          <TouchableOpacity onPress={this.toggleFaceDetection}>
-            <MaterialIcons name="tag-faces" size={32} color={this.state.faceDetecting ? "white" : "#858585"} />
-          </TouchableOpacity>
-          <TouchableOpacity onPress={this.toggleBarcodeScanning}>
-            <MaterialCommunityIcons name="barcode-scan" size={32} color={this.state.barcodeScanning ? "white" : "#858585"} />
-          </TouchableOpacity>
-        </View>
+  renderMoreOptions = () => (
+    <View style={styles.options}>
+      <View style={styles.detectors}>
+        <TouchableOpacity onPress={this.toggleFaceDetection}>
+          <MaterialIcons name="tag-faces" size={32} color={this.state.faceDetecting ? "white" : "#858585"} />
+        </TouchableOpacity>
+        <TouchableOpacity onPress={this.toggleBarcodeScanning}>
+          <MaterialCommunityIcons name="barcode-scan" size={32} color={this.state.barcodeScanning ? "white" : "#858585"} />
+        </TouchableOpacity>
+      </View>
 
-        <View style={styles.pictureSizeContainer}>
-          <Text style={styles.pictureQualityLabel}>Picture quality</Text>
-          <View style={styles.pictureSizeChooser}>
-            <TouchableOpacity onPress={this.previousPictureSize} style={{ padding: 6 }}>
-              <Ionicons name="md-arrow-dropleft" size={14} color="white" />
-            </TouchableOpacity>
-            <View style={styles.pictureSizeLabel}>
-              <Text style={{ color: 'white' }}>{this.state.pictureSize}</Text>
-            </View>
-            <TouchableOpacity onPress={this.nextPictureSize} style={{ padding: 6 }}>
-              <Ionicons name="md-arrow-dropright" size={14} color="white" />
-            </TouchableOpacity>
+      <View style={styles.pictureSizeContainer}>
+        <Text style={styles.pictureQualityLabel}>Picture quality</Text>
+        <View style={styles.pictureSizeChooser}>
+          <TouchableOpacity onPress={this.previousPictureSize} style={{ padding: 6 }}>
+            <Ionicons name="md-arrow-dropleft" size={14} color="white" />
+          </TouchableOpacity>
+          <View style={styles.pictureSizeLabel}>
+            <Text style={{ color: 'white' }}>{this.state.pictureSize}</Text>
           </View>
+          <TouchableOpacity onPress={this.nextPictureSize} style={{ padding: 6 }}>
+            <Ionicons name="md-arrow-dropright" size={14} color="white" />
+          </TouchableOpacity>
         </View>
       </View>
-    );
+    </View>
+  );
 
-  renderCamera = () =>
-    (
-      <View style={{ flex: 1 }}>
-        <Camera
-          ref={ref => {
-            this.camera = ref;
-          }}
-          style={styles.camera}
-          onCameraReady={this.collectPictureSizes}
-          type={this.state.type}
-          flashMode={this.state.flash}
-          autoFocus={this.state.autoFocus}
-          zoom={this.state.zoom}
-          whiteBalance={this.state.whiteBalance}
-          ratio={this.state.ratio}
-          pictureSize={this.state.pictureSize}
-          onMountError={this.handleMountError}
-          onFacesDetected={this.state.faceDetecting ? this.onFacesDetected : undefined}
-          onFaceDetectionError={this.onFaceDetectionError}
-          barCodeScannerSettings={{
-            barCodeTypes: [
-              BarCodeScanner.Constants.BarCodeType.qr,
-              BarCodeScanner.Constants.BarCodeType.pdf417,
-            ],
-          }}
-          onBarCodeScanned={this.state.barcodeScanning ? this.onBarCodeScanned : undefined}
-        >
-          {this.renderTopBar()}
-          {this.renderBottomBar()}
-        </Camera>
-        {this.state.faceDetecting && this.renderFaces()}
-        {this.state.faceDetecting && this.renderLandmarks()}
-        {this.state.showMoreOptions && this.renderMoreOptions()}
-      </View>
-    );
+  renderCamera = () => (
+    <View style={{ flex: 1 }}>
+      <Camera
+        ref={ref => {
+          this.camera = ref;
+        }}
+        style={styles.camera}
+        onCameraReady={this.collectPictureSizes}
+        type={this.state.type}
+        flashMode={this.state.flash}
+        autoFocus={this.state.autoFocus}
+        zoom={this.state.zoom}
+        whiteBalance={this.state.whiteBalance}
+        ratio={this.state.ratio}
+        pictureSize={this.state.pictureSize}
+        onMountError={this.handleMountError}
+        onFacesDetected={this.state.faceDetecting ? this.onFacesDetected : undefined}
+        onFaceDetectionError={this.onFaceDetectionError}
+        barCodeScannerSettings={{
+          barCodeTypes: [
+            BarCodeScanner.Constants.BarCodeType.qr,
+            BarCodeScanner.Constants.BarCodeType.pdf417,
+          ],
+        }}
+        onBarCodeScanned={this.state.barcodeScanning ? this.onBarCodeScanned : undefined}
+      >
+        {this.renderTopBar()}
+        {this.renderBottomBar()}
+      </Camera>
+      {this.state.faceDetecting && this.renderFaces()}
+      {this.state.faceDetecting && this.renderLandmarks()}
+      {this.state.showMoreOptions && this.renderMoreOptions()}
+    </View>
+  );
 
   render = () => {
     const cameraScreenContent = this.state.permissionsGranted
       ? this.renderCamera()
       : this.renderNoPermissions();
+
     const content = this.state.showGallery ? this.renderGallery() : cameraScreenContent;
+
     return <View style={styles.container}>{content}</View>;
   }
 }
