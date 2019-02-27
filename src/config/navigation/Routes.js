@@ -1,10 +1,11 @@
 import _ from 'lodash';
 import { FontIcons } from '../../assets/icons';
 import * as Screens from '../../screens';
+import {PageNames} from '../AppConstants';
 
 export const MainRoutes = [
   {
-    id: 'Login',
+    id: PageNames.Login,
     title: 'Login',
     description: '',
     icon: FontIcons.login,
@@ -12,7 +13,7 @@ export const MainRoutes = [
     children: [],
   },
   {
-    id: 'Dashboard',
+    id: PageNames.Dashboard,
     title: 'Dashboard',
     icon: FontIcons.dashboard,
     screen: Screens.Dashboard,
@@ -25,14 +26,14 @@ export const MainRoutes = [
     screen: Screens.AccountSummary,
     children: [
       {
-        id: 'AccountSummary',
+        id: PageNames.AccountSummary,
         title: 'Account',
         description: 'Summary',
         screen: Screens.AccountSummary,
         children: [],
       },     
       {
-        id: 'AccountPayment',
+        id: PageNames.AccountPayment,
         title: 'Account',
         description: 'Payment',
         screen: Screens.AccountPayment,
@@ -47,21 +48,21 @@ export const MainRoutes = [
     screen: Screens.Violations,
     children: [
       {
-        id: 'Violations',
+        id: PageNames.Violations,
         title: 'Violations',
         description: 'Overview',
         screen: Screens.Violations,
         children: [],
       },     
       {
-        id: 'Violation',
+        id: PageNames.Violation,
         title: 'Violation Detail',
         description: 'Detail',
         screen: Screens.Violation,
         children: [],
       },   
       {
-        id: 'ViolationMap',
+        id: PageNames.ViolationMap,
         title: 'Map',
         description: 'Map',
         screen: Screens.ViolationMap,
@@ -76,20 +77,21 @@ export const MainRoutes = [
     screen: Screens.WorkOrders,
     children: [
       {
-        id: 'WorkOrders',
+        id: PageNames.WorkOrders,
         title: 'Work Order',
         description: 'Overview',
         screen: Screens.WorkOrders,
         children: [],
       },     
       {
-        id: 'WorkOrder',
+        id: PageNames.WorkOrder,
         title: 'Work Order Detail',
         description: 'Detail',
         screen: Screens.WorkOrder,
         children: [],
-      },       {
-        id: 'WorkOrderMap',
+      },       
+      {
+        id: PageNames.WorkOrderMap,
         title: 'Map',
         description: 'Map',
         screen: Screens.WorkOrderMap,
@@ -104,21 +106,21 @@ export const MainRoutes = [
     screen: Screens.Architectural,
     children: [
       {
-        id: 'Architecturals',
+        id: PageNames.Architecturals,
         title: 'Arc/Arb',
         description: 'Overview',
         screen: Screens.Architecturals,
         children: [],
       },     
       {
-        id: 'Architectural',
+        id: PageNames.Architectural,
         title: 'Arc/Arb Detail',
         description: 'Detail',
         screen: Screens.Architectural,
         children: [],
       }, 
       {
-        id: 'ArchitecturalStatus',
+        id: PageNames.ArchitecturalStatus,
         title: 'Status',
         description: 'Status',
         screen: Screens.ArchitecturalStatus,
@@ -133,7 +135,7 @@ export const MainRoutes = [
     screen: Screens.SocialMenu,
     children: [
       {
-        id: 'Profile',
+        id: PageNames.Profile,
         title: 'Profile',
         description: 'Detail',
         screen: Screens.Profile,
@@ -147,7 +149,7 @@ export const MainRoutes = [
         children: [],
       },
       {
-        id: 'ProfileSettings',
+        id: PageNames.ProfileSettings,
         title: 'Profile Settings',
         screen: Screens.ProfileSettings,
         children: [],
@@ -223,7 +225,7 @@ export const MainRoutes = [
         children: [],
       },
       {
-        id: 'Comments',
+        id: PageNames.Comments,
         title: 'Comments',
         screen: Screens.Comments,
         children: [],
@@ -258,21 +260,21 @@ export const MainRoutes = [
     ],
   },
   {
-    id: 'Documents',
+    id: PageNames.Documents,
     title: 'Documents',
     icon: FontIcons.other,
     screen: Screens.Documents,
     children: [],
   },
   {
-    id: 'Settings',
+    id: PageNames.Settings,
     title: 'Settings',
     icon: FontIcons.other,
     screen: Screens.Settings,
     children: [],
   },
   {
-    id: 'Themes',
+    id: PageNames.Themes,
     title: 'Themes',
     icon: FontIcons.theme,
     screen: Screens.Themes,
@@ -292,11 +294,18 @@ export const MainRoutes = [
     screen: Screens.CameraScreen,
     children: [],
   },
+  {
+    id: 'Cards',
+    title: 'Cards',
+    icon: FontIcons.other,
+    screen: Screens.Cards,
+    children: [],
+  },
 ];
 
 export const MenuRoutes =  [
   {
-    id: 'Dashboard',
+    id: PageNames.Dashboard,
     title: 'Dashboard',
     icon: FontIcons.dashboard,
     screen: Screens.Dashboard,
@@ -331,10 +340,10 @@ export const MenuRoutes =  [
     children: [],
   },
   {
-    id: 'Settings',
+    id: PageNames.Settings,
     title: 'Settings',
     icon: FontIcons.other,
     screen: Screens.Settings,
     children: [],
   },
-];;
+];

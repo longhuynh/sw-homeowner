@@ -1,7 +1,8 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
-import { SwText, SwTextInput, SwAvoidKeyboard, SwStyleSheet } from 'sw-react-native-ui';
+import { View, StyleSheet } from 'react-native';
+import { SwText, SwTextInput, SwStyleSheet } from 'sw-react-native-ui';
 import { GradientButton } from '../../components/index';
+import { PageNames } from '../../config/AppConstants';
 
 export class AccountPayment extends React.Component {
   static navigationOptions = {
@@ -22,7 +23,7 @@ export class AccountPayment extends React.Component {
   };
 
   onSubmitButtonPressed = () => {
-    this.props.navigation.navigate('AccountSummary');
+    this.props.navigation.navigate(PageNames.AccountSummary);
   };
 
   render = () => (

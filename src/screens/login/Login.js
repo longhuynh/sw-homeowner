@@ -4,6 +4,7 @@ import NavigationType from '../../config/navigation/NavigationType';
 import { Input, Button } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { View, Text, Keyboard, ImageBackground, Dimensions } from 'react-native';
+import { PageNames } from '../../config/AppConstants';
 
 const screenWidth = Dimensions.get('window').width;
 const screenHeight = Dimensions.get('window').height;
@@ -35,7 +36,7 @@ export class Login extends React.Component {
       showLoading: !showLoading,
     });
 
-    this.props.navigation.navigate('Dashboard');
+    this.props.navigation.navigate(PageNames.Dashboard);
   }
 
   getImageBackgroundSource = () => (

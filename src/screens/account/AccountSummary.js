@@ -3,6 +3,7 @@ import { ScrollView, View, StyleSheet, Dimensions } from 'react-native';
 import { SwText, SwTextInput, SwTabSet, SwTab, SwStyleSheet } from 'sw-react-native-ui';
 import { Table, Row, Rows } from 'react-native-table-component';
 import { GradientButton } from '../../components/index';
+import { PageNames } from '../../config/AppConstants';
 
 const screenHeight = Dimensions.get('window').height - 350;
 
@@ -38,7 +39,7 @@ export class AccountSummary extends React.Component {
   };
 
   onPayButtonPressed = () => {
-    this.props.navigation.navigate('AccountPayment');
+    this.props.navigation.navigate(PageNames.AccountPayment);
   };
 
   renderTransactions = () => (
