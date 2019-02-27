@@ -3,9 +3,7 @@ import { ScrollView, View, StyleSheet
 } from 'react-native';
 import { SwText, SwTextInput, SwAvoidKeyboard, SwTheme, SwStyleSheet} from 'sw-react-native-ui';
 import { data } from '../../data/DataProvider';
-import { Avatar, SocialSetting, GradientButton,
-} from '../../components/index';
-import { FontAwesome } from '../../assets/icons';
+import { Avatar, GradientButton} from '../../components/index';
 
 export class ProfileSettings extends React.Component {
   static navigationOptions = {

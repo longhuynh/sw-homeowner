@@ -1,18 +1,6 @@
 import React from 'react';
-import {
-  FlatList,
-  View,
-  Image,
-  TouchableOpacity,
-  Modal,
-} from 'react-native';
-import {
-  SwText,
-  SwCard,
-  SwButton,
-  SwStyleSheet,
-  SwTheme,
-} from 'sw-react-native-ui';
+import { FlatList, View, Image, TouchableOpacity, Modal } from 'react-native';
+import { SwText, SwCard, SwButton, SwStyleSheet, SwTheme} from 'sw-react-native-ui';
 import { LinearGradient } from 'expo';
 import { data } from '../../data/DataProvider';
 import { PasswordTextInput } from '../../components/PasswordTextInput';

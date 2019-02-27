@@ -142,22 +142,9 @@ export const MainRoutes = [
         children: [],
       },
       {
-        id: 'ProfileV2',
-        title: 'Profile V2',
-        description: 'Detail',
-        screen: Screens.ProfileV2,
-        children: [],
-      },
-      {
         id: PageNames.ProfileSettings,
         title: 'Profile Settings',
         screen: Screens.ProfileSettings,
-        children: [],
-      },
-      {
-        id: 'ProfileSettingsV2',
-        title: 'Profile Settings V2',
-        screen: Screens.ProfileSettingsV2,
         children: [],
       },
       {
@@ -176,32 +163,6 @@ export const MainRoutes = [
         id: 'Feed',
         title: 'Feed',
         screen: Screens.Feed,
-        children: [],
-      },
-    ],
-  },
-  {
-    id: 'ArticlesMenu',
-    title: 'Articles',
-    icon: FontIcons.article,
-    screen: Screens.ArticleMenu,
-    children: [
-      {
-        id: 'Articles',
-        title: 'Article List',
-        screen: Screens.Articles,
-        children: [],
-      },
-      {
-        id: 'Blogposts',
-        title: 'Blogposts',
-        screen: Screens.Blogposts,
-        children: [],
-      },
-      {
-        id: 'Article',
-        title: 'Article View',
-        screen: Screens.Article,
         children: [],
       },
     ],

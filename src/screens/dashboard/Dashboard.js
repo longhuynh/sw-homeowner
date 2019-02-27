@@ -1,6 +1,6 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
-import { SwText, SwStyleSheet, SwTheme } from 'sw-react-native-ui';
+import { SwText, SwStyleSheet } from 'sw-react-native-ui';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class Dashboard extends React.Component {

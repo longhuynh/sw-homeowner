@@ -1,13 +1,6 @@
 import React from 'react';
-import {
-  FlatList,
-  View,
-  Image,
-} from 'react-native';
-import {
-  SwCard,
-  SwText, SwStyleSheet,
-} from 'sw-react-native-ui';
+import { FlatList, View, Image} from 'react-native';
+import { SwCard, SwText, SwStyleSheet} from 'sw-react-native-ui';
 import { Avatar } from '../../components/avatar/Avatar';
 import { SocialBar } from '../../components/social-bar/SocialBar';
 import { data } from '../../data/DataProvider';

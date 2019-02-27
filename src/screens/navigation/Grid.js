@@ -1,12 +1,6 @@
 import React from 'react';
-import {
-  ScrollView,
-  Dimensions,
-} from 'react-native';
-import {
-  SwButton, SwStyleSheet,
-  SwText,
-} from 'sw-react-native-ui';
+import { ScrollView, Dimensions } from 'react-native';
+import { SwButton, SwStyleSheet, SwText } from 'sw-react-native-ui';
 import { MainRoutes } from '../../config/navigation/Routes';
 import NavigationType from '../../config/navigation/NavigationType';
 

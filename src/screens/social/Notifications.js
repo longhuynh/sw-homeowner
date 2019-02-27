@@ -1,9 +1,5 @@
 import React from 'react';
-import {
-  FlatList,
-  View,
-  Image,
-} from 'react-native';
+import { FlatList, View, Image } from 'react-native';
 import { SwStyleSheet, SwText } from 'sw-react-native-ui';
 import { Avatar } from '../../components/index';
 import { data } from '../../data/DataProvider';
