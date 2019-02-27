@@ -36,7 +36,7 @@ export class Login extends React.Component {
       showLoading: !showLoading,
     });
 
-    this.props.navigation.navigate('ChatList');
+    this.props.navigation.navigate(PageNames.Dashboard);
   }
 
   getImageBackgroundSource = () => (
