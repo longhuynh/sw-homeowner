@@ -145,6 +145,7 @@ export const bootstrap = () => {
   SwTheme.setType('SwText', 'chat', {
     color: theme => theme.colors.chat.text,
   });
+
   /*
    SwButton types
    */
@@ -202,6 +203,7 @@ export const bootstrap = () => {
     borderWidth: 1,
     backgroundColor: theme => theme.colors.control.background,
   });
+  
   /*
    SwModalImg types
    */

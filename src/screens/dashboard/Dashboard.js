@@ -2,10 +2,27 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet } from 'sw-react-native-ui';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { data } from '../../data/DataProvider';
+import { Avatar } from '../../components/avatar/Avatar';
+import NavigationType from '../../config/navigation/NavigationType';
+import { Overlay } from 'react-native-elements';
 
 export class Dashboard extends React.Component {
   static navigationOptions = {
     title: 'Dashboard'.toUpperCase(),
+  };
+
+  static propTypes = {
+    navigation: NavigationType.isRequired,
+  };
+
+  static navigationOptions = ({ navigation }) => {
+    const userId = 1;
+    const user = data.getUser(userId);
+    return ({
+      headerTitle: Dashboard.renderNavigationTitle(navigation, user),
+      headerLeft: Dashboard.renderNavigationAvatar(navigation, user),
+    });
   };
 
   state = {
@@ -47,6 +64,29 @@ export class Dashboard extends React.Component {
     this.props.navigation.navigate(screen);
   }
 
+  static onNavigationTitlePressed = (navigation, user) => {
+    navigation.navigate('Units');
+  };
+
+  static onNavigationAvatarPressed = (navigation, user) => {
+    navigation.navigate('Profile', { id: user.id });
+  };
+
+  static renderNavigationTitle = (navigation, user) => (
+    <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation, user)}>
+      <View style={styles.header}>
+        <SwText swType='header5'>{`${user.firstName} ${user.lastName}`}</SwText>
+        <SwText swType='secondary2 secondaryColor'>{`${user.address}`}</SwText>
+      </View>
+    </TouchableOpacity>
+  );
+
+  static renderNavigationAvatar = (navigation, user) => (
+    <TouchableOpacity onPress={() => Dashboard.onNavigationAvatarPressed(navigation, user)}>
+      <Avatar style={styles.avatar} swType='small' img={user.photo} />
+    </TouchableOpacity>
+  );
+
   renderStatItem = (item) => (
     <TouchableOpacity onPress={() => {this.gotoScreen(item.screen) }} key={item.screen}>
       <View style={[styles.container, { backgroundColor: item.background }]} >
@@ -74,6 +114,12 @@ const styles = SwStyleSheet.create(theme => ({
   screen: {
     backgroundColor: theme.colors.screen.scroll,
     paddingHorizontal: 20,
+  },
+  header: {
+    alignItems: 'center',
+  },
+  avatar: {
+    marginLeft: 20,    
   },
   items: {
     justifyContent: 'space-between',

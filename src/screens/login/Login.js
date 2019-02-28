@@ -30,13 +30,15 @@ export class Login extends React.Component {
   };
 
   submitLoginCredentials() {
-    const { showLoading } = this.state;
-
     this.setState({
-      showLoading: !showLoading,
+      showLoading: true,
     });
 
     this.props.navigation.navigate(PageNames.Dashboard);
+
+    this.setState({
+      showLoading: false,
+    });
   }
 
   getImageBackgroundSource = () => (

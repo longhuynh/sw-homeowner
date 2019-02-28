@@ -20,6 +20,13 @@ export const MainRoutes = [
     children: [],
   },
   {
+    id: 'Units',
+    title: 'Units',
+    icon: FontIcons.dashboard,
+    screen: Screens.Units,
+    children: [],
+  },
+  {
     id: 'AccountMenu',
     title: 'Account',
     icon: FontIcons.login,
