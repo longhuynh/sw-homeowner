@@ -28,30 +28,24 @@ export class Units extends React.Component {
   items = [
     {
       id: '1',
-      name: '6910 Pine Top Ln',
-      address: ''
+      address: '6910 Pine Top Ln'
     },
     {
       id: '2',
-      name: '9202 Elk Mountain Ct',
-      address: ''
+      address: '9202 Elk Mountain Ct'
     },
     {
       id: '3',
-      name: '5406 Pecan Leaf Dr',
-      address: ''
+      address: '5406 Pecan Leaf Dr'
     },    
     {
       id: '4',
-      name: '5510 Pointed Leaf Ct',
-      address: ''
+      address: '5510 Pointed Leaf Ct'
     },
     {
       id: '5',
-      name: '2309 Bullhorn Trl',
-      address: ''
-    }
-    
+      address: '2309 Bullhorn Trl'
+    }    
   ];
   
 
@@ -66,12 +60,12 @@ export class Units extends React.Component {
       <SwText style={styles.icon} swType='primary moon xxlarge'>
         {FontIcons.theme}
       </SwText>
-      <SwText swType='small center'>{item.name}</SwText>
+      <SwText swType='small center'>{item.address}</SwText>
     </SwButton>
   );
 
   onItemPressed = (item) => {
-    this.props.navigation.navigate(PageNames.Dashboard);
+    this.props.navigation.navigate(PageNames.Dashboard, {address: item.address});
   };
 
   render() {

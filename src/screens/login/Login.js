@@ -2,7 +2,7 @@ import React from 'react';
 import { SwAvoidKeyboard, SwStyleSheet } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Input, Button } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { View, Text, Keyboard, ImageBackground, Dimensions } from 'react-native';
 import { PageNames } from '../../config/AppConstants';
 
@@ -67,7 +67,7 @@ export class Login extends React.Component {
               <View style={styles.loginInput}>
                 <Input
                   leftIcon={
-                    <Icon
+                    <FontAwesome
                       name='user-o'
                       color='rgba(171, 189, 219, 1)'
                       size={25}
@@ -94,7 +94,7 @@ export class Login extends React.Component {
                 />
                 <Input
                   leftIcon={
-                    <Icon
+                    <FontAwesome
                       name='lock'
                       color='rgba(171, 189, 219, 1)'
                       size={25}

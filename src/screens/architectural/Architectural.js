@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome from 'react-native-vector-icons/FontAwesome';
 
 export class Architectural extends React.Component {
   static navigationOptions = {
@@ -13,7 +13,6 @@ export class Architectural extends React.Component {
     super(props);
     const architecturalId = this.props.navigation.getParam('id', 1);
   }
-
  
   state = {
     data: {
@@ -53,7 +52,7 @@ export class Architectural extends React.Component {
           <SwText swType='header2'>{item.name}</SwText>
           <SwText swType='secondary2'>{item.value}</SwText>
         </View>
-        <Icon name={item.icon} size={50} style={styles.icon} />
+        <FontAwesome name={item.icon} size={50} style={styles.icon} />
       </View>
       </SwCard>
     </TouchableOpacity>

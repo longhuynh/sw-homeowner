@@ -1,11 +1,10 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet } from 'sw-react-native-ui';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { data } from '../../data/DataProvider';
 import { Avatar } from '../../components/avatar/Avatar';
 import NavigationType from '../../config/navigation/NavigationType';
-import { Overlay } from 'react-native-elements';
 
 export class Dashboard extends React.Component {
   static navigationOptions = {
@@ -32,14 +31,14 @@ export class Dashboard extends React.Component {
           name: 'Balance',
           screen: 'AccountSummary',
           value: '$4,512',
-          icon: 'money',
+          icon: 'dollar-sign',
           background: 'rgb(134, 19, 136)'
         },
         {
           name: 'Arc/Arb',
           screen: 'Architecturals',
           value: '4',
-          icon: 'legal',
+          icon: 'hammer',
           background: 'rgb(59, 157, 214)'
         },
         {
@@ -53,7 +52,7 @@ export class Dashboard extends React.Component {
           name: 'Violations',
           screen: 'Violations',
           value: '5',
-          icon: 'warning',
+          icon: 'exclamation-triangle',
           background: 'rgb(102, 188, 69)'
         }
       ],
@@ -94,7 +93,7 @@ export class Dashboard extends React.Component {
           <SwText swType='header2' style={styles.name}>{item.name}</SwText>
           <SwText swType='secondary1' style={styles.value}>{item.value}</SwText>
         </View>
-        <Icon name={item.icon} size={50} style={styles.icon} />
+        <FontAwesome5 name={item.icon} size={50} style={styles.icon} />
       </View>
     </TouchableOpacity>
   );
