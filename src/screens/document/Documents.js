@@ -1,9 +1,11 @@
 
 import React from 'react';
-import { View, FlatList, StyleSheet, Dimensions } from 'react-native';
+import { View, FlatList, StyleSheet, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import FileViewer from 'react-native-file-viewer';
+import { FileSystem } from 'expo';
 
 const screenHeight = Dimensions.get('window').height - 120;
 
@@ -12,9 +14,12 @@ export class Documents extends React.Component {
     title: 'Documents'.toUpperCase(),
   };
 
+
   constructor(props) {
     super(props);
     const workOrderId = this.props.navigation.getParam('id', 1);
+
+    this.state = {localFile: ''};
   }
 
   data = [{
@@ -90,6 +95,35 @@ export class Documents extends React.Component {
   },
   ];
 
+  getLocalPath (url) {
+    const filename = url.split('/').pop();
+    return `${FileSystem.documentDirectory}${filename}`;
+  } 
+
+  onViewFile(item){
+    // const url = 'https://www.ctvnews.ca/polopoly_fs/1.4037876!/httpImage/image.jpg_gen/derivatives/landscape_1020/image.jpg';
+    // const localFile =  this.getLocalPath(url);
+
+    // this.setState({
+    //   localFile: localFile,
+    //       });
+    
+    // Alert.alert(localFile);
+
+    // FileSystem.downloadAsync(url, localFile)
+    // .then((uri) => 
+    // {
+    //   setTimeout(() => { FileViewer.open(localFile);}, 5000)
+     
+    // })
+    // .then(() => {
+    // })
+    // .catch(error => {
+
+    // });
+    this.props.navigation.navigate('DocumentViewer');
+  }
+
   onCameraButtonPressed() {
     this.props.navigation.navigate('CameraExample');
   }
@@ -105,16 +139,19 @@ export class Documents extends React.Component {
   );
 
   renderItem = ({ item }) => (
+    <TouchableOpacity onPress={() => this.onViewFile(item)}>
     <View style={styles.itemContainer}>
       <View style={styles.content}>
         <View style={styles.contentHeader}>
           <SwText swType='header5' style={styles.link}> {`${item.fileName}`} ({`${item.format}`})</SwText>
           <SwText swType='secondary4 hintColor'>
+          <SwText swType='header5' style={styles.link}> {`${this.state.localFile}`}</SwText>
           </SwText>
         </View>
         <SwText swType='primary3 mediumLine'>{`${item.dateCreated}`} ({`${item.userCreated}`})</SwText>
       </View>
     </View>
+    </TouchableOpacity>
   );
 
   render = () => (

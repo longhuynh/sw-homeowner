@@ -1,21 +1,33 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { ScrollView, View, StyleSheet, AsyncStorage } from 'react-native';
 import { SwText, SwButton, SwStyleSheet } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { PageNames } from '../../config/AppConstants';
-import { FontIcons } from '../../assets/icons';
+import { Icon } from 'react-native-elements';
+import { DbStorageKey } from '../../services/storageKey';
 
 export class Units extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
+
   static navigationOptions = {
-    title: 'Change Units'.toUpperCase(),
+    title: 'Change Owner Units'.toUpperCase(),
   };
+
+  constructor(props) {
+    super(props);
+  }
 
   state = {
     dimensions: undefined,
+    owners: []
   };
+
+  async componentWillMount(){   
+    const owners = await AsyncStorage.getItem(DbStorageKey.Owners);   
+    this.setState({owners: JSON.parse(owners) });
+  }
 
   onContainerLayout = (event) => {
     if (this.state.height) {
@@ -25,57 +37,46 @@ export class Units extends React.Component {
     this.setState({ dimensions });
   };
 
-  items = [
-    {
-      id: '1',
-      address: '6910 Pine Top Ln'
-    },
-    {
-      id: '2',
-      address: '9202 Elk Mountain Ct'
-    },
-    {
-      id: '3',
-      address: '5406 Pecan Leaf Dr'
-    },    
-    {
-      id: '4',
-      address: '5510 Pointed Leaf Ct'
-    },
-    {
-      id: '5',
-      address: '2309 Bullhorn Trl'
-    }    
-  ];
-  
+  renderItems = () => this.state.owners.map(this.renderItem);
 
-  renderItems = () => this.items.map(this.renderItem);
-
-  renderItem = (item) => (
+  renderItem = (owner) => (
     <SwButton
       swType='tile'
       style={{ height: this.state.dimensions.width / 3, width: this.state.dimensions.width / 3 }}
-      key={item.id}
-      onPress={() => this.onItemPressed(item)}>
-      <SwText style={styles.icon} swType='primary moon xxlarge'>
-        {FontIcons.theme}
-      </SwText>
-      <SwText swType='small center'>{item.address}</SwText>
+      key={owner.IdEncrypted}
+      onPress={() => this.onItemPressed(owner)}>
+      <Icon name='home' size={30} type='font-awesome' color='#3bd555'/>
+      <SwText swType='primary small center'>{owner.OwnerFirstName} {owner.OwnerLastName}</SwText>
+      <SwText swType='small center'>{owner.UnitAddress}</SwText>
     </SwButton>
   );
 
-  onItemPressed = (item) => {
-    this.props.navigation.navigate(PageNames.Dashboard, {address: item.address});
+  onItemPressed = async (owner) => {
+    const ownerFullName = `${owner.OwnerFirstName} ${owner.OwnerLastName}`;
+    const dashboardQuery = {jsonItems: "[{\"queryName\":\"UnitIdEncrypted\",\"value\":\"" + owner.IdEncrypted + 
+    "\"},{\"queryName\":\"AssociationIdEncrypted\",\"value\":\""+ owner.AssociationIdEncrypted +
+    "\"},{\"queryName\":\"ManagementIdEncrypted\",\"value\":\""+ owner.ManagementIdEncrypted + "\"}]"}
+
+    const navigationParams = {
+      unitIdEncrypted: owner.IdEncrypted,
+      ownerFullName: ownerFullName, 
+      ownerFullName: ownerFullName, 
+      address: owner.UnitAddress,
+      dashboardQuery: dashboardQuery
+    };
+
+    this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
   };
 
   render() {
-    const items = this.state.dimensions === undefined ? <View /> : this.renderItems();
+    const owners = this.state.dimensions === undefined ? <View /> : this.renderItems();
+
     return (
       <ScrollView
         style={styles.root}
         onLayout={this.onContainerLayout}
         contentContainerStyle={styles.rootContainer}>
-        {items}
+        {owners}
       </ScrollView>
     );
   }
@@ -88,6 +89,9 @@ const styles = SwStyleSheet.create(theme => ({
   rootContainer: {
     flexDirection: 'row',
     flexWrap: 'wrap',
+  },
+  icon: {
+    color: theme.colors.primary
   },
   empty: {
     borderWidth: StyleSheet.hairlineWidth,

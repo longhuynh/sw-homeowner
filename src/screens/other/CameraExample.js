@@ -1,7 +1,8 @@
 import React from 'react';
 import { Text, View, TouchableOpacity } from 'react-native';
-import { Camera, Permissions } from 'expo';
+import { Camera, Permissions, FileSystem } from 'expo';
 import NavigationType from '../../config/navigation/NavigationType';
+import { Icon } from 'react-native-elements';
 
 export class CameraExample extends React.Component {
   static propTypes = {
@@ -15,11 +16,27 @@ export class CameraExample extends React.Component {
   state = {
     hasCameraPermission: null,
     type: Camera.Constants.Type.back,
+    newPhotos: false,
   };
 
-  async componentDidMount() {
+  async componentWillMount() {
     const { status } = await Permissions.askAsync(Permissions.CAMERA);
     this.setState({ hasCameraPermission: status === 'granted' });
+  }
+
+  componentDidMount() {
+    FileSystem.makeDirectoryAsync(FileSystem.documentDirectory + 'photos').catch(e => {
+      console.log(e, 'Directory exists');
+    });
+  }
+
+  onPictureSaved = async photo => {
+    await FileSystem.moveAsync({
+      from: photo.uri,
+      to: `${FileSystem.documentDirectory}photos/${Date.now()}.jpg`,
+    });
+
+    this.setState({ newPhotos: true });
   }
   
   render = () => {
@@ -54,10 +71,7 @@ export class CameraExample extends React.Component {
                     this.camera.takePictureAsync({ onPictureSaved: this.onPictureSaved });
                   }
                 }}>
-                <Text
-                  style={{ fontSize: 18, marginBottom: 10, color: 'white', textAlign: 'center' }}>
-                  Take Photo
-                </Text>
+                <Icon type='font-awesome' name='circle' color='#FFFFFF' size={50}/>
               </TouchableOpacity>
             </View>
           </Camera>

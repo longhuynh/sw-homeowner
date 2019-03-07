@@ -235,6 +235,13 @@ export const MainRoutes = [
     children: [],
   },
   {
+    id: PageNames.DocumentViewer,
+    title: 'Document Viewer',
+    icon: FontIcons.other,
+    screen: Screens.DocumentViewer,
+    children: [],
+  },
+  {
     id: PageNames.Settings,
     title: 'Settings',
     icon: FontIcons.other,

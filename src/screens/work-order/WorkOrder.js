@@ -4,8 +4,6 @@ import { View, ScrollView, Dimensions } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import Icon from 'react-native-vector-icons/FontAwesome';
 
-const screenHeight = Dimensions.get('window').height - 120;
-
 export class WorkOrder extends React.Component {
   static navigationOptions = {
     title: 'Work Order Detail'.toUpperCase(),
@@ -51,8 +49,7 @@ export class WorkOrder extends React.Component {
             </View>
             <View style={styles.heading}>
               <SwText swType='primary header4'>Description</SwText>
-              <SwText numberOfLines={10} swType='secondary2 header5'>
-                Description is the pattern of narrative development that aims to make vivid a place, object, character, or group. Description is one of four rhetorical modes (also known as modes of discourse), along with exposition, argumentation, and narration.
+              <SwText numberOfLines={5} swType='secondary2 header5'>
                 Description is the pattern of narrative development that aims to make vivid a place, object, character, or group. Description is one of four rhetorical modes (also known as modes of discourse), along with exposition, argumentation, and narration.
               </SwText>
             </View>
@@ -88,7 +85,6 @@ const styles = SwStyleSheet.create(theme => ({
   },
   card: {
     borderRadius: 3,
-    height: screenHeight,
     paddingHorizontal: 15,
   },
   header: {

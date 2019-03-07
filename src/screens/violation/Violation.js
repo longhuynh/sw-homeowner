@@ -1,10 +1,8 @@
 
 import React from 'react';
-import { View, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { View, ScrollView } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import Icon from 'react-native-vector-icons/FontAwesome';
-
-const screenHeight = Dimensions.get('window').height - 120;
 
 export class Violation extends React.Component {
   static navigationOptions = {
@@ -89,7 +87,6 @@ const styles = SwStyleSheet.create(theme => ({
   },
   card: {
     borderRadius: 3,
-    height: screenHeight,
     paddingHorizontal: 15,
   },
   header: {

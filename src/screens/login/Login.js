@@ -3,19 +3,21 @@ import { SwAvoidKeyboard, SwStyleSheet } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Input, Button } from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { View, Text, Keyboard, ImageBackground, Dimensions } from 'react-native';
+import { Alert, View, Text, Keyboard, ImageBackground, Dimensions, AsyncStorage } from 'react-native';
 import { PageNames } from '../../config/AppConstants';
+import {  login } from '../../services/LoginService';
+import {  populateUnitOwners } from '../../services/OwnerService';
+import { DbStorageKey } from '../../services/storageKey';
 
-const screenWidth = Dimensions.get('window').width;
-const screenHeight = Dimensions.get('window').height;
+const {width, height} = Dimensions.get('window');
 
 export class Login extends React.Component {
   constructor(props) {
     super(props);
 
     this.state = {
-      username: '',
-      password: '',
+      username: 'SmartwebsSCSCarolina',
+      password: 'SCSCarolina989',
       loginFailed: false,
       showLoading: false,
     };
@@ -29,12 +31,49 @@ export class Login extends React.Component {
     header: null,
   };
 
-  submitLoginCredentials() {
-    this.setState({
-      showLoading: true,
-    });
+  componentDidMount(){   
 
-    this.props.navigation.navigate(PageNames.Dashboard);
+  }
+
+  submitLoginCredentials() {
+    login(this.state.username, this.state.password)
+      .then(async (response) => {
+        this.setState({
+          showLoading: true,
+        });
+
+        if(response != null || response != undefined){
+          this.setState({loginFailed: false});
+
+          await AsyncStorage.setItem(DbStorageKey.User, JSON.stringify(response));
+
+          const unitOwners = populateUnitOwners(response);        
+          await AsyncStorage.setItem(DbStorageKey.Owners, JSON.stringify(unitOwners));
+
+          const unit = unitOwners[0];
+          await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
+
+          const ownerFullName = `${unit.OwnerFirstName} ${unit.OwnerLastName}`;
+          const dashboardQuery = {jsonItems: "[{\"queryName\":\"UnitIdEncrypted\",\"value\":\"" + unit.IdEncrypted + 
+            "\"},{\"queryName\":\"AssociationIdEncrypted\",\"value\":\""+ unit.AssociationIdEncrypted +
+            "\"},{\"queryName\":\"ManagementIdEncrypted\",\"value\":\""+ unit.ManagementIdEncrypted + "\"}]"}
+
+          const navigationParams = {
+            unitIdEncrypted: unit.IdEncrypted,
+            ownerFullName: ownerFullName, 
+            address: unit.UnitAddress,
+            dashboardQuery: dashboardQuery
+          };
+      
+          this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
+        }
+        else{
+          this.setState({loginFailed: true});
+        }      
+      })
+      .catch((error) => {
+        console.error(error);
+      });    
 
     this.setState({
       showLoading: false,
@@ -190,8 +229,8 @@ const styles = SwStyleSheet.create(theme => ({
     flex: 1,
     top: 0,
     left: 0,
-    width: screenWidth,
-    height: screenHeight,
+    width: width,
+    height: height,
     justifyContent: 'center',
     alignItems: 'center',
   },
