@@ -9,6 +9,7 @@ export class UIConstants {
 export const PageNames = {
   Login: 'Login',
   Dashboard: 'Dashboard',
+  UnitOwners: 'UnitOwners',
   AccountSummary: 'AccountSummary',
   AccountPayment: 'AccountPayment',
   Violations: 'Violations',

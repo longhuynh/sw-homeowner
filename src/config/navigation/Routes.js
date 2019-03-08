@@ -20,10 +20,10 @@ export const MainRoutes = [
     children: [],
   },
   {
-    id: 'Units',
-    title: 'Units',
-    icon: FontIcons.dashboard,
-    screen: Screens.Units,
+    id: 'UnitOwners',
+    title: 'UnitOwners',
+    icon: FontIcons.other,
+    screen: Screens.UnitOwners,
     children: [],
   },
   {

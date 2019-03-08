@@ -5,8 +5,9 @@ import NavigationType from '../../config/navigation/NavigationType';
 import { PageNames } from '../../config/AppConstants';
 import { Icon } from 'react-native-elements';
 import { DbStorageKey } from '../../services/storageKey';
+import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
-export class Units extends React.Component {
+export class UnitOwners extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
@@ -21,12 +22,12 @@ export class Units extends React.Component {
 
   state = {
     dimensions: undefined,
-    owners: []
+    unitOwners: []
   };
 
   async componentWillMount(){   
-    const owners = await AsyncStorage.getItem(DbStorageKey.Owners);   
-    this.setState({owners: JSON.parse(owners) });
+    const unitOwners = await AsyncStorage.getItem(DbStorageKey.UnitOwners);   
+    this.setState({unitOwners: JSON.parse(unitOwners) });
   }
 
   onContainerLayout = (event) => {
@@ -37,31 +38,35 @@ export class Units extends React.Component {
     this.setState({ dimensions });
   };
 
-  renderItems = () => this.state.owners.map(this.renderItem);
+  renderItems = () => this.state.unitOwners.map(this.renderItem);
 
-  renderItem = (owner) => (
+  renderItem = (unit) => (
     <SwButton
       swType='tile'
       style={{ height: this.state.dimensions.width / 3, width: this.state.dimensions.width / 3 }}
-      key={owner.IdEncrypted}
-      onPress={() => this.onItemPressed(owner)}>
+      key={unit.IdEncrypted}
+      onPress={() => this.onItemPressed(unit)}>
       <Icon name='home' size={30} type='font-awesome' color='#3bd555'/>
-      <SwText swType='primary small center'>{owner.OwnerFirstName} {owner.OwnerLastName}</SwText>
-      <SwText swType='small center'>{owner.UnitAddress}</SwText>
+      <SwText swType='primary small center'>{unit.OwnerFirstName} {unit.OwnerLastName}</SwText>
+      <SwText swType='small center'>{unit.UnitAddress}</SwText>
     </SwButton>
   );
 
-  onItemPressed = async (owner) => {
-    const ownerFullName = `${owner.OwnerFirstName} ${owner.OwnerLastName}`;
-    const dashboardQuery = {jsonItems: "[{\"queryName\":\"UnitIdEncrypted\",\"value\":\"" + owner.IdEncrypted + 
-    "\"},{\"queryName\":\"AssociationIdEncrypted\",\"value\":\""+ owner.AssociationIdEncrypted +
-    "\"},{\"queryName\":\"ManagementIdEncrypted\",\"value\":\""+ owner.ManagementIdEncrypted + "\"}]"}
+  onItemPressed = async (unit) => {
+    const ownerFullName = `${unit.OwnerFirstName} ${unit.OwnerLastName}`;
+    const pairs = [
+      {name: 'UnitIdEncrypted', value: unit.IdEncrypted},
+      {name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted},
+      {name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted}
+    ];
+
+    const dashboardQuery = jsonItemsBuilder(pairs);
 
     const navigationParams = {
-      unitIdEncrypted: owner.IdEncrypted,
+      unitIdEncrypted: unit.IdEncrypted,
       ownerFullName: ownerFullName, 
-      ownerFullName: ownerFullName, 
-      address: owner.UnitAddress,
+      address: unit.UnitAddress,
+      numberOfUnit: this.state.unitOwners.length,
       dashboardQuery: dashboardQuery
     };
 
@@ -69,14 +74,14 @@ export class Units extends React.Component {
   };
 
   render() {
-    const owners = this.state.dimensions === undefined ? <View /> : this.renderItems();
+    const unitOwners = this.state.dimensions === undefined ? <View /> : this.renderItems();
 
     return (
       <ScrollView
         style={styles.root}
         onLayout={this.onContainerLayout}
         contentContainerStyle={styles.rootContainer}>
-        {owners}
+        {unitOwners}
       </ScrollView>
     );
   }

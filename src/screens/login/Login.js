@@ -8,6 +8,7 @@ import { PageNames } from '../../config/AppConstants';
 import { login } from '../../services/LoginService';
 import { populateUnitOwners } from '../../services/OwnerService';
 import { DbStorageKey } from '../../services/storageKey';
+import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
 const {width, height} = Dimensions.get('window');
 
@@ -46,20 +47,26 @@ export class Login extends React.Component {
           await AsyncStorage.setItem(DbStorageKey.User, JSON.stringify(response));
 
           const unitOwners = populateUnitOwners(response);        
-          await AsyncStorage.setItem(DbStorageKey.Owners, JSON.stringify(unitOwners));
+          await AsyncStorage.setItem(DbStorageKey.UnitOwners, JSON.stringify(unitOwners));
 
           const unit = unitOwners[0];
           await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
 
           const ownerFullName = `${unit.OwnerFirstName} ${unit.OwnerLastName}`;
-          const dashboardQuery = {jsonItems: "[{\"queryName\":\"UnitIdEncrypted\",\"value\":\"" + unit.IdEncrypted + 
-            "\"},{\"queryName\":\"AssociationIdEncrypted\",\"value\":\""+ unit.AssociationIdEncrypted +
-            "\"},{\"queryName\":\"ManagementIdEncrypted\",\"value\":\""+ unit.ManagementIdEncrypted + "\"}]"}
+
+          const pairs = [
+            {name: 'UnitIdEncrypted', value: unit.IdEncrypted},
+            {name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted},
+            {name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted}
+          ];
+
+          const dashboardQuery = jsonItemsBuilder(pairs);
 
           const navigationParams = {
             unitIdEncrypted: unit.IdEncrypted,
             ownerFullName: ownerFullName, 
             address: unit.UnitAddress,
+            numberOfUnit: unitOwners.length,
             dashboardQuery: dashboardQuery
           };
 

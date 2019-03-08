@@ -18,10 +18,11 @@ export class Dashboard extends React.Component {
   static navigationOptions = ({ navigation }) => {
     let ownerFullName = navigation.state.params ? navigation.state.params.ownerFullName : undefined;
     let address = navigation.state.params ? navigation.state.params.address : undefined;
+    let numberOfUnit = navigation.state.params ? navigation.state.params.numberOfUnit : 0;
     this.dashboardQuery = navigation.state.params ? navigation.state.params.dashboardQuery : undefined;
 
     return ({
-      headerTitle: Dashboard.renderNavigationTitle(navigation, ownerFullName, address),
+      headerTitle: Dashboard.renderNavigationTitle(navigation, ownerFullName, address, numberOfUnit),
       headerLeft: Dashboard.renderNavigationAvatar(navigation),
     });
   };
@@ -40,7 +41,7 @@ export class Dashboard extends React.Component {
     const unitIdEncrypted = nextProps.navigation.state.params.unitIdEncrypted;
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);   
 
-    const ownersData = await AsyncStorage.getItem(DbStorageKey.Owners);   
+    const ownersData = await AsyncStorage.getItem(DbStorageKey.UnitOwners);   
     
     if(unitData == null)
       return false;
@@ -128,20 +129,20 @@ export class Dashboard extends React.Component {
   }
 
   static onNavigationTitlePressed = (navigation) => {
-    navigation.navigate('Units');
+    navigation.navigate(PageNames.UnitOwners);
   };
 
   static onNavigationAvatarPressed = (navigation) => {
     navigation.navigate(PageNames.Profile);
   };
 
-  static renderNavigationTitle = (navigation, ownerFullName, address) => (
+  static renderNavigationTitle = (navigation, ownerFullName, address, numberOfUnit) => (
     <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation)}>
       <View style={styles.header}>
         <SwText swType='header5'>{ownerFullName}</SwText>
         <SwText swType='secondary2 secondaryColor'>{address}</SwText>
       </View>
-      <Badge value={5} status="success" textStyle={{ fontSize: 15 }}
+      <Badge value={numberOfUnit} status="success" textStyle={{ fontSize: 15 }}
         badgeStyle={{ width: 20, height: 20, borderRadius: 300 }}
         containerStyle={{ position: 'absolute', top: -5, right: -15 }} />
     </TouchableOpacity>
