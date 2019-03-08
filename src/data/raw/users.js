@@ -3,8 +3,7 @@ const images = [
   require('../img/Image2.png'),
   require('../img/Image3.png'),
   require('../img/Image4.png'),
-  require('../img/Image1.png'),
-  require('../img/Image8.png'),
+  require('../img/Image7.png'),
   require('../img/Image6.png'),
   require('../img/Image9.png'),
   require('../img/Image5.png'),
@@ -24,7 +23,7 @@ const users = [{
   password: '123456',
   newPassword: '12345678',
   confirmPassword: '12345678',
-  photo: require('../img/avatars/Image7.png'),
+  photo: require('../img/avatars/no-avatar.png'),
   images,
 
 },
@@ -43,7 +42,7 @@ const users = [{
   postCount: 95,
   phone: '86-(261)670-4133',
   images,
-  photo: require('../img/avatars/Image1.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 },
 {
   id: 3,
@@ -60,7 +59,7 @@ const users = [{
   postCount: 60,
   phone: '30-(524)246-5851',
   images,
-  photo: require('../img/avatars/Image3.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 },
 {
   id: 4,
@@ -76,7 +75,7 @@ const users = [{
   confirmPassword: 'vj4ueTKK',
   phone: '86-(499)721-5796',
   images,
-  photo: require('../img/avatars/Image4.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 },
 {
   id: 5,
@@ -92,7 +91,7 @@ const users = [{
   confirmPassword: 'N9l5KLpBW',
   phone: '63-(210)188-9126',
   images,
-  photo: require('../img/avatars/Image5.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 },
 {
   id: 6,
@@ -108,7 +107,7 @@ const users = [{
   confirmPassword: 'nJRP3MdIh4U',
   phone: '86-(939)186-9659',
   images,
-  photo: require('../img/avatars/Image6.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 },
 {
   id: 7,
@@ -124,7 +123,7 @@ const users = [{
   confirmPassword: '60z2bgL',
   phone: '62-(373)613-7229',
   images,
-  photo: require('../img/avatars/Image7.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 },
 {
   id: 8,
@@ -140,7 +139,7 @@ const users = [{
   confirmPassword: 't2a1FbI8oCo',
   phone: '234-(135)610-8989',
   images,
-  photo: require('../img/avatars/Image8.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 },
 {
   id: 9,
@@ -156,7 +155,7 @@ const users = [{
   confirmPassword: 'y84Jquaxg8',
   phone: '1-(913)904-8423',
   images,
-  photo: require('../img/avatars/Image10.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 },
 {
   id: 10,
@@ -172,7 +171,7 @@ const users = [{
   confirmPassword: 'm05jBM1S88',
   phone: '62-(688)911-5487',
   images,
-  photo: require('../img/avatars/Image11.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 },
 {
   id: 11,
@@ -188,7 +187,7 @@ const users = [{
   confirmPassword: 'f49mZd49eGHm',
   phone: '7-(121)282-0448',
   images,
-  photo: require('../img/avatars/Image12.png'),
+  photo: require('../img/avatars/no-avatar.png'),
 }];
 
 export default users;

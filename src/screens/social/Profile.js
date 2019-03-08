@@ -1,28 +1,44 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet } from 'react-native';
+import { ScrollView, View, StyleSheet, Alert, AsyncStorage } from 'react-native';
 import { SwText, SwTextInput, SwButton, SwTheme, SwStyleSheet } from 'sw-react-native-ui';
-import { data } from '../../data/DataProvider';
 import { Avatar, GradientButton } from '../../components/index';
 import { FontIcons } from '../../assets/icons';
+import { DbStorageKey } from '../../services/storageKey';
 
 export class Profile extends React.Component {
   static navigationOptions = {
     title: 'Profile'.toUpperCase(),
   };
 
-  user = data.getUser();
+  constructor(props) {
+    super(props);
 
-  state = {
-    firstName: this.user.firstName,
-    lastName: this.user.lastName,
-    email: this.user.email,
-    country: this.user.country,
-    phone: this.user.phone,
-    address: this.user.address,
-    city: this.user.city,
-    state: this.user.state,
-    zipcode: this.user.zipcode,
-  };
+    this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      homePhone: ''      
+    };
+  }
+
+  async componentWillMount(){   
+    const selectedUnit = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);   
+    const unit = JSON.parse(selectedUnit);
+    this.updateState(unit);    
+  }
+
+  updateState(data){
+    console.log(data);
+    this.setState({
+      firstName: data.OwnerFirstName,
+      lastName: data.OwnerLastName,
+      email: data.OwnerEmail,
+      phone: data.CellPhone,
+      homePhone: data.HomePhone
+    });
+  }
+  
 
   onEditButtonPressed = () => {
     this.props.navigation.navigate('ProfileSettings');
@@ -33,7 +49,23 @@ export class Profile extends React.Component {
   };
 
   onLogoutButtonPressed = () => {
-    this.props.navigation.navigate('Login');
+    Alert.alert(
+      'Are you sure? ', 
+      'Do you want to log out ?',
+      [
+        {
+          text: 'OK', 
+          onPress: () => this.props.navigation.navigate('Login')
+        },
+        {
+          text: 'Cancel',
+          onPress: () => console.log('Cancel Pressed'),
+          style: 'cancel',
+        },
+      ],
+      {cancelable: false},
+    );
+   
   };
 
   render = () => (
@@ -45,7 +77,7 @@ export class Profile extends React.Component {
               <SwText swType='moon large primary'>{FontIcons.profile}</SwText>
             </SwButton>
           </View>
-          <Avatar img={this.user.photo} swType='big' />
+          <Avatar img={require('../../data/img/avatars/no-avatar.png')} swType='big' />
           <View style={styles.buttons}>
             <SwButton style={styles.circleButton} swType='icon circle' onPress={this.onChangeThemeButtonPressed}>
               <SwText swType='moon large primary'>{FontIcons.theme}</SwText>
@@ -106,7 +138,7 @@ export class Profile extends React.Component {
             label='Home Phone'
             returnKeyType='next'
             keyboardType='phone-pad'
-            value='N/A'
+            value={this.state.homePhone}
             swType='right clear'
             editable={false}
             selectTextOnFocus={false}

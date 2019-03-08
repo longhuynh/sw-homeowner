@@ -1,28 +1,58 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet
-} from 'react-native';
+import { ScrollView, View, StyleSheet, AsyncStorage} from 'react-native';
 import { SwText, SwTextInput, SwAvoidKeyboard, SwTheme, SwStyleSheet} from 'sw-react-native-ui';
-import { data } from '../../data/DataProvider';
 import { Avatar, GradientButton} from '../../components/index';
+import { DbStorageKey } from '../../services/storageKey';
 
 export class ProfileSettings extends React.Component {
   static navigationOptions = {
     title: 'Profile Settings'.toUpperCase(),
   };
 
-  user = data.getUser();
+  constructor(props) {
+    super(props);
 
-  state = {
-    firstName: this.user.firstName,
-    lastName: this.user.lastName,
-    email: this.user.email,
-    country: this.user.country,
-    phone: this.user.phone,
-    address: this.user.address,
-    city: this.user.city,
-    state: this.user.state,
-    zipcode: this.user.zipcode,
-  };
+    this.state = {
+      firstName: '',
+      lastName: '',
+      email: '',
+      phone: '',
+      homePhone: '',
+      mailingAddress: '',
+      mailingCity: '',
+      mailingState:'',
+      mailingZipCode: '', 
+      unitAddress: '',
+      unitCity: '',
+      unitState:'',
+      unitZipCode: '', 
+    };
+  }
+
+  async componentWillMount(){   
+    const selectedUnit = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);   
+    const unit = JSON.parse(selectedUnit);
+    this.updateState(unit);    
+  }
+
+  updateState(data){
+    console.log(data);
+    this.setState({
+      firstName: data.OwnerFirstName,
+      lastName: data.OwnerLastName,
+      email: data.OwnerEmail,
+      phone: data.CellPhone,
+      homePhone: data.HomePhone,
+      mailingAddress: data.MailingAddress,
+      mailingCity: data.MailingCity,
+      mailingState: data.MailingState,
+      mailingZipCode: data.MailingZip,
+      unitAddress: data.UnitAddress,
+      unitCity: data.UnitCity,
+      unitState: data.UnitState,
+      unitZipCode: data.UnitZip,
+    });
+  }
 
   onFirstNameInputChanged = (text) => {
     this.setState({ firstName: text });
@@ -40,27 +70,43 @@ export class ProfileSettings extends React.Component {
     this.setState({ phone: text });
   };
 
-  onAddressInputChanged = (text) => {
-    this.setState({ address: text });
+  onMailingAddressInputChanged = (text) => {
+    this.setState({ mailingAddress: text });
   };
 
-  onCityInputChanged = (text) => {
-    this.setState({ city: text });
+  onMailingCityInputChanged = (text) => {
+    this.setState({ mailingCity: text });
   };
 
-  onStateInputChanged = (text) => {
-    this.setState({ state: text });
+  onMailingStateInputChanged = (text) => {
+    this.setState({ mailingState: text });
   };
 
-  onZipCodeInputChanged = (text) => {
-    this.setState({ zipcode: text });
+  onMailingZipCodeInputChanged = (text) => {
+    this.setState({ mailingZipCode: text });
+  };
+
+  onUnitAddressInputChanged = (text) => {
+    this.setState({ unitAddress: text });
+  };
+
+  onUnitCityInputChanged = (text) => {
+    this.setState({ unitCity: text });
+  };
+
+  onUnitStateInputChanged = (text) => {
+    this.setState({ unitState: text });
+  };
+
+  onUnitZipCodeInputChanged = (text) => {
+    this.setState({ unitZipCode: text });
   };
 
   render = () => (
     <ScrollView style={styles.root}>
       <SwAvoidKeyboard>
         <View style={styles.header}>
-          <Avatar img={this.user.photo} swType='big' />
+          <Avatar img={require('../../data/img/avatars/no-avatar.png')} swType='big' />
         </View>
         <View style={styles.section}>
           <View style={[styles.row, styles.heading]}>
@@ -125,36 +171,36 @@ export class ProfileSettings extends React.Component {
             <SwTextInput
               label='Address'
               returnKeyType='next'
-              value={this.state.address}
+              value={this.state.mailingAddress}
               swType='right clear'
-              onChangeText={this.onAddressInputChanged}
+              onChangeText={this.onMailingAddressInputChanged}
             />
           </View>
           <View style={styles.row}>
             <SwTextInput
               label='City'
               returnKeyType='next'
-              value={this.state.city}
+              value={this.state.mailingCity}
               swType='right clear'
-              onChangeText={this.onCityInputChanged}
+              onChangeText={this.onMailingCityInputChanged}
             />
           </View>
           <View style={styles.row}>
             <SwTextInput
               label='State'
               returnKeyType='next'
-              value={this.state.state}
+              value={this.state.mailingState}
               swType='right clear'
-              onChangeText={this.onStateInputChanged}
+              onChangeText={this.onMailingStateInputChanged}
             />
           </View>
           <View style={styles.row}>
             <SwTextInput
               label='Zip Code'
               returnKeyType='next'
-              value={this.state.zipcode}              
+              value={this.state.mailingZipCode}              
               swType='right clear'
-              onChangeText={this.onZipCodeInputChanged}
+              onChangeText={this.onMailingZipCodeInputChanged}
             />
           </View>
         </View>
@@ -166,36 +212,36 @@ export class ProfileSettings extends React.Component {
             <SwTextInput
               label='Address'
               returnKeyType='next'
-              value={this.state.address}
+              value={this.state.mailingAddress}
               swType='right clear'
-              onChangeText={this.onAddressInputChanged}
+              onChangeText={this.onMailingAddressInputChanged}
             />
           </View>
           <View style={styles.row}>
             <SwTextInput
               label='City'
               returnKeyType='next'
-              value={this.state.city}
+              value={this.state.mailingCity}
               swType='right clear'
-              onChangeText={this.onCityInputChanged}
+              onChangeText={this.onMailingCityInputChanged}
             />
           </View>
           <View style={styles.row}>
             <SwTextInput
               label='State'
               returnKeyType='next'
-              value={this.state.state}
+              value={this.state.mailingState}
               swType='right clear'
-              onChangeText={this.onStateInputChanged}
+              onChangeText={this.onMailingStateInputChanged}
             />
           </View>
           <View style={styles.row}>
             <SwTextInput
               label='Zip Code'
               returnKeyType='next'
-              value={this.state.zipcode}              
+              value={this.state.mailingZipCode}              
               swType='right clear'
-              onChangeText={this.onZipCodeInputChanged}
+              onChangeText={this.onMailingZipCodeInputChanged}
             />
           </View>
         </View>

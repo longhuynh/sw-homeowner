@@ -3,10 +3,10 @@ import { SwAvoidKeyboard, SwStyleSheet } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Input, Button } from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { Alert, View, Text, Keyboard, ImageBackground, Dimensions, AsyncStorage } from 'react-native';
+import { View, Text, Keyboard, ImageBackground, Dimensions, AsyncStorage } from 'react-native';
 import { PageNames } from '../../config/AppConstants';
-import {  login } from '../../services/LoginService';
-import {  populateUnitOwners } from '../../services/OwnerService';
+import { login } from '../../services/LoginService';
+import { populateUnitOwners } from '../../services/OwnerService';
 import { DbStorageKey } from '../../services/storageKey';
 
 const {width, height} = Dimensions.get('window');
@@ -38,9 +38,7 @@ export class Login extends React.Component {
   submitLoginCredentials() {
     login(this.state.username, this.state.password)
       .then(async (response) => {
-        this.setState({
-          showLoading: true,
-        });
+        this.setState({ showLoading: true });
 
         if(response != null || response != undefined){
           this.setState({loginFailed: false});
@@ -64,7 +62,8 @@ export class Login extends React.Component {
             address: unit.UnitAddress,
             dashboardQuery: dashboardQuery
           };
-      
+
+          this.setState({ showLoading: false });
           this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
         }
         else{
@@ -75,9 +74,7 @@ export class Login extends React.Component {
         console.error(error);
       });    
 
-    this.setState({
-      showLoading: false,
-    });
+    this.setState({ showLoading: false });
   }
 
   getImageBackgroundSource = () => (

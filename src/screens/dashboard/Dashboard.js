@@ -61,7 +61,7 @@ export class Dashboard extends React.Component {
       console.log("shouldComponentUpdate "+ JSON.stringify(dashboardQuery));
       this.bindData(dashboardQuery);
     }
-        
+
     return this.shouldUpdate;
   }
 
@@ -149,7 +149,7 @@ export class Dashboard extends React.Component {
 
   static renderNavigationAvatar = (navigation) => (
     <TouchableOpacity onPress={() => Dashboard.onNavigationAvatarPressed(navigation)}>
-      <Avatar style={styles.avatar} swType='small' img={require('../../data/img/avatars/Image7.png')} />
+      <Avatar style={styles.avatar} swType='small' img={require('../../data/img/avatars/no-avatar.png')} />
     </TouchableOpacity>
   );
 
