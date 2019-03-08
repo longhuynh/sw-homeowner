@@ -12,7 +12,7 @@ export class Profile extends React.Component {
 
   constructor(props) {
     super(props);
-
+    console.log("Profile constructor");
     this.state = {
       firstName: '',
       lastName: '',
@@ -28,14 +28,14 @@ export class Profile extends React.Component {
     this.updateState(unit);    
   }
 
-  updateState(data){
-    console.log(data);
+  updateState(unit){
+    console.log("Profile updateState");
     this.setState({
-      firstName: data.OwnerFirstName,
-      lastName: data.OwnerLastName,
-      email: data.OwnerEmail,
-      phone: data.CellPhone,
-      homePhone: data.HomePhone
+      firstName: unit.OwnerFirstName,
+      lastName: unit.OwnerLastName,
+      email: unit.OwnerEmail,
+      phone: unit.CellPhone,
+      homePhone: unit.HomePhone
     });
   }
   

@@ -1,13 +1,19 @@
-import { baseUrl, headers } from "./config";
+import { ApiConfig } from "./config";
 
-export const getDashboard = (jsonItems) => {
-    return fetch(`${baseUrl}/ResidentialPortalService.svc/GetUnitSummaryData`, {
+class DashboardService {
+  async getDashboard(jsonItems) {
+    try {
+      const response = await fetch(`${ApiConfig.baseUrl}/ResidentialPortalService.svc/GetUnitSummaryData`, {
         method: 'POST',
-        headers: headers,
+        headers: ApiConfig.headers,
         body: JSON.stringify(jsonItems),
-    })
-    .then(response => response.json()) 
-    .catch(error => {
+      });
+      return await response.json();
+    }
+    catch (error) {
       console.error(error);
-    });
+    }
+  }
+
 }
+export const DashboardServiceInstance = new DashboardService();

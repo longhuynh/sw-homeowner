@@ -14,18 +14,6 @@ export class SideMenu extends React.Component {
 
   user = data.getUser();
 
-  state = {
-    firstName: this.user.firstName,
-    lastName: this.user.lastName,
-    email: this.user.email,
-    country: this.user.country,
-    phone: this.user.phone,
-    address: this.user.address,
-    city: this.user.city,
-    state: this.user.state,
-    zipcode: this.user.zipcode,
-  };
-
   onMenuItemPressed = (item) => {
     this.props.navigation.navigate(item.id);
   };

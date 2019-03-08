@@ -6,7 +6,7 @@ import { Avatar } from '../../components/avatar/Avatar';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
-import { getDashboard } from '../../services/DashboardService';
+import { getDashboard, DashboardServiceInstance } from '../../services/DashboardService';
 import { DbStorageKey } from '../../services/storageKey';
 import _ from 'lodash';
 
@@ -70,21 +70,20 @@ export class Dashboard extends React.Component {
     this.shouldUpdate = false;
   }
 
-  bindData(dashboardQuery) {
-    console.log("bindData " + JSON.stringify(dashboardQuery));
-    getDashboard(dashboardQuery).then(response => {
-      if (response != null || response != undefined) {
-        console.log(JSON.stringify(response));
-        const dataValue = Object.values(response);
-        const parsedData = JSON.parse(dataValue);       
+  async bindData(dashboardQuery) {
+    await DashboardServiceInstance.getDashboard(dashboardQuery)
+      .then(response => {
+        if (response != null || response != undefined) {
+          const dataValue = Object.values(response);
+          const parsedData = JSON.parse(dataValue);       
 
-        const items = this.generateData(parsedData);
-        this.setState({ items: items });
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    })
+          const items = this.generateData(parsedData);
+          this.setState({ items: items });
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      })
   }
 
   state = {

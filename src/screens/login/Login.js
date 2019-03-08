@@ -5,12 +5,12 @@ import { Input, Button } from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { View, Text, Keyboard, ImageBackground, Dimensions, AsyncStorage } from 'react-native';
 import { PageNames } from '../../config/AppConstants';
-import { login } from '../../services/LoginService';
-import { populateUnitOwners } from '../../services/OwnerService';
+import { LoginServiceInstance } from '../../services/LoginService';
+import { OwnerServiceInstance } from '../../services/OwnerService';
 import { DbStorageKey } from '../../services/storageKey';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
-const {width, height} = Dimensions.get('window');
+const { width, height } = Dimensions.get('window');
 
 export class Login extends React.Component {
   constructor(props) {
@@ -32,21 +32,21 @@ export class Login extends React.Component {
     header: null,
   };
 
-  componentDidMount(){   
+  componentDidMount() {
 
   }
 
-  submitLoginCredentials() {
-    login(this.state.username, this.state.password)
+  async submitLoginCredentials() {
+    await LoginServiceInstance.login(this.state.username, this.state.password)
       .then(async (response) => {
         this.setState({ showLoading: true });
 
-        if(response != null || response != undefined){
-          this.setState({loginFailed: false});
+        if (response != null || response != undefined) {
+          this.setState({ loginFailed: false });
 
           await AsyncStorage.setItem(DbStorageKey.User, JSON.stringify(response));
 
-          const unitOwners = populateUnitOwners(response);        
+          const unitOwners = OwnerServiceInstance.populateUnitOwners(response);
           await AsyncStorage.setItem(DbStorageKey.UnitOwners, JSON.stringify(unitOwners));
 
           const unit = unitOwners[0];
@@ -55,16 +55,16 @@ export class Login extends React.Component {
           const ownerFullName = `${unit.OwnerFirstName} ${unit.OwnerLastName}`;
 
           const pairs = [
-            {name: 'UnitIdEncrypted', value: unit.IdEncrypted},
-            {name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted},
-            {name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted}
+            { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
+            { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted },
+            { name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted }
           ];
 
           const dashboardQuery = jsonItemsBuilder(pairs);
 
           const navigationParams = {
             unitIdEncrypted: unit.IdEncrypted,
-            ownerFullName: ownerFullName, 
+            ownerFullName: ownerFullName,
             address: unit.UnitAddress,
             numberOfUnit: unitOwners.length,
             dashboardQuery: dashboardQuery
@@ -73,13 +73,13 @@ export class Login extends React.Component {
           this.setState({ showLoading: false });
           this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
         }
-        else{
-          this.setState({loginFailed: true});
-        }      
+        else {
+          this.setState({ loginFailed: true });
+        }
       })
       .catch((error) => {
         console.error(error);
-      });    
+      });
 
     this.setState({ showLoading: false });
   }

@@ -1,13 +1,25 @@
-import { authenticationUrl, headers } from "./config";
+import { ApiConfig } from "./config";
 
-export const login = (username, password) => {
-    return fetch(`${authenticationUrl}/User/Authenticate`, {
+class LoginService {
+  constructor() {
+    console.log("LoginService constructor");
+  }
+
+  async login(username, password) {
+    try {
+      const response = await fetch(`${ApiConfig.authenticationUrl}/User/Authenticate`, {
         method: 'PUT',
-        headers: headers,
+        headers: ApiConfig.headers,
         body: JSON.stringify({ UserName: username, Password: password }),
-    })
-    .then(response => response.json()) 
-    .catch(error => {
-      console.error(error);
-    });
+      });
+      
+      return await response.json();
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
 }
+
+export const LoginServiceInstance = new LoginService();

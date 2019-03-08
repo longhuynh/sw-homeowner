@@ -35,22 +35,21 @@ export class ProfileSettings extends React.Component {
     this.updateState(unit);    
   }
 
-  updateState(data){
-    console.log(data);
+  updateState(unit){
     this.setState({
-      firstName: data.OwnerFirstName,
-      lastName: data.OwnerLastName,
-      email: data.OwnerEmail,
-      phone: data.CellPhone,
-      homePhone: data.HomePhone,
-      mailingAddress: data.MailingAddress,
-      mailingCity: data.MailingCity,
-      mailingState: data.MailingState,
-      mailingZipCode: data.MailingZip,
-      unitAddress: data.UnitAddress,
-      unitCity: data.UnitCity,
-      unitState: data.UnitState,
-      unitZipCode: data.UnitZip,
+      firstName: unit.OwnerFirstName,
+      lastName: unit.OwnerLastName,
+      email: unit.OwnerEmail,
+      phone: unit.CellPhone,
+      homePhone: unit.HomePhone,
+      mailingAddress: unit.MailingAddress,
+      mailingCity: unit.MailingCity,
+      mailingState: unit.MailingState,
+      mailingZipCode: unit.MailingZip,
+      unitAddress: unit.UnitAddress,
+      unitCity: unit.UnitCity,
+      unitState: unit.UnitState,
+      unitZipCode: unit.UnitZip
     });
   }
 
