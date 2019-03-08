@@ -6,7 +6,7 @@ import { Avatar } from '../../components/avatar/Avatar';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
-import { getDashboard, DashboardServiceInstance } from '../../services/DashboardService';
+import { DashboardServiceInstance } from '../../services/DashboardService';
 import { DbStorageKey } from '../../services/storageKey';
 import _ from 'lodash';
 

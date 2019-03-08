@@ -1,17 +1,3 @@
-export const FontIcons = {
-  login: '',
-  navigation: '',
-  article: '',
-  profile: '',
-  mail: '',
-  dashboard: '',
-  mobile: '',
-  other: '',
-  theme: '',
-  card: '',
-  addToCardForm: '',
-};
-
 export const FontAwesome = {
   heart: String.fromCharCode(61444),
   comment: String.fromCharCode(61669),

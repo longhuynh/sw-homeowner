@@ -1,6 +1,7 @@
 import React from 'react';
 import { TouchableHighlight, View, ScrollView, Platform, StyleSheet} from 'react-native';
 import { SwStyleSheet, SwText, SwTheme} from 'sw-react-native-ui';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { data } from '../../data/DataProvider';
 import { Avatar} from '../../components/index';
 import { MenuRoutes } from '../../config/navigation/Routes';
@@ -41,10 +42,7 @@ export class SideMenu extends React.Component {
       onPress={() => this.onMenuItemPressed(item)}>
       <View style={styles.content}>
         <View style={styles.content}>
-          <SwText
-            style={styles.icon}
-            swType='moon primary xlarge'>{item.icon}
-          </SwText>
+          <FontAwesome5 name={item.icon} size={20} style={styles.icon} />
           <SwText>{item.title}</SwText>
         </View>
         <SwText swType='awesome secondaryColor small'>{FontAwesome.chevronRight}</SwText>
@@ -100,5 +98,6 @@ const styles = SwStyleSheet.create(theme => ({
   },
   icon: {
     marginRight: 13,
+    color: theme.colors.primary
   },
 }));

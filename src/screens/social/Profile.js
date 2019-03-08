@@ -2,7 +2,7 @@ import React from 'react';
 import { ScrollView, View, StyleSheet, Alert, AsyncStorage } from 'react-native';
 import { SwText, SwTextInput, SwButton, SwTheme, SwStyleSheet } from 'sw-react-native-ui';
 import { Avatar, GradientButton } from '../../components/index';
-import { FontIcons } from '../../assets/icons';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { DbStorageKey } from '../../services/storageKey';
 
 export class Profile extends React.Component {
@@ -74,13 +74,13 @@ export class Profile extends React.Component {
         <View style={styles.headerRow}>
           <View style={styles.buttons}>
             <SwButton style={styles.circleButton} swType='icon circle' onPress={this.onEditButtonPressed} >
-              <SwText swType='moon large primary'>{FontIcons.profile}</SwText>
+            <FontAwesome5 name='edit' size={22} style={styles.icon} />
             </SwButton>
           </View>
           <Avatar img={require('../../data/img/avatars/no-avatar.png')} swType='big' />
           <View style={styles.buttons}>
             <SwButton style={styles.circleButton} swType='icon circle' onPress={this.onChangeThemeButtonPressed}>
-              <SwText swType='moon large primary'>{FontIcons.theme}</SwText>
+            <FontAwesome5 name='users-cog' size={22} style={styles.icon} />
             </SwButton>
           </View>
         </View>
@@ -199,5 +199,8 @@ const styles = SwStyleSheet.create(theme => ({
     marginRight: 20,
     marginBottom: 20,
     alignSelf: 'flex-end'
+  },
+  icon: {
+    color: theme.colors.primary
   },
 }));

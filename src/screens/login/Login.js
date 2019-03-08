@@ -71,7 +71,7 @@ export class Login extends React.Component {
           };
 
           this.setState({ showLoading: false });
-          this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
+          this.props.navigation.navigate(PageNames.Violation, navigationParams);
         }
         else {
           this.setState({ loginFailed: true });

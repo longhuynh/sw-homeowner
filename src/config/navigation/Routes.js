@@ -1,5 +1,4 @@
 import _ from 'lodash';
-import { FontIcons } from '../../assets/icons';
 import * as Screens from '../../screens';
 import {PageNames} from '../AppConstants';
 
@@ -8,28 +7,24 @@ export const MainRoutes = [
     id: PageNames.Login,
     title: 'Login',
     description: '',
-    icon: FontIcons.login,
     screen: Screens.Login,
     children: [],
   },
   {
     id: PageNames.Dashboard,
     title: 'Dashboard',
-    icon: FontIcons.dashboard,
     screen: Screens.Dashboard,
     children: [],
   },
   {
     id: 'UnitOwners',
     title: 'UnitOwners',
-    icon: FontIcons.other,
     screen: Screens.UnitOwners,
     children: [],
   },
   {
     id: 'AccountMenu',
     title: 'Account',
-    icon: FontIcons.login,
     screen: Screens.AccountSummary,
     children: [
       {
@@ -51,7 +46,6 @@ export const MainRoutes = [
   {
     id: 'ViolationMenu',
     title: 'Violation',
-    icon: FontIcons.article,
     screen: Screens.Violations,
     children: [
       {
@@ -80,7 +74,6 @@ export const MainRoutes = [
   {
     id: 'WorkOrderMenu',
     title: 'Work Orders',
-    icon: FontIcons.mail,
     screen: Screens.WorkOrders,
     children: [
       {
@@ -109,7 +102,6 @@ export const MainRoutes = [
   {
     id: 'ArchitecturalMenu',
     title: 'Architecturals',
-    icon: FontIcons.profile,
     screen: Screens.Architectural,
     children: [
       {
@@ -138,7 +130,6 @@ export const MainRoutes = [
   {
     id: 'SocialMenu',
     title: 'Social',
-    icon: FontIcons.profile,
     screen: Screens.SocialMenu,
     children: [
       {
@@ -177,7 +168,6 @@ export const MainRoutes = [
   {
     id: 'MessagingMenu',
     title: 'Messaging',
-    icon: FontIcons.mail,
     screen: Screens.MessagingMenu,
     children: [
       {
@@ -202,7 +192,6 @@ export const MainRoutes = [
   },
   {
     id: 'NavigationMenu',
-    icon: FontIcons.navigation,
     title: 'Navigation',
     screen: Screens.NavigationMenu,
     children: [
@@ -230,49 +219,42 @@ export const MainRoutes = [
   {
     id: PageNames.Documents,
     title: 'Documents',
-    icon: FontIcons.other,
     screen: Screens.Documents,
     children: [],
   },
   {
     id: PageNames.DocumentViewer,
     title: 'Document Viewer',
-    icon: FontIcons.other,
     screen: Screens.DocumentViewer,
     children: [],
   },
   {
     id: PageNames.Settings,
     title: 'Settings',
-    icon: FontIcons.other,
     screen: Screens.Settings,
     children: [],
   },
   {
     id: PageNames.Themes,
     title: 'Themes',
-    icon: FontIcons.theme,
     screen: Screens.Themes,
     children: [],
   },
   {
     id: 'CameraExample',
     title: 'CameraExample',
-    icon: FontIcons.theme,
     screen: Screens.CameraExample,
     children: [],
   }, 
   {
     id: 'CameraScreen',
     title: 'CameraScreen',
-    icon: FontIcons.theme,
     screen: Screens.CameraScreen,
     children: [],
   },
   {
     id: 'Cards',
     title: 'Cards',
-    icon: FontIcons.other,
     screen: Screens.Cards,
     children: [],
   },
@@ -282,42 +264,42 @@ export const MenuRoutes =  [
   {
     id: PageNames.Dashboard,
     title: 'Dashboard',
-    icon: FontIcons.dashboard,
+    icon: 'layer-group',
     screen: Screens.Dashboard,
     children: [],
   },
   {
     id: 'AccountMenu',
     title: 'Account',
-    icon: FontIcons.login,
+    icon: 'dollar-sign',
     screen: Screens.AccountSummary,
-    children: [],
-  },
-  {
-    id: 'ViolationMenu',
-    title: 'Violation',
-    icon: FontIcons.article,
-    screen: Screens.Violations,
-    children: [],
-  },
-  {
-    id: 'WorkOrderMenu',
-    title: 'Work Orders',
-    icon: FontIcons.mail,
-    screen: Screens.WorkOrders,
     children: [],
   },
   {
     id: 'ArchitecturalMenu',
     title: 'Architecturals',
-    icon: FontIcons.profile,
+    icon: 'hammer',
     screen: Screens.Architectural,
+    children: [],
+  },
+  {
+    id: 'WorkOrderMenu',
+    title: 'Work Orders',
+    icon: 'wrench',
+    screen: Screens.WorkOrders,
+    children: [],
+  },
+  {
+    id: 'ViolationMenu',
+    title: 'Violation',
+    icon: 'exclamation-triangle',
+    screen: Screens.Violations,
     children: [],
   },
   {
     id: PageNames.Settings,
     title: 'Settings',
-    icon: FontIcons.other,
+    icon: 'cog',
     screen: Screens.Settings,
     children: [],
   },

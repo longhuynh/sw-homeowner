@@ -46,7 +46,7 @@ export class UnitOwners extends React.Component {
       style={{ height: this.state.dimensions.width / 3, width: this.state.dimensions.width / 3 }}
       key={unit.IdEncrypted}
       onPress={() => this.onItemPressed(unit)}>
-      <Icon name='home' size={30} type='font-awesome' color='#3bd555'/>
+      <Icon name='home' size={30} type='font-awesome' iconStyle={styles.icon} />
       <SwText swType='primary small center'>{unit.OwnerFirstName} {unit.OwnerLastName}</SwText>
       <SwText swType='small center'>{unit.UnitAddress}</SwText>
     </SwButton>
@@ -95,14 +95,11 @@ const styles = SwStyleSheet.create(theme => ({
     flexDirection: 'row',
     flexWrap: 'wrap',
   },
-  icon: {
-    color: theme.colors.primary
-  },
   empty: {
     borderWidth: StyleSheet.hairlineWidth,
     borderColor: theme.colors.border.base,
   },
   icon: {
-    marginBottom: 16,
+    color: theme.colors.primary
   },
 }));
