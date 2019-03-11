@@ -3,7 +3,7 @@ import { ApiConfig } from "./config";
 class DashboardService {
   async getDashboard(jsonItems) {
     try {
-      const response = await fetch(`${ApiConfig.baseUrl}/ResidentialPortalService.svc/GetUnitSummaryData`, {
+      const response = await fetch(`${ApiConfig.baseUrl}/GetUnitSummaryData`, {
         method: 'POST',
         headers: ApiConfig.headers,
         body: JSON.stringify(jsonItems),
@@ -16,4 +16,5 @@ class DashboardService {
   }
 
 }
+
 export const DashboardServiceInstance = new DashboardService();

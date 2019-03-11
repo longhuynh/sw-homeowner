@@ -7,7 +7,7 @@ class ViolationService {
 
   async getAll(jsonItems) {
     try {
-      const response = await fetch(`${ApiConfig.baseUrl}/ResidentialPortalService.svc/GetUnitViolations`, {
+      const response = await fetch(`${ApiConfig.baseUrl}/GetUnitViolations`, {
         method: 'POST',
         headers: ApiConfig.headers,
         body: JSON.stringify(jsonItems),
@@ -19,6 +19,19 @@ class ViolationService {
     }
   }
 
+  async getViolation(id) {
+    try {
+      const response = await fetch(`${ApiConfig.baseUrl}/`, {
+        method: 'POST',
+        headers: ApiConfig.headers,
+        body: JSON.stringify({id: id}),
+      });
+      return await response.json();
+    }
+    catch (error) {
+      console.error(error);
+    }
+  }
 
 }
 

@@ -1,13 +1,13 @@
 import { ApiConfig } from "./config";
 
-class ArcService {
+class WorkOrderService {
   constructor() {
-    console.log("ArcService constructor");
+    console.log("WorkOrderService constructor");
   }
 
   async getAll(jsonItems) {
     try {
-      const response = await fetch(`${ApiConfig.baseUrl}/ArcProjects`, {
+      const response = await fetch(`${ApiConfig.baseUrl}/GetUnitWorkOrders`, {
         method: 'POST',
         headers: ApiConfig.headers,
         body: JSON.stringify(jsonItems),
@@ -22,4 +22,4 @@ class ArcService {
 
 }
 
-export const ArcServiceInstance = new ArcService();
+export const WorkOrderServiceInstance = new WorkOrderService();
