@@ -29,7 +29,7 @@ export class Dashboard extends React.Component {
 
   constructor(props) {
     super(props);
-    const dashboardQuery=  this.props.navigation.getParam('dashboardQuery', '');
+    const dashboardQuery = this.props.navigation.getParam('dashboardQuery', '');
     this.bindData(dashboardQuery);
   }
 
@@ -37,13 +37,13 @@ export class Dashboard extends React.Component {
   ownerFullName = null;
   shouldUpdate = false;
 
-  async shouldComponentUpdate(nextProps){
+  async shouldComponentUpdate(nextProps) {
     const unitIdEncrypted = nextProps.navigation.state.params.unitIdEncrypted;
-    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);   
+    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
 
-    const ownersData = await AsyncStorage.getItem(DbStorageKey.UnitOwners);   
-    
-    if(unitData == null)
+    const ownersData = await AsyncStorage.getItem(DbStorageKey.UnitOwners);
+
+    if (unitData == null)
       return false;
 
     let unit = JSON.parse(unitData);
@@ -51,15 +51,15 @@ export class Dashboard extends React.Component {
     console.log(unit.IdEncrypted != unitIdEncrypted);
     console.log(unit.IdEncrypted + " - " + unitIdEncrypted);
 
-    if(unit.IdEncrypted != unitIdEncrypted){
+    if (unit.IdEncrypted != unitIdEncrypted) {
       const owners = JSON.parse(ownersData);
-      unit = _.find(owners, {IdEncrypted: unitIdEncrypted});
+      unit = _.find(owners, { IdEncrypted: unitIdEncrypted });
       console.log(JSON.stringify(unit));
       await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
 
       const dashboardQuery = nextProps.navigation.state.params.dashboardQuery;
       this.shouldUpdate = true;
-      console.log("shouldComponentUpdate "+ JSON.stringify(dashboardQuery));
+      console.log("shouldComponentUpdate " + JSON.stringify(dashboardQuery));
       this.bindData(dashboardQuery);
     }
 
@@ -75,7 +75,7 @@ export class Dashboard extends React.Component {
       .then(response => {
         if (response != null || response != undefined) {
           const dataValue = Object.values(response);
-          const parsedData = JSON.parse(dataValue);       
+          const parsedData = JSON.parse(dataValue);
 
           const items = this.generateData(parsedData);
           this.setState({ items: items });

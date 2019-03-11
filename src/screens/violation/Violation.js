@@ -1,8 +1,10 @@
 
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View, ScrollView, AsyncStorage } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import Icon from 'react-native-vector-icons/FontAwesome';
+import { ViolationServiceInstance } from '../../services/ViolationService';
+import { DbStorageKey } from '../../services/storageKey';
 
 export class Violation extends React.Component {
   static navigationOptions = {
