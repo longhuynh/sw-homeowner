@@ -1,6 +1,7 @@
 import React from 'react';
 import MapView, { ProviderPropType, Marker } from 'react-native-maps';
 import { StyleSheet, View, Image, Dimensions, TouchableOpacity } from 'react-native';
+import { SwStyleSheet, SwText } from 'sw-react-native-ui';
 
 const { width, height } = Dimensions.get('window');
 
@@ -23,12 +24,9 @@ function createMarker(modifier = 1) {
 const Markers = [
   createMarker(),
   createMarker(2),
-  createMarker(3),
-  createMarker(4),
+  createMarker(0),
   createMarker(-1),
   createMarker(-2),
-  createMarker(-3),
-  createMarker(-4),
 ];
 
 const DefaultPadding = { top: 40, right: 40, bottom: 40, left: 40 };
@@ -46,27 +44,6 @@ export class ViolationMap extends React.Component {
     super(props);   
   }
 
-  fitPadding() {
-    this.map.fitToCoordinates([Markers[2], Markers[3]], {
-      edgePadding: { top: 100, right: 100, bottom: 100, left: 100 },
-      animated: true,
-    });
-  }
-
-  fitBottomTwoMarkers() {
-    this.map.fitToCoordinates([Markers[2], Markers[3]], {
-      edgePadding: DefaultPadding,
-      animated: true,
-    });
-  }
-
-  fitAllMarkers() {
-    this.map.fitToCoordinates(Markers, {
-      edgePadding: DefaultPadding,
-      animated: true,
-    });
-  }
-
   render = () => {
     return (
       <View style={styles.container}>
@@ -80,46 +57,25 @@ export class ViolationMap extends React.Component {
           longitudeDelta: LONGITUDE_DELTA,
         }}
       >
-        {Markers.map((marker, i) => (
-          <Marker
-            key={i}
-            coordinate={marker.coordinate}            
-          >
-            <Image source={require('../../assets/images/houses/houseGreen.png')} />
-          </Marker>
-        ))}
+        {
+          Markers.map((marker, i) => (
+            <Marker key={i} coordinate={marker.coordinate}>
+              <Image source={require('../../assets/images/houses/houseGreen.png')} />
+            </Marker>
+          ))
+        }
       </MapView>
-      {/* <View style={styles.buttonContainer}>
-        <TouchableOpacity
-          onPress={() => this.fitPadding()}
-          style={[styles.bubble, styles.button]}
-        >
-          <Text>Fit Bottom Two Markers with Padding</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.fitBottomTwoMarkers()}
-          style={[styles.bubble, styles.button]}
-        >
-          <Text>Fit Bottom Two Markers</Text>
-        </TouchableOpacity>
-        <TouchableOpacity
-          onPress={() => this.fitAllMarkers()}
-          style={[styles.bubble, styles.button]}
-        >
-          <Text>Fit All Markers</Text>
-        </TouchableOpacity>
-      </View> */}
     </View>
     );
   }
 }
 
-
-const styles = StyleSheet.create({
+const styles = SwStyleSheet.create(theme => ({
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    backgroundColor: theme.colors.screen.scroll,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -141,4 +97,4 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: 'transparent',
   },
-});
+}));

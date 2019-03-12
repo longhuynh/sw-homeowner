@@ -1,6 +1,7 @@
 import React from 'react';
 import MapView, { ProviderPropType, Marker } from 'react-native-maps';
 import { StyleSheet, View, Image, Dimensions, TouchableOpacity } from 'react-native';
+import {SwStyleSheet } from 'sw-react-native-ui';
 
 const { width, height } = Dimensions.get('window');
 
@@ -50,25 +51,25 @@ export class WorkOrderMap extends React.Component {
             longitudeDelta: LONGITUDE_DELTA,
           }}
         >
-          {Markers.map((marker, i) => (
-            <Marker
-              key={i}
-              coordinate={marker.coordinate}
-            >
-              <Image source={require('../../assets/images/houses/bldgBlack.png')} />
-            </Marker>
-          ))}
+          {
+            Markers.map((marker, i) => (
+              <Marker key={i} coordinate={marker.coordinate}>
+                <Image source={require('../../assets/images/houses/bldgBlack.png')} />
+              </Marker>
+            ))
+          }
         </MapView>
       </View>
     );
   }
 }
 
-const styles = StyleSheet.create({
+const styles = SwStyleSheet.create(theme => ({
   container: {
     ...StyleSheet.absoluteFillObject,
     justifyContent: 'flex-end',
     alignItems: 'center',
+    backgroundColor: theme.colors.screen.scroll,
   },
   map: {
     ...StyleSheet.absoluteFillObject,
@@ -90,4 +91,4 @@ const styles = StyleSheet.create({
     marginVertical: 20,
     backgroundColor: 'transparent',
   },
-});
+}));

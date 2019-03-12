@@ -1,9 +1,11 @@
 
 import React from 'react';
-import { View, WebView} from 'react-native';
+import { View, Image, Dimensions} from 'react-native';
 import { SwStyleSheet} from 'sw-react-native-ui';
 import PDFReader from 'rn-pdf-reader-js';
 import { Constants } from 'expo';
+
+const {width, height} = Dimensions.get('window');
  
 export class DocumentViewer extends React.Component {
   static navigationOptions = {
@@ -17,16 +19,16 @@ export class DocumentViewer extends React.Component {
     this.state = {localFile: ''};
   }
 
-  
 
   render = () => (
     <View style={styles.container}>
     {/* <PDFReader
           source={{ uri: "http://gahp.net/wp-content/uploads/2017/09/sample.pdf" }}
         /> */}
-    <WebView
-        source={{uri: 'https://www.ctvnews.ca/polopoly_fs/1.4037876!/httpImage/image.jpg_gen/derivatives/landscape_1020/image.jpg'}}
-        style={{marginTop: 20}}
+    <Image 
+        source={{uri: 'https://www.noao.edu/outreach/press/pr01/images/horsehead_med_res.jpg'}}
+        style={styles.content}
+
       />
   </View>
   )
@@ -35,7 +37,11 @@ export class DocumentViewer extends React.Component {
 const styles = SwStyleSheet.create(theme => ({
   container: {
     flex: 1,
-    paddingTop: Constants.statusBarHeight,
-    backgroundColor: '#ecf0f1',
+    backgroundColor: theme.colors.screen.scroll,
   },
+  content: {
+    width: width,
+    height: height
+  }
+
 }));

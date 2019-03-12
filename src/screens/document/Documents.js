@@ -6,6 +6,7 @@ import { Badge} from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FileViewer from 'react-native-file-viewer';
 import { FileSystem } from 'expo';
+import { PageNames } from '../../config/AppConstants';
 
 const screenHeight = Dimensions.get('window').height - 120;
 
@@ -125,7 +126,7 @@ export class Documents extends React.Component {
   }
 
   onCameraButtonPressed() {
-    this.props.navigation.navigate('CameraExample');
+    this.props.navigation.navigate(PageNames.SwCamera);
   }
 
   onUploadButtonPressed() {

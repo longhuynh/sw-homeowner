@@ -4,7 +4,7 @@ import { Camera, Permissions, FileSystem } from 'expo';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Icon } from 'react-native-elements';
 
-export class CameraExample extends React.Component {
+export class SwCamera extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };

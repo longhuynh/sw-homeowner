@@ -241,9 +241,9 @@ export const MainRoutes = [
     children: [],
   },
   {
-    id: 'CameraExample',
-    title: 'CameraExample',
-    screen: Screens.CameraExample,
+    id: PageNames.SwCamera,
+    title: 'Camera',
+    screen: Screens.SwCamera,
     children: [],
   }, 
   {
