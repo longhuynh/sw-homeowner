@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, FlatList, StyleSheet, Dimensions, TouchableOpacity, Alert } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
-import { Badge} from 'react-native-elements';
+import { Badge } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import FileViewer from 'react-native-file-viewer';
 import { FileSystem } from 'expo';
@@ -20,7 +20,7 @@ export class Documents extends React.Component {
     super(props);
     const workOrderId = this.props.navigation.getParam('id', 1);
 
-    this.state = {localFile: ''};
+    this.state = { localFile: '' };
   }
 
   data = [{
@@ -96,26 +96,26 @@ export class Documents extends React.Component {
   },
   ];
 
-  getLocalPath (url) {
+  getLocalPath(url) {
     const filename = url.split('/').pop();
     return `${FileSystem.documentDirectory}${filename}`;
-  } 
+  }
 
-  onViewFile(item){
+  onViewFile(item) {
     // const url = 'https://www.ctvnews.ca/polopoly_fs/1.4037876!/httpImage/image.jpg_gen/derivatives/landscape_1020/image.jpg';
     // const localFile =  this.getLocalPath(url);
 
     // this.setState({
     //   localFile: localFile,
     //       });
-    
+
     // Alert.alert(localFile);
 
     // FileSystem.downloadAsync(url, localFile)
     // .then((uri) => 
     // {
     //   setTimeout(() => { FileViewer.open(localFile);}, 5000)
-     
+
     // })
     // .then(() => {
     // })
@@ -141,64 +141,71 @@ export class Documents extends React.Component {
 
   renderItem = ({ item }) => (
     <TouchableOpacity onPress={() => this.onViewFile(item)}>
-    <View style={styles.itemContainer}>
-      <View style={styles.content}>
-        <View style={styles.contentHeader}>
-          <SwText swType='header5' style={styles.link}> {`${item.fileName}`} ({`${item.format}`})</SwText>
-          <SwText swType='secondary4 hintColor'>
-          <SwText swType='header5' style={styles.link}> {`${this.state.localFile}`}</SwText>
-          </SwText>
+      <View style={styles.itemContainer}>
+        <View style={styles.content}>
+          <View style={styles.contentHeader}>
+            <SwText swType='header5' style={styles.link}> {`${item.fileName}`} ({`${item.format}`})</SwText>
+            <SwText swType='secondary4 hintColor'>
+              <SwText swType='header5' style={styles.link}> {`${this.state.localFile}`}</SwText>
+            </SwText>
+          </View>
+          <SwText swType='primary3 mediumLine'>{`${item.dateCreated}`} ({`${item.userCreated}`})</SwText>
         </View>
-        <SwText swType='primary3 mediumLine'>{`${item.dateCreated}`} ({`${item.userCreated}`})</SwText>
       </View>
-    </View>
     </TouchableOpacity>
   );
 
   render = () => (
-    <View style={styles.screen}>
-      <View style={styles.container} >     
-        <SwCard style={styles.card}>
-          <Badge value={this.data.length} status="success" textStyle={{ fontSize: 25 }} 
-                badgeStyle={{width: 50, height:50, borderRadius: 300 }} 
-                containerStyle={{ position: 'absolute', top: -15, right: -15 }}/>
+    <View style={styles.screen} >
+      <SwCard style={styles.container}>
+        <Badge value={this.data.length} status="success" textStyle={{ fontSize: 25 }}
+          badgeStyle={{ width: 50, height: 50, borderRadius: 300 }}
+          containerStyle={{ position: 'absolute', top: -15, right: -15 }} />
 
-          <View style={styles.top}>
-            <View style={styles.row}>
-              <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onCameraButtonPressed() }}>
-                <Icon name='camera' size={35} style={styles.icon} />
-              </SwButton>
-              <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onUploadButtonPressed() }}>
-                <Icon name='upload' size={35} style={styles.icon} />
-              </SwButton>
-            </View>
+        <View style={styles.top}>
+          <View style={styles.row}>
+            <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onCameraButtonPressed() }}>
+              <Icon name='camera' size={35} style={styles.icon} />
+            </SwButton>
+            <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onUploadButtonPressed() }}>
+              <Icon name='upload' size={35} style={styles.icon} />
+            </SwButton>
           </View>
+        </View>
 
-          <FlatList
-            data={this.data}
-            extraData={this.state}
-            ItemSeparatorComponent={this.renderSeparator}
-            keyExtractor={this.extractItemKey}
-            renderItem={this.renderItem}
-          />
-
-        </SwCard>
-      </View>
+        <FlatList
+          data={this.data}
+          extraData={this.state}
+          ItemSeparatorComponent={this.renderSeparator}
+          keyExtractor={this.extractItemKey}
+          renderItem={this.renderItem}
+        />
+      </SwCard>
     </View>
   )
 }
 
 const styles = SwStyleSheet.create(theme => ({
   screen: {
+    flex: 1,
+    marginVertical: 20,
     backgroundColor: theme.colors.screen.scroll,
-    paddingHorizontal: 20,
+    marginHorizontal: 20,
+  },
+  container: {
+    flex: 1,
+    borderRadius: 3,
+    paddingHorizontal: 15,
+    borderColor: theme.colors.border.card,
+    backgroundColor: theme.colors.screen.base,
+  },
+  card: {
+    borderRadius: 3,
+    height: screenHeight,
+    paddingHorizontal: 15,
   },
   link: {
     color: theme.colors.info
-  },
-  container: {
-    justifyContent: 'space-between',
-    marginVertical: 20,
   },
   itemContainer: {
     paddingLeft: 5,
@@ -207,11 +214,7 @@ const styles = SwStyleSheet.create(theme => ({
     flexDirection: 'row',
     alignItems: 'flex-start',
   },
-  card: {
-    borderRadius: 3,
-    height: screenHeight,
-    paddingHorizontal: 15,
-  },
+
   header: {
     paddingVertical: 25,
   },
