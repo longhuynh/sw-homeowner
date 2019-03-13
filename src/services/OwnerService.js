@@ -2,11 +2,16 @@ class OwnerService {
   populateUnitOwners = (user) => {
     const unitOwners = [];
 
-    const owners = user.Owners;
+    const owners = user.Owners || [];
+
+    if(owners.length == 0)
+      return [];
+
     owners.forEach(owner => {
       const userOwner = Object.assign({}, owner);
 
-      userOwner.Units.map(unit => {
+      const units = userOwner.Units || [];
+      units.map(unit => {
         const unitOwner = unit;
 
         unitOwner.ManagementIdEncrypted = user.ManagementIdEncrypted;

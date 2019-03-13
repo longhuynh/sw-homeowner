@@ -7,7 +7,7 @@ import { View, Text, Keyboard, ImageBackground, Dimensions, AsyncStorage } from 
 import { PageNames } from '../../config/AppConstants';
 import { LoginServiceInstance } from '../../services/LoginService';
 import { OwnerServiceInstance } from '../../services/OwnerService';
-import { DbStorageKey } from '../../services/storageKey';
+import { DbStorageKey, AppStorageKey } from '../../services/storageKey';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
 const { width, height } = Dimensions.get('window');
@@ -17,8 +17,8 @@ export class Login extends React.Component {
     super(props);
 
     this.state = {
-      username: 'SmartwebsSCSCarolina',
-      password: 'SCSCarolina989',
+      username: 'smartwebssc',
+      password: 'sc989',
       loginFailed: false,
       showLoading: false,
     };
@@ -47,28 +47,34 @@ export class Login extends React.Component {
           await AsyncStorage.setItem(DbStorageKey.User, JSON.stringify(response));
 
           const unitOwners = OwnerServiceInstance.populateUnitOwners(response);
+
           await AsyncStorage.setItem(DbStorageKey.UnitOwners, JSON.stringify(unitOwners));
+          await AsyncStorage.setItem(AppStorageKey.IsLogin, 'true');
 
-          const unit = unitOwners[0];
-          await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
+          let navigationParams = {};
 
-          const ownerFullName = `${unit.OwnerFirstName} ${unit.OwnerLastName}`;
+          if(unitOwners.length > 0){
+            const unit = unitOwners[0];
+            await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
+  
+            const ownerFullName = `${unit.OwnerFirstName || ''} ${unit.OwnerLastName || ''}`;
+  
+            const pairs = [
+              { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
+              { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted },
+              { name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted }
+            ];
 
-          const pairs = [
-            { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
-            { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted },
-            { name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted }
-          ];
+            const dashboardQuery = jsonItemsBuilder(pairs);
 
-          const dashboardQuery = jsonItemsBuilder(pairs);
-
-          const navigationParams = {
-            unitIdEncrypted: unit.IdEncrypted,
-            ownerFullName: ownerFullName,
-            address: unit.UnitAddress,
-            numberOfUnit: unitOwners.length,
-            dashboardQuery: dashboardQuery
-          };
+            navigationParams = {
+              unitIdEncrypted: unit.IdEncrypted,
+              ownerFullName: ownerFullName,
+              address: unit.UnitAddress,
+              numberOfUnit: unitOwners.length,
+              dashboardQuery: dashboardQuery
+            };  
+          }    
 
           this.setState({ showLoading: false });
           this.props.navigation.navigate(PageNames.Dashboard, navigationParams);

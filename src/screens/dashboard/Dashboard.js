@@ -19,7 +19,6 @@ export class Dashboard extends React.Component {
     let ownerFullName = navigation.state.params ? navigation.state.params.ownerFullName : undefined;
     let address = navigation.state.params ? navigation.state.params.address : undefined;
     let numberOfUnit = navigation.state.params ? navigation.state.params.numberOfUnit : 0;
-    this.dashboardQuery = navigation.state.params ? navigation.state.params.dashboardQuery : undefined;
 
     return ({
       headerTitle: Dashboard.renderNavigationTitle(navigation, ownerFullName, address, numberOfUnit),
@@ -33,8 +32,6 @@ export class Dashboard extends React.Component {
     this.bindData(dashboardQuery);
   }
 
-  dashboardQuery = null;
-  ownerFullName = null;
   shouldUpdate = false;
 
   async shouldComponentUpdate(nextProps) {
@@ -55,11 +52,12 @@ export class Dashboard extends React.Component {
       const owners = JSON.parse(ownersData);
       unit = _.find(owners, { IdEncrypted: unitIdEncrypted });
       console.log(JSON.stringify(unit));
+
       await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
 
       const dashboardQuery = nextProps.navigation.state.params.dashboardQuery;
       this.shouldUpdate = true;
-      console.log("shouldComponentUpdate " + JSON.stringify(dashboardQuery));
+
       this.bindData(dashboardQuery);
     }
 
@@ -71,6 +69,9 @@ export class Dashboard extends React.Component {
   }
 
   async bindData(dashboardQuery) {
+    if(dashboardQuery == undefined || dashboardQuery == '')
+      return;
+
     await DashboardServiceInstance.getDashboard(dashboardQuery)
       .then(response => {
         if (response != null || response != undefined) {
@@ -135,17 +136,21 @@ export class Dashboard extends React.Component {
     navigation.navigate(PageNames.Profile);
   };
 
-  static renderNavigationTitle = (navigation, ownerFullName, address, numberOfUnit) => (
+  static renderNavigationTitle = (navigation, ownerFullName, address, numberOfUnit) => {
+    if(numberOfUnit == undefined || numberOfUnit == 0)
+      return <View />;
+    
+    return ( 
     <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation)}>
       <View style={styles.header}>
         <SwText swType='header5'>{ownerFullName}</SwText>
         <SwText swType='secondary2 secondaryColor'>{address}</SwText>
-      </View>
+      </View>     
       <Badge value={numberOfUnit} status="success" textStyle={{ fontSize: 15 }}
         badgeStyle={{ width: 20, height: 20, borderRadius: 300 }}
-        containerStyle={{ position: 'absolute', top: -5, right: -15 }} />
+        containerStyle={{ position: 'absolute', top: -5, right: -15 }} />      
     </TouchableOpacity>
-  )
+  )}
 
   static renderNavigationAvatar = (navigation) => (
     <TouchableOpacity onPress={() => Dashboard.onNavigationAvatarPressed(navigation)}>
@@ -166,6 +171,14 @@ export class Dashboard extends React.Component {
   );
 
   render = () => {
+    if(this.state.items.length == 0)
+      return (
+      <View style={[styles.screen, {flex: 1}]}>
+        <View style={styles.items} >
+        <SwText swType='primary'>There are no unit owner</SwText>
+        </View>     
+      </View>
+    )
     return (
       <ScrollView style={styles.screen}>
         <View style={styles.items} >

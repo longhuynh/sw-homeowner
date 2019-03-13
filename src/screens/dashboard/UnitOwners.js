@@ -53,7 +53,7 @@ export class UnitOwners extends React.Component {
   );
 
   onItemPressed = async (unit) => {
-    const ownerFullName = `${unit.OwnerFirstName} ${unit.OwnerLastName}`;
+    const ownerFullName = `${unit.OwnerFirstName || ''} ${unit.OwnerLastName || ''}`;
     const pairs = [
       {name: 'UnitIdEncrypted', value: unit.IdEncrypted},
       {name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted},

@@ -56,9 +56,9 @@ export class Violation extends React.Component {
 
         <View style={styles.bottom}>
           <View style={styles.row}>
-            <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onMapsButtonPressed() }}>
+            {/* <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onMapsButtonPressed() }}>
               <Icon name='globe' size={35} style={styles.icon} />
-            </SwButton>
+            </SwButton> */}
             <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onCommentsButtonPressed() }}>
               <Icon name='comment' size={35} style={styles.icon} />
             </SwButton>
@@ -69,7 +69,6 @@ export class Violation extends React.Component {
         </View>
       </View>
     </View>
-
   )
 }
 

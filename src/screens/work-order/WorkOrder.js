@@ -31,12 +31,8 @@ export class WorkOrder extends React.Component {
       <SwCard style={styles.container}>
         <View style={styles.section}>
           <View style={styles.heading}>
-            <SwText swType='primary header4'>Category</SwText>
-            <SwText swType='secondary2 header5'>Pool</SwText>
-          </View>
-          <View style={styles.heading}>
-            <SwText swType='primary header4'>Sub Category</SwText>
-            <SwText swType='secondary2 header5'>Cleaning</SwText>
+            <SwText swType='primary header4'>Category - Sub Category</SwText>
+            <SwText swType='secondary2 header5'>Pool - Cleaning</SwText>
           </View>
           <View style={styles.heading}>
             <SwText swType='primary header4'>Status</SwText>
@@ -56,9 +52,9 @@ export class WorkOrder extends React.Component {
 
         <View style={styles.bottom}>
           <View style={styles.row}>
-            <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onMapsButtonPressed() }}>
+            {/* <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onMapsButtonPressed() }}>
               <Icon name='globe' size={35} style={styles.icon} />
-            </SwButton>
+            </SwButton> */}
             <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onCommentsButtonPressed() }}>
               <Icon name='comment' size={35} style={styles.icon} />
             </SwButton>

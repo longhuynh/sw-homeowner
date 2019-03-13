@@ -6,6 +6,10 @@ export const DbStorageKey = {
     SelectedUnit: "@Db:SelectedUnit"
 };
 
+export const AppStorageKey = {
+    IsLogin: "@App:IsLogin",
+};
+
 export const clearStorageKey = async (key) => {
     await AsyncStorage.setItem(key, null);
 };
