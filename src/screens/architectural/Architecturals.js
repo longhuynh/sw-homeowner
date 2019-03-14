@@ -1,65 +1,95 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { Badge, Icon} from 'react-native-elements';
+import { ArcServiceInstance } from '../../services/ArcService';
+import { DbStorageKey } from '../../services/storageKey';
+import { PageNames } from '../../config/AppConstants';
+import { jsonItemsBuilder } from '../../services/jsonBuilder';
+
+const moment = require('moment');
 
 export class Architecturals extends React.Component {
   static navigationOptions = {
     title: 'Arc/Arb'.toUpperCase(),
   };
 
-  state = {
-    data: {
-      items: [
-        {
-          id: 1,
-          name: 'Pool & Desk',
-          status: 'In Review',
-          icon: 'check',
-          iconStatus: 'success',
-          createdDate: '02/11/2018'
-        },
-        {
-          id: 2,
-          name: 'Shed',
-          status: 'Approved',
-          icon: 'check',
-          iconStatus: 'success',
-          createdDate: '02/11/2018'
-        },
-        {
-          id: 3,
-          name: 'Pool',
-          status: 'Declined',
-          icon: 'close',
-          iconStatus: 'error',
-          createdDate: '02/11/2018'
-        },
-        {
-          id: 4,
-          name: 'Arbor',
-          status: 'Created',
-          icon: 'check',
-          iconStatus: 'success',
-          createdDate: '02/11/2018'
-        },      
-      ],
-    },
-  };
+  constructor(props) {
+    super(props);
+
+    this.state = {
+      query: '',
+      refreshing: false,
+      items: [],
+      unit: {}
+    };
+  }
+
+  async componentWillMount() {
+    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
+    const unit = JSON.parse(unitData);
+
+    this.setState({unit: unit});
+
+    const pairs = [
+      { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
+      { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted }
+    ];
+
+    const query = jsonItemsBuilder(pairs);
+    this.setState({query: query});
+
+    await this.bindData(query);
+  }
+
+  async bindData(query) {
+    if (query == undefined || query == '')
+      return;
+
+    await ArcServiceInstance.getAll(query)
+      .then(response => {        
+        if (response != null && response != undefined) {
+          const dataValue = Object.values(response);
+          const items = JSON.parse(dataValue);
+          this.setState({ items: items });
+        }
+      })
+      .catch(error => {
+        console.error(error);
+      });
+  }
+
+  navigateToArc(id){
+    const pairs = [
+      { name: 'ProjectIdEncrypted', value: id },
+      { name: 'AssociationIdEncrypted', value: this.state.unit.AssociationIdEncrypted }
+    ];
+
+    const query = jsonItemsBuilder(pairs);
+    
+    this.props.navigation.navigate(PageNames.Architectural, { query: query, id: id })
+  }
+
+  refreshData() {
+    this.setState({ refreshing: true })
+    this.bindData(this.state.query);
+    this.setState({ refreshing: false });
+  }
 
   renderStatItem = (item) => (
-    <TouchableOpacity key={item.id}
-        onPress={() => this.props.navigation.navigate('Architectural', { id: item.id })}>
-       <SwCard style={styles.card}>
+    <TouchableOpacity 
+      key={item.ProjectIdEncrypted}
+      onPress={() => this.navigateToArc(item.ProjectIdEncrypted)}>
+       <SwCard style={styles.itemContainer}>
        {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15  }}
           badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
           containerStyle={{ position: 'absolute', top: -10, right: -10, }} /> */}
         <View style={styles.content}>
-          <SwText swType='header2'>{`${item.name}`}</SwText>
+          <SwText swType='header2'>{`${item.ProjectTitle}`}</SwText>
           <View style={styles.detail}>
-            <SwText swType='secondary2'>{item.status}</SwText>
+            <SwText swType='secondary2'>{item.ProjectStatus}</SwText>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{item.createdDate}</SwText>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.CreatedDate)).format('MM/DD/YYYY')}</SwText>
             </View>
           </View>
         </View>
@@ -67,11 +97,19 @@ export class Architecturals extends React.Component {
     </TouchableOpacity>
   );
 
+  refreshControl() {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={() => this.refreshData()} />
+    )
+  }
+
   render = () => {
     return (
-      <ScrollView style={styles.screen}>
-        <View style={styles.items} >
-          {this.state.data.items.map(this.renderStatItem)}
+      <ScrollView style={styles.screen} refreshControl={this.refreshControl()}>
+        <View style={styles.container} >
+          {this.state.items.map(this.renderStatItem)}
         </View>
       </ScrollView>
     );
@@ -81,13 +119,13 @@ export class Architecturals extends React.Component {
 const styles = SwStyleSheet.create(theme => ({
   screen: {
     backgroundColor: theme.colors.screen.scroll,
-    paddingHorizontal: 20,
   },
-  items: {
+  container: {
     justifyContent: 'space-between',
     marginVertical: 20,
+    marginHorizontal: 20,
   },
-  card: {
+  itemContainer: {
     borderRadius: 3,
     paddingHorizontal: 15,
     paddingVertical: 15,

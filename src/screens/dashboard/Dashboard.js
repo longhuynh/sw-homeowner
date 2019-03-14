@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, ScrollView, TouchableOpacity, AsyncStorage, RefreshControl } from 'react-native';
 import { SwText, SwStyleSheet } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Avatar } from '../../components/avatar/Avatar';
@@ -29,6 +29,13 @@ export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     const query = this.props.navigation.getParam('query', '');
+
+    this.state = {
+      query: query,
+      refreshing: false,
+      items: []
+    };
+
     this.bindData(query);
   }
 
@@ -53,6 +60,7 @@ export class Dashboard extends React.Component {
       await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
 
       const query = nextProps.navigation.state.params.query;
+      this.setState({ query: query });
       this.shouldUpdate = true;
 
       this.bindData(query);
@@ -66,12 +74,12 @@ export class Dashboard extends React.Component {
   }
 
   async bindData(query) {
-    if(query == undefined || query == '')
+    if (query == undefined || query == '')
       return;
 
     await DashboardServiceInstance.getDashboard(query)
       .then(response => {
-        if (response != null || response != undefined) {
+        if (response != null && response != undefined) {
           const dataValue = Object.values(response);
           const parsedData = JSON.parse(dataValue);
 
@@ -84,45 +92,47 @@ export class Dashboard extends React.Component {
       });
   }
 
-  state = {
-    items: []
-  };
-
   generateData(parsedData) {
     let items = [];
     items.push({
       name: 'Balance',
       screen: 'AccountSummary',
-      value: parsedData.Balance,
+      value: parsedData.Balance || '$0.00',
       icon: 'dollar-sign',
       background: 'rgb(134, 19, 136)'
     });
     items.push({
       name: 'Arc/Arb',
       screen: 'Architecturals',
-      value: parsedData.ActiveArchitecturalCount,
+      value: parsedData.ActiveArchitecturalCount || 0,
       icon: 'hammer',
       background: 'rgb(59, 157, 214)'
     });
     items.push({
       name: 'Work Orders',
       screen: 'WorkOrders',
-      value: parsedData.ActiveWorkOrderCount,
+      value: parsedData.ActiveWorkOrderCount || 0,
       icon: 'wrench',
       background: 'rgb(255, 127, 29)'
     });
     items.push({
       name: 'Violations',
       screen: 'Violations',
-      value: parsedData.ActiveViolationCount,
+      value: parsedData.ActiveViolationCount || 0,
       icon: 'exclamation-triangle',
       background: 'rgb(102, 188, 69)'
     });
     return items;
   }
 
-  gotoScreen(screen) {
+  navigateToScreen(screen) {
     this.props.navigation.navigate(screen);
+  }
+
+  refreshData() {
+    this.setState({ refreshing: true })
+    this.bindData(this.state.query);
+    this.setState({ refreshing: false });
   }
 
   static onNavigationTitlePressed = (navigation) => {
@@ -134,20 +144,21 @@ export class Dashboard extends React.Component {
   };
 
   static renderNavigationTitle = (navigation, ownerFullName, address, numberOfUnit) => {
-    if(numberOfUnit == undefined || numberOfUnit == 0)
+    if (numberOfUnit == undefined || numberOfUnit == 0)
       return <View />;
-    
-    return ( 
-    <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation)}>
-      <View style={styles.header}>
-        <SwText swType='header5'>{ownerFullName}</SwText>
-        <SwText swType='secondary2 secondaryColor'>{address}</SwText>
-      </View>     
-      <Badge value={numberOfUnit} status="success" textStyle={{ fontSize: 15 }}
-        badgeStyle={{ width: 20, height: 20, borderRadius: 300 }}
-        containerStyle={{ position: 'absolute', top: -5, right: -15 }} />      
-    </TouchableOpacity>
-  )}
+
+    return (
+      <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation)}>
+        <View style={styles.header}>
+          <SwText swType='header5'>{ownerFullName}</SwText>
+          <SwText swType='secondary2 secondaryColor'>{address}</SwText>
+        </View>
+        <Badge value={numberOfUnit} status="success" textStyle={{ fontSize: 15 }}
+          badgeStyle={{ width: 20, height: 20, borderRadius: 300 }}
+          containerStyle={{ position: 'absolute', top: -5, right: -15 }} />
+      </TouchableOpacity>
+    )
+  }
 
   static renderNavigationAvatar = (navigation) => (
     <TouchableOpacity onPress={() => Dashboard.onNavigationAvatarPressed(navigation)}>
@@ -156,8 +167,8 @@ export class Dashboard extends React.Component {
   );
 
   renderStatItem = (item) => (
-    <TouchableOpacity onPress={() => { this.gotoScreen(item.screen) }} key={item.screen}>
-      <View style={[styles.container, { backgroundColor: item.background }]} >
+    <TouchableOpacity onPress={() => { this.navigateToScreen(item.screen) }} key={item.screen}>
+      <View style={[styles.item, { backgroundColor: item.background }]} >
         <View>
           <SwText swType='header3' style={styles.name}>{item.name}</SwText>
           <SwText swType='secondary1' style={styles.value}>{item.value}</SwText>
@@ -167,10 +178,18 @@ export class Dashboard extends React.Component {
     </TouchableOpacity>
   );
 
+  refreshControl() {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={() => this.refreshData()} />
+    )
+  }
+
   render = () => {
     return (
-      <ScrollView style={styles.screen}>
-        <View style={styles.items} >
+      <ScrollView style={styles.screen} refreshControl={this.refreshControl()}>
+        <View style={styles.container}>
           {this.state.items.map(this.renderStatItem)}
         </View>
       </ScrollView>
@@ -181,7 +200,6 @@ export class Dashboard extends React.Component {
 const styles = SwStyleSheet.create(theme => ({
   screen: {
     backgroundColor: theme.colors.screen.scroll,
-    paddingHorizontal: 20,
   },
   header: {
     alignItems: 'center',
@@ -189,11 +207,12 @@ const styles = SwStyleSheet.create(theme => ({
   avatar: {
     marginLeft: 20,
   },
-  items: {
+  container: {
     justifyContent: 'space-between',
     marginVertical: 20,
+    marginHorizontal: 20,
   },
-  container: {
+  item: {
     flexDirection: 'row',
     justifyContent: 'space-between',
     borderRadius: 3,

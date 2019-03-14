@@ -5,8 +5,13 @@ import { SwText, SwStyleSheet, SwButton } from 'sw-react-native-ui';
 import Icon from 'react-native-vector-icons/FontAwesome';
 import { ViolationServiceInstance } from '../../services/ViolationService';
 import { PageNames } from '../../config/AppConstants';
+import NavigationType from '../../config/navigation/NavigationType';
 
 export class Violation extends React.Component {
+  static propTypes = {
+    navigation: NavigationType.isRequired,
+  };
+
   static navigationOptions = {
     title: 'Violation Detail'.toUpperCase(),
   };
@@ -15,9 +20,7 @@ export class Violation extends React.Component {
     super(props);
     const query = this.props.navigation.getParam('query', '');
     const violationId = this.props.navigation.getParam('id', '');
-    const refresh = this.props.navigation.getParam('refresh', '');
-    
-    console.log('Violation Detail constructor' + refresh);
+
     this.bindData(query);
     
     this.state = {
@@ -26,38 +29,22 @@ export class Violation extends React.Component {
       violation: {},
       comments: [],
       documents: []
-    }
+    };
   }
 
   componentWillMount() {
-    console.log("componentWillMount");
+
   }
-
-  // async shouldComponentUpdate(nextProps) {
-  //   const refresh = nextProps.navigation.state.params.refresh;
-  //   // const refresh1 = nextProps.navigation.state.params.refresh1;
-  //   // console.log(refresh1);
-  //   // console.log(this.state.query);
-
-  //   // if(refresh != undefined && refresh == true)
-  //   //   this.bindData(this.state.query);
-
-  //   return refresh != undefined && refresh == true;
-  // }
-
-  // componentWillUpdate() {
-  //   this.bindData(this.state.query);
-
-  // }
-
 
   async bindData(query){
     if(query == undefined || query == '')
-    return;
+      return;
 
-  await ViolationServiceInstance.getViolation(query)
+    console.log(query);  
+    
+    await ViolationServiceInstance.getViolation(query)
     .then(response => {
-      if (response != null || response != undefined) {
+      if (response != null && response != undefined) {
         const dataValue = Object.values(response);
         const violation = JSON.parse(dataValue);
 

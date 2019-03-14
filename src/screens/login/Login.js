@@ -41,7 +41,7 @@ export class Login extends React.Component {
       .then(async (response) => {
         this.setState({ showLoading: true });
 
-        if (response != null || response != undefined) {
+        if (response != null && response != undefined) {
           this.setState({ loginFailed: false });
 
           await AsyncStorage.setItem(DbStorageKey.User, JSON.stringify(response));

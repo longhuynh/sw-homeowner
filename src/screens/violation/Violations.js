@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { Badge, Icon } from 'react-native-elements';
 import { ViolationServiceInstance } from '../../services/ViolationService';
@@ -17,6 +17,8 @@ export class Violations extends React.Component {
   constructor(props) {
     super(props);
     this.state = {
+      query: '',
+      refreshing: false,
       items: [ ],
       unit: {}
     };
@@ -29,15 +31,24 @@ export class Violations extends React.Component {
 
     const pairs = [
       { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
-      { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted },
-      { name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted }
+      { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted }
     ];
 
     const query = jsonItemsBuilder(pairs);
+    this.setState({query: query});
+
+    await this.bindData(query);
+  }
+
+  async bindData(query) {
+    if (query == undefined || query == '')
+      return;
+
+    console.log(query);  
 
     await ViolationServiceInstance.getAll(query)
       .then(response => {
-        if (response != null || response != undefined) {
+        if (response != null && response != undefined) {
           const dataValue = Object.values(response);
           const items = JSON.parse(dataValue);
           this.setState({ items: items });
@@ -45,7 +56,7 @@ export class Violations extends React.Component {
       })
       .catch(error => {
         console.error(error);
-      })
+      });
   }
 
   navigateToViolation(id){
@@ -59,19 +70,25 @@ export class Violations extends React.Component {
     this.props.navigation.navigate(PageNames.Violation, { query: query, id: id })
   }
 
+  refreshData() {
+    this.setState({ refreshing: true })
+    this.bindData(this.state.query);
+    this.setState({ refreshing: false });
+  }
+
   renderItem = (item) => (
     <TouchableOpacity key={item.ViolationItemIdEncrypted}
       onPress={() => this.navigateToViolation(item.ViolationItemIdEncrypted)}>
-      <SwCard style={styles.card}>
+      <SwCard style={styles.itemContainer}>
         {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15 }} 
               badgeStyle={{width: 30, height:30, borderRadius: 300 }} 
               containerStyle={{ position: 'absolute', top: -10, right: -10,  }}/> */}
         <View style={styles.content}>
-          <SwText swType='header2'>{item.ViolationType}</SwText>
+          <SwText swType='header2' numberOfLines={1}>{item.ViolationType}</SwText>
           <View style={styles.detail}>
             <SwText swType='secondary2'>{item.OpenClosed}</SwText>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{item.ViolationCreatedDate}</SwText>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.ViolationCreatedDate)).format('MM/DD/YYYY')}</SwText>
             </View>
           </View>
         </View>
@@ -79,10 +96,18 @@ export class Violations extends React.Component {
     </TouchableOpacity>
   );
 
+  refreshControl() {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={() => this.refreshData()} />
+    )
+  }
+
   render = () => {
     return (
-      <ScrollView style={styles.screen}>
-        <View style={styles.items} >
+      <ScrollView style={styles.screen} refreshControl={this.refreshControl()}>
+        <View style={styles.container} >
           {this.state.items.map(this.renderItem)}
         </View>
       </ScrollView>
@@ -92,14 +117,14 @@ export class Violations extends React.Component {
 
 const styles = SwStyleSheet.create(theme => ({
   screen: {
-    backgroundColor: theme.colors.screen.scroll,
-    paddingHorizontal: 20,
+    backgroundColor: theme.colors.screen.scroll,   
   },
-  items: {
+  container: {
     justifyContent: 'space-between',
     marginVertical: 20,
+    marginHorizontal: 20,
   },
-  card: {
+  itemContainer: {
     borderRadius: 3,
     paddingHorizontal: 15,
     paddingVertical: 15,

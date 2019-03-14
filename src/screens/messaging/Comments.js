@@ -18,8 +18,7 @@ export class Comments extends React.Component {
   static navigationOptions = {
     title: 'Comments'.toUpperCase(),
   };
-
-
+  
   constructor(props) {
     super(props);
     const comments = this.props.navigation.getParam('comments', []);

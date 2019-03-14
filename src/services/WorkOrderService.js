@@ -7,7 +7,7 @@ class WorkOrderService {
 
   async getAll(jsonItems) {
     try {
-      const response = await fetch(`${ApiConfig.baseUrl}/GetUnitWorkOrders`, {
+      const response = await fetch(`${ApiConfig.residentApiUrl}/GetUnitWorkorders`, {
         method: 'POST',
         headers: ApiConfig.headers,
         body: JSON.stringify(jsonItems),
@@ -18,7 +18,6 @@ class WorkOrderService {
       console.error(error);
     }
   }
-
 
 }
 

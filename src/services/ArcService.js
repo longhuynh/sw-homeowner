@@ -7,7 +7,7 @@ class ArcService {
 
   async getAll(jsonItems) {
     try {
-      const response = await fetch(`${ApiConfig.baseUrl}/ArcProjects`, {
+      const response = await fetch(`${ApiConfig.residentApiUrl}/GetUnitArcProjects`, {
         method: 'POST',
         headers: ApiConfig.headers,
         body: JSON.stringify(jsonItems),
