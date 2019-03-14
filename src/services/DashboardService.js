@@ -3,7 +3,7 @@ import { ApiConfig } from "./config";
 class DashboardService {
   async getDashboard(jsonItems) {
     try {
-      const response = await fetch(`${ApiConfig.baseUrl}/GetUnitSummaryData`, {
+      const response = await fetch(`${ApiConfig.residentApiUrl}/GetUnitSummaryData`, {
         method: 'POST',
         headers: ApiConfig.headers,
         body: JSON.stringify(jsonItems),

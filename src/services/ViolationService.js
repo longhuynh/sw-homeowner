@@ -7,7 +7,7 @@ class ViolationService {
 
   async getAll(jsonItems) {
     try {
-      const response = await fetch(`${ApiConfig.baseUrl}/GetUnitViolations`, {
+      const response = await fetch(`${ApiConfig.residentApiUrl}/GetUnitViolations`, {
         method: 'POST',
         headers: ApiConfig.headers,
         body: JSON.stringify(jsonItems),
@@ -19,12 +19,12 @@ class ViolationService {
     }
   }
 
-  async getViolation(id) {
+  async getViolation(jsonItems) {
     try {
-      const response = await fetch(`${ApiConfig.baseUrl}/`, {
+      const response = await fetch(`${ApiConfig.residentApiUrl}/GetUnitViolationDetail`, {
         method: 'POST',
         headers: ApiConfig.headers,
-        body: JSON.stringify({id: id}),
+        body: JSON.stringify(jsonItems),
       });
       return await response.json();
     }

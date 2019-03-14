@@ -28,8 +28,8 @@ export class Dashboard extends React.Component {
 
   constructor(props) {
     super(props);
-    const dashboardQuery = this.props.navigation.getParam('dashboardQuery', '');
-    this.bindData(dashboardQuery);
+    const query = this.props.navigation.getParam('query', '');
+    this.bindData(query);
   }
 
   shouldUpdate = false;
@@ -45,9 +45,6 @@ export class Dashboard extends React.Component {
 
     let unit = JSON.parse(unitData);
 
-    console.log(unit.IdEncrypted != unitIdEncrypted);
-    console.log(unit.IdEncrypted + " - " + unitIdEncrypted);
-
     if (unit.IdEncrypted != unitIdEncrypted) {
       const owners = JSON.parse(ownersData);
       unit = _.find(owners, { IdEncrypted: unitIdEncrypted });
@@ -55,10 +52,10 @@ export class Dashboard extends React.Component {
 
       await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
 
-      const dashboardQuery = nextProps.navigation.state.params.dashboardQuery;
+      const query = nextProps.navigation.state.params.query;
       this.shouldUpdate = true;
 
-      this.bindData(dashboardQuery);
+      this.bindData(query);
     }
 
     return this.shouldUpdate;
@@ -68,11 +65,11 @@ export class Dashboard extends React.Component {
     this.shouldUpdate = false;
   }
 
-  async bindData(dashboardQuery) {
-    if(dashboardQuery == undefined || dashboardQuery == '')
+  async bindData(query) {
+    if(query == undefined || query == '')
       return;
 
-    await DashboardServiceInstance.getDashboard(dashboardQuery)
+    await DashboardServiceInstance.getDashboard(query)
       .then(response => {
         if (response != null || response != undefined) {
           const dataValue = Object.values(response);
@@ -84,7 +81,7 @@ export class Dashboard extends React.Component {
       })
       .catch(error => {
         console.error(error);
-      })
+      });
   }
 
   state = {
@@ -162,7 +159,7 @@ export class Dashboard extends React.Component {
     <TouchableOpacity onPress={() => { this.gotoScreen(item.screen) }} key={item.screen}>
       <View style={[styles.container, { backgroundColor: item.background }]} >
         <View>
-          <SwText swType='header2' style={styles.name}>{item.name}</SwText>
+          <SwText swType='header3' style={styles.name}>{item.name}</SwText>
           <SwText swType='secondary1' style={styles.value}>{item.value}</SwText>
         </View>
         <FontAwesome5 name={item.icon} size={50} style={styles.icon} />
@@ -171,14 +168,6 @@ export class Dashboard extends React.Component {
   );
 
   render = () => {
-    if(this.state.items.length == 0)
-      return (
-      <View style={[styles.screen, {flex: 1}]}>
-        <View style={styles.items} >
-        <SwText swType='primary'>There are no unit owner</SwText>
-        </View>     
-      </View>
-    )
     return (
       <ScrollView style={styles.screen}>
         <View style={styles.items} >

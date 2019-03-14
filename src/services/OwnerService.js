@@ -16,6 +16,7 @@ class OwnerService {
 
         unitOwner.ManagementIdEncrypted = user.ManagementIdEncrypted;
         unitOwner.AssociationIdEncrypted = userOwner.AssociationIdEncrypted;
+        unitOwner.UserIdEncrypted = user.IdEncrypted;
         unitOwner.OwnerFirstName = userOwner.OwnerFirstName;
         unitOwner.OwnerLastName = userOwner.OwnerLastName;
         unitOwner.OwnerEmail = userOwner.OwnerEmail;

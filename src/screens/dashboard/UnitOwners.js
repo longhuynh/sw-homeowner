@@ -60,14 +60,14 @@ export class UnitOwners extends React.Component {
       {name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted}
     ];
 
-    const dashboardQuery = jsonItemsBuilder(pairs);
+    const query = jsonItemsBuilder(pairs);
 
     const navigationParams = {
       unitIdEncrypted: unit.IdEncrypted,
       ownerFullName: ownerFullName, 
       address: unit.UnitAddress,
       numberOfUnit: this.state.unitOwners.length,
-      dashboardQuery: dashboardQuery
+      query: query
     };
 
     this.props.navigation.navigate(PageNames.Dashboard, navigationParams);

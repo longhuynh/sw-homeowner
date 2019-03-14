@@ -5,15 +5,27 @@ import { Badge, Icon } from 'react-native-elements';
 import { ViolationServiceInstance } from '../../services/ViolationService';
 import { DbStorageKey } from '../../services/storageKey';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
+import { PageNames } from '../../config/AppConstants';
+
+const moment = require('moment');
 
 export class Violations extends React.Component {
   static navigationOptions = {
     title: 'Violations'.toUpperCase(),
   };
 
+  constructor(props) {
+    super(props);
+    this.state = {
+      items: [ ],
+      unit: {}
+    };
+  }
+
   async componentWillMount() {
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
     const unit = JSON.parse(unitData);
+    this.setState({unit: unit});
 
     const pairs = [
       { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
@@ -27,63 +39,39 @@ export class Violations extends React.Component {
       .then(response => {
         if (response != null || response != undefined) {
           const dataValue = Object.values(response);
-          const parsedData = JSON.parse(dataValue);
-
-          console.log(parsedData);
-          // this.setState({ items: items });
+          const items = JSON.parse(dataValue);
+          this.setState({ items: items });
         }
       })
       .catch(error => {
         console.error(error);
       })
-
   }
 
-  state = {
-    items: [
-      {
-        id: 1,
-        category: 'Lanscape',
-        subCategory: 'Moving',
-        icon: 'check',
-        status: 'Open',
-        iconStatus: 'success',
-        createdDate: '02/11/2018'
-      },
-      {
-        id: 2,
-        category: 'Parking',
-        subCategory: 'Boat',
-        status: 'Close',
-        icon: 'close',
-        iconStatus: 'error',
-        createdDate: '02/11/2018'
-      },
-      {
-        id: 3,
-        category: 'Animal & Pet',
-        subCategory: 'Dog',
-        status: 'Open',
-        icon: 'check',
-        iconStatus: 'success',
-        createdDate: '02/11/2018'
-      }
-    ],
-  };
+  navigateToViolation(id){
+    const pairs = [
+      { name: 'ViolationItemIdEncrypted', value: id },
+      { name: 'AssociationIdEncrypted', value: this.state.unit.AssociationIdEncrypted }
+    ];
 
-  renderStatItem = (item) => (
-    <TouchableOpacity key={item.id}
-      onPress={() => this.props.navigation.navigate('Violation', { id: item.id })}>
+    const query = jsonItemsBuilder(pairs);
+    
+    this.props.navigation.navigate(PageNames.Violation, { query: query, id: id })
+  }
+
+  renderItem = (item) => (
+    <TouchableOpacity key={item.ViolationItemIdEncrypted}
+      onPress={() => this.navigateToViolation(item.ViolationItemIdEncrypted)}>
       <SwCard style={styles.card}>
         {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15 }} 
               badgeStyle={{width: 30, height:30, borderRadius: 300 }} 
               containerStyle={{ position: 'absolute', top: -10, right: -10,  }}/> */}
         <View style={styles.content}>
-          <SwText swType='header2'>{`${item.category} - ${item.subCategory}`}</SwText>
+          <SwText swType='header2'>{item.ViolationType}</SwText>
           <View style={styles.detail}>
-            <SwText swType='secondary2'>{item.status}</SwText>
+            <SwText swType='secondary2'>{item.OpenClosed}</SwText>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{item.createdDate}</SwText>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{item.ViolationCreatedDate}</SwText>
             </View>
           </View>
         </View>
@@ -95,7 +83,7 @@ export class Violations extends React.Component {
     return (
       <ScrollView style={styles.screen}>
         <View style={styles.items} >
-          {this.state.items.map(this.renderStatItem)}
+          {this.state.items.map(this.renderItem)}
         </View>
       </ScrollView>
     );

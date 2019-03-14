@@ -13,6 +13,14 @@ import { jsonItemsBuilder } from '../../services/jsonBuilder';
 const { width, height } = Dimensions.get('window');
 
 export class Login extends React.Component {
+  static propTypes = {
+    navigation: NavigationType.isRequired,
+  };
+
+  static navigationOptions = {
+    header: null,
+  };
+
   constructor(props) {
     super(props);
 
@@ -23,14 +31,6 @@ export class Login extends React.Component {
       showLoading: false,
     };
   }
-
-  static propTypes = {
-    navigation: NavigationType.isRequired,
-  };
-
-  static navigationOptions = {
-    header: null,
-  };
 
   componentDidMount() {
 
@@ -45,6 +45,8 @@ export class Login extends React.Component {
           this.setState({ loginFailed: false });
 
           await AsyncStorage.setItem(DbStorageKey.User, JSON.stringify(response));
+
+          console.log(response);
 
           const unitOwners = OwnerServiceInstance.populateUnitOwners(response);
 
@@ -65,14 +67,14 @@ export class Login extends React.Component {
               { name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted }
             ];
 
-            const dashboardQuery = jsonItemsBuilder(pairs);
+            const query = jsonItemsBuilder(pairs);
 
             navigationParams = {
               unitIdEncrypted: unit.IdEncrypted,
               ownerFullName: ownerFullName,
               address: unit.UnitAddress,
               numberOfUnit: unitOwners.length,
-              dashboardQuery: dashboardQuery
+              query: query
             };  
           }    
 

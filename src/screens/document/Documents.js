@@ -4,9 +4,9 @@ import { View, FlatList, StyleSheet, Dimensions, TouchableOpacity, Alert } from 
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge } from 'react-native-elements';
 import Icon from 'react-native-vector-icons/FontAwesome';
-import FileViewer from 'react-native-file-viewer';
 import { FileSystem } from 'expo';
 import { PageNames } from '../../config/AppConstants';
+import { ApiConfig } from '../../services/config';
 
 const screenHeight = Dimensions.get('window').height - 120;
 
@@ -15,86 +15,16 @@ export class Documents extends React.Component {
     title: 'Documents'.toUpperCase(),
   };
 
-
   constructor(props) {
     super(props);
-    const workOrderId = this.props.navigation.getParam('id', 1);
+    const documents = this.props.navigation.getParam('documents', []);
 
-    this.state = { localFile: '' };
+    this.state = {
+      documents: documents
+    }
+
+    console.log(this.state.documents);
   }
-
-  data = [{
-    id: 1,
-    fileName: 'Word Order Form',
-    format: 'PDF',
-    userCreated: 'Home Owner',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  {
-    id: 2,
-    fileName: 'Photo 1',
-    format: 'png',
-    userCreated: 'Jim Smith',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  {
-    id: 3,
-    fileName: 'Photo 2',
-    format: 'gif',
-    userCreated: 'Jim Smith',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  {
-    id: 11,
-    fileName: 'Word Order Form',
-    format: 'PDF',
-    userCreated: 'Home Owner',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  {
-    id: 21,
-    fileName: 'Photo 1',
-    format: 'png',
-    userCreated: 'Jim Smith',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  {
-    id: 31,
-    fileName: 'Photo 2',
-    format: 'gif',
-    userCreated: 'Jim Smith',
-    dateCreated: '6/3/2018',
-    url: '',
-  }, {
-    id: 12,
-    fileName: 'Word Order Form',
-    format: 'PDF',
-    userCreated: 'Home Owner',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  {
-    id: 22,
-    fileName: 'Photo 1',
-    format: 'png',
-    userCreated: 'Jim Smith',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  {
-    id: 32,
-    fileName: 'Photo 2',
-    format: 'gif',
-    userCreated: 'Jim Smith',
-    dateCreated: '6/3/2018',
-    url: '',
-  },
-  ];
 
   getLocalPath(url) {
     const filename = url.split('/').pop();
@@ -102,27 +32,8 @@ export class Documents extends React.Component {
   }
 
   onViewFile(item) {
-    // const url = 'https://www.ctvnews.ca/polopoly_fs/1.4037876!/httpImage/image.jpg_gen/derivatives/landscape_1020/image.jpg';
-    // const localFile =  this.getLocalPath(url);
-
-    // this.setState({
-    //   localFile: localFile,
-    //       });
-
-    // Alert.alert(localFile);
-
-    // FileSystem.downloadAsync(url, localFile)
-    // .then((uri) => 
-    // {
-    //   setTimeout(() => { FileViewer.open(localFile);}, 5000)
-
-    // })
-    // .then(() => {
-    // })
-    // .catch(error => {
-
-    // });
-    this.props.navigation.navigate('DocumentViewer');
+    const url = item.Url.replace('..', ApiConfig.baseUrl);
+    this.props.navigation.navigate(PageNames.DocumentViewer, {url: url, extension: item.Extension} );
   }
 
   onCameraButtonPressed() {
@@ -133,7 +44,7 @@ export class Documents extends React.Component {
 
   }
 
-  extractItemKey = (item) => `${item.id}`;
+  extractItemKey = (item) => `${item.DocumentIdEncrypted}`;
 
   renderSeparator = () => (
     <View style={styles.separator} />
@@ -144,12 +55,9 @@ export class Documents extends React.Component {
       <View style={styles.itemContainer}>
         <View style={styles.content}>
           <View style={styles.contentHeader}>
-            <SwText swType='header5' style={styles.link}> {`${item.fileName}`} ({`${item.format}`})</SwText>
-            <SwText swType='secondary4 hintColor'>
-              <SwText swType='header5' style={styles.link}> {`${this.state.localFile}`}</SwText>
-            </SwText>
+            <SwText swType='header5' style={styles.link}> {`${item.Text}`} ({`${item.Extension}`})</SwText>
           </View>
-          <SwText swType='primary3 mediumLine'>{`${item.dateCreated}`} ({`${item.userCreated}`})</SwText>
+          <SwText swType='primary3 mediumLine'>{`${item.CreatedDate}`} (Long Huynh)</SwText>
         </View>
       </View>
     </TouchableOpacity>
@@ -158,7 +66,7 @@ export class Documents extends React.Component {
   render = () => (
     <View style={styles.screen} >
       <SwCard style={styles.container}>
-        <Badge value={this.data.length} status="success" textStyle={{ fontSize: 25 }}
+        <Badge value={this.state.documents.length} status="success" textStyle={{ fontSize: 25 }}
           badgeStyle={{ width: 50, height: 50, borderRadius: 300 }}
           containerStyle={{ position: 'absolute', top: -15, right: -15 }} />
 
@@ -174,7 +82,7 @@ export class Documents extends React.Component {
         </View>
 
         <FlatList
-          data={this.data}
+          data={this.state.documents}
           extraData={this.state}
           ItemSeparatorComponent={this.renderSeparator}
           keyExtractor={this.extractItemKey}

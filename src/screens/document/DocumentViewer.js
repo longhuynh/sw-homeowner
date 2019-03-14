@@ -1,12 +1,12 @@
 
 import React from 'react';
-import { View, Image, Dimensions} from 'react-native';
-import { SwStyleSheet} from 'sw-react-native-ui';
+import { View, Image, Dimensions } from 'react-native';
+import { SwStyleSheet } from 'sw-react-native-ui';
 import PDFReader from 'rn-pdf-reader-js';
 import { Constants } from 'expo';
 
-const {width, height} = Dimensions.get('window');
- 
+const { width, height } = Dimensions.get('window');
+
 export class DocumentViewer extends React.Component {
   static navigationOptions = {
     title: 'Document Viewer'.toUpperCase(),
@@ -14,24 +14,31 @@ export class DocumentViewer extends React.Component {
 
   constructor(props) {
     super(props);
-    const workOrderId = this.props.navigation.getParam('id', 1);
+    const url = this.props.navigation.getParam('url', '');
+    const extension = this.props.navigation.getParam('extension', '');
 
-    this.state = {localFile: ''};
+    console.log(url);
+
+    this.state = {
+      url: url,
+      extension: extension
+    };
   }
 
+  render = () => {
+    if (this.state.extension == 'pdf')
+      return (
+        <View style={styles.container}>
+          <PDFReader source={{ uri: this.state.url }} />
+        </View>
+      )
 
-  render = () => (
-    <View style={styles.container}>
-    {/* <PDFReader
-          source={{ uri: "http://gahp.net/wp-content/uploads/2017/09/sample.pdf" }}
-        /> */}
-    <Image 
-        source={{uri: 'https://www.noao.edu/outreach/press/pr01/images/horsehead_med_res.jpg'}}
-        style={styles.content}
-
-      />
-  </View>
-  )
+    return (
+      <View style={styles.container}>
+        <Image source={{ uri: this.state.url }} style={styles.content} />
+      </View>
+    )
+  }
 }
 
 const styles = SwStyleSheet.create(theme => ({

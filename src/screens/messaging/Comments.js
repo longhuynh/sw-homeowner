@@ -1,11 +1,13 @@
 import React from 'react';
-import { FlatList, View, ScrollView, StyleSheet, Dimensions } from 'react-native';
+import { FlatList, View, StyleSheet, AsyncStorage, Alert } from 'react-native';
 import { SwStyleSheet, SwText, SwTextInput, SwCard } from 'sw-react-native-ui';
-import { data } from '../../data/DataProvider';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
+import { PageNames } from '../../config/AppConstants';
+import { CommentServiceInstance } from '../../services/CommentService';
+import { jsonItemsBuilder } from '../../services/jsonBuilder';
+import { DbStorageKey } from '../../services/storageKey';
 
-const screenHeight = Dimensions.get('window').height - 120;
 const moment = require('moment');
 
 export class Comments extends React.Component {
@@ -17,19 +19,24 @@ export class Comments extends React.Component {
     title: 'Comments'.toUpperCase(),
   };
 
-  state = {
-    comment: ''
-  };
 
   constructor(props) {
     super(props);
-    const postId = this.props.navigation.getParam('postId', 1);
+    const comments = this.props.navigation.getParam('comments', []);
+    const pageName = this.props.navigation.getParam('pageName', '');
+    const violationId = this.props.navigation.getParam('violationId', '');
+
     this.state = {
-      data: data.getComments(postId),
+      violationId: violationId,
+      comments: comments,
+      pageName: pageName,
+      comment: 'This is my comments'
     };
+
+    console.log(comments);
   }
 
-  extractItemKey = (item) => `${item.id}`;
+  extractItemKey = (item) => `${item.ActivityNotesIdEncrypted}`;
 
   onCommentInputChanged = (text) => {
     this.setState({ comment: text });
@@ -39,65 +46,107 @@ export class Comments extends React.Component {
     <View style={styles.separator} />
   );
 
-  onSaveButtonPressed = () => {
-    //this.props.navigation.navigate('Login');
+  onSaveButtonPressed = async () => {
+    if(this.state.comment.trim() == ''){
+      Alert.alert('Please enter comment');
+      return;
+    }    
+      
+    const pageName = this.state.pageName;
+    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
+    const unit = JSON.parse(unitData);
+   
+    switch (pageName) {
+      case PageNames.Violation:      
+        await this.saveViolationComment(unit.UserIdEncrypted);
+        break;
+      case PageNames.Architectural:
+        break;
+      case PageNames.WorkOrder:
+        break;
+      default:
+        break;
+    }
+
+    this.props.navigation.navigate(pageName, {refresh: true});
   };
+  
+  async saveViolationComment(userIdEncrypted) {
+    let savedComment = null;
+
+    const pairs = [
+      { name: 'ViolationItemIdEncrypted', value: this.state.violationId },
+      { name: 'UserIdEncrypted', value: userIdEncrypted },
+      { name: 'Note', value: this.state.comment }
+    ];
+    
+    const jsonItems = jsonItemsBuilder(pairs);
+
+    await CommentServiceInstance.saveViolationComment(jsonItems)
+      .then(response => {
+        savedComment = response;
+        console.log(JSON.stringify(response));
+      })
+      .catch(error => {
+        console.error(error);
+      });
+
+      return savedComment;
+  }
 
   renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <View style={styles.content}>
         <View style={styles.contentHeader}>
-          <SwText swType='header5'>01/10/2019 ({`${item.user.firstName} ${item.user.lastName}`})</SwText>
-          <SwText swType='secondary4 hintColor'>
-          </SwText>
+          <SwText swType='header5'>{moment(item.CreatedDate.toString()).format('MM/DD/YYYY')} ({item.CreatedByUser})</SwText>
+          <SwText swType='secondary4 hintColor'></SwText>
         </View>
-        <SwText swType='primary3 mediumLine'>{item.text}</SwText>
+        <SwText swType='primary3 mediumLine'>{item.Notes}</SwText>
       </View>
     </View>
   );
 
   render = () => (
-    <ScrollView style={styles.screen}>
-      <View style={styles.container} >
-        <SwCard style={styles.card}>
-          <View style={styles.comment}>
-            <SwText swType='header5'>Add comment</SwText>
-            <SwTextInput
-              value={this.state.comment}
-              swType='bordered'
-              onChangeText={this.onCommentInputChanged}
-              multiline={true}
-              numberOfLines={4} />
-          </View>
+    <View style={styles.screen} >
+      <SwCard style={styles.container}>
+        <View style={styles.comment}>
+          <SwText swType='header5'>Add comment</SwText>
+          <SwTextInput
+            value={this.state.comment}
+            swType='bordered'
+            onChangeText={this.onCommentInputChanged}
+            multiline={true}
+            numberOfLines={4} />
+        </View>
 
-          <GradientButton swType='small' style={styles.saveButton} text='Save' onPress={this.onSaveButtonPressed} />
+        <GradientButton swType='small' style={styles.saveButton} text='Save' onPress={this.onSaveButtonPressed} />
 
-          <FlatList
-            data={this.state.data}
-            extraData={this.state}
-            ItemSeparatorComponent={this.renderSeparator}
-            keyExtractor={this.extractItemKey}
-            renderItem={this.renderItem}
-          />
-        </SwCard>
-      </View>
-    </ScrollView>
+        <FlatList
+          data={this.state.comments}
+          extraData={this.state}
+          ItemSeparatorComponent={this.renderSeparator}
+          keyExtractor={this.extractItemKey}
+          renderItem={this.renderItem}
+        />
+      </SwCard>
+    </View>
   );
+
 }
 
 const styles = SwStyleSheet.create(theme => ({
   screen: {
+    flex: 1,
+    marginVertical: 20,
     backgroundColor: theme.colors.screen.scroll,
-    paddingHorizontal: 20,
+    marginHorizontal: 20,
   },
   container: {
-    justifyContent: 'space-between',
-    marginVertical: 20,
-  },
-  card: {
+    flex: 1,
     borderRadius: 3,
-    height: screenHeight,
     paddingHorizontal: 15,
+    borderColor: theme.colors.border.card,
+    backgroundColor: theme.colors.screen.base,
   },
   itemContainer: {
     paddingLeft: 5,
