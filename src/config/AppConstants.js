@@ -26,7 +26,6 @@ export const PageNames = {
   Comments: 'Comments',
   Documents: 'Documents',
   DocumentViewer: 'DocumentViewer',
-  SwCamera: 'SwCamera',
   Settings: 'Settings',
   Themes: 'Themes',    
 };

@@ -241,18 +241,6 @@ export const MainRoutes = [
     children: [],
   },
   {
-    id: PageNames.SwCamera,
-    title: 'Camera',
-    screen: Screens.SwCamera,
-    children: [],
-  }, 
-  {
-    id: 'UploadImage',
-    title: 'Upload Image',
-    screen: Screens.UploadImage,
-    children: [],
-  }, 
-  {
     id: 'Cards',
     title: 'Cards',
     screen: Screens.Cards,
