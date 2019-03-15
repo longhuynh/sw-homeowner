@@ -1,9 +1,9 @@
 {
-  "packagerPort": 19001,
-  "packagerPid": 18984,
+  "packagerPort": null,
+  "packagerPid": null,
   "expoServerNgrokUrl": "https://dn-wun.longhuynh.sw-homeowner.exp.direct",
   "packagerNgrokUrl": "https://packager.dn-wun.longhuynh.sw-homeowner.exp.direct",
-  "ngrokPid": 25616,
+  "ngrokPid": 23180,
   "devToolsPort": 19002,
   "expoServerPort": 19000
 }

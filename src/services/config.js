@@ -8,5 +8,12 @@ class BaseConfig{
         'Content-Type': 'application/json;charset=UTF-8',
         'Authorization': 'SwClassic eyJ1SWQiOiJVMVRaLU1oZFN3ekFGWDgwNUdvIiwibUlkIjoiSjJmQW1JRk91ZWtIQkEifQ=='
     };
+
+    uploadHeaders = {
+        'Accept': 'application/x-jsonr+json, application/json, text/plain',
+        'Content-Type': 'multipart/form-data',
+        'Authorization': 'SwClassic eyJ1SWQiOiJVMVRaLU1oZFN3ekFGWDgwNUdvIiwibUlkIjoiSjJmQW1JRk91ZWtIQkEifQ=='
+    };
 }
+
 export const ApiConfig = new BaseConfig();

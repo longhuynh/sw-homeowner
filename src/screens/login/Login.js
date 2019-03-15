@@ -79,14 +79,14 @@ export class Login extends React.Component {
           }    
 
           this.setState({ showLoading: false });
-          this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
+          this.props.navigation.navigate('UploadImage', navigationParams);
         }
         else {
           this.setState({ loginFailed: true });
         }
       })
       .catch((error) => {
-        console.error(error);
+        console.log(error);
       });
 
     this.setState({ showLoading: false });

@@ -2,8 +2,10 @@ import { ApiConfig } from "./config";
 
 class DashboardService {
   async getDashboard(jsonItems) {
+    const url = `${ApiConfig.residentApiUrl}/GetUnitSummaryData`;
+    
     try {
-      const response = await fetch(`${ApiConfig.residentApiUrl}/GetUnitSummaryData`, {
+      const response = await fetch(url, {
         method: 'POST',
         headers: ApiConfig.headers,
         body: JSON.stringify(jsonItems),
@@ -11,7 +13,7 @@ class DashboardService {
       return await response.json();
     }
     catch (error) {
-      console.error(error);
+      console.log(error);
     }
   }
 

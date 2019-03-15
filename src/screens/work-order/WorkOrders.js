@@ -55,7 +55,7 @@ export class WorkOrders extends React.Component {
         }
       })
       .catch(error => {
-        console.error(error);
+        console.log(error);
       });
   }
 

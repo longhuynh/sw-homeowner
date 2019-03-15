@@ -6,8 +6,10 @@ class LoginService {
   }
 
   async login(username, password) {
+    const url = `${ApiConfig.authenticationUrl}/User/Authenticate`;
+    
     try {
-      const response = await fetch(`${ApiConfig.authenticationUrl}/User/Authenticate`, {
+      const response = await fetch(url, {
         method: 'PUT',
         headers: ApiConfig.headers,
         body: JSON.stringify({ UserName: username, Password: password }),

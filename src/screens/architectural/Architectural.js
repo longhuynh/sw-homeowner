@@ -13,47 +13,44 @@ export class Architectural extends React.Component {
     super(props);
     const architecturalId = this.props.navigation.getParam('id', 1);
   }
- 
+
   state = {
-    data: {
-      items: [
-        {
-          name: 'Status',
-          screen: 'ArchitecturalStatus',
-          value: 'In Review',
-          icon: 'star'
-        },
-        {
-          name: 'Pics/Docs',
-          screen: 'Documents',
-          value: '5',
-          icon: 'camera'
-        },
-        {
-          name: 'Comments',
-          screen: 'Comments',
-          value: '12',
-          icon: 'comment'
-        }
-      ],
-    },
+    items: [
+      {
+        name: 'Status',
+        screen: 'ArchitecturalStatus',
+        value: 'In Review',
+        icon: 'star'
+      },
+      {
+        name: 'Pics/Docs',
+        screen: 'Documents',
+        value: '5',
+        icon: 'camera'
+      },
+      {
+        name: 'Comments',
+        screen: 'Comments',
+        value: '12',
+        icon: 'comment'
+      }
+    ],
   };
 
-  gotoScreen(screen) {
+  navigateToScreen(screen) {
     this.props.navigation.navigate(screen);
   }
 
-
   renderStatItem = (item) => (
-    <TouchableOpacity onPress={() => {this.gotoScreen(item.screen) }} key={item.name}>
-     <SwCard style={styles.card}>
-      <View style={styles.content} >
-        <View>
-          <SwText swType='header2'>{item.name}</SwText>
-          <SwText swType='secondary2'>{item.value}</SwText>
+    <TouchableOpacity onPress={() => { this.navigateToScreen(item.screen) }} key={item.name}>
+      <SwCard style={styles.card}>
+        <View style={styles.content} >
+          <View>
+            <SwText swType='header2'>{item.name}</SwText>
+            <SwText swType='secondary2'>{item.value}</SwText>
+          </View>
+          <FontAwesome name={item.icon} size={50} style={styles.icon} />
         </View>
-        <FontAwesome name={item.icon} size={50} style={styles.icon} />
-      </View>
       </SwCard>
     </TouchableOpacity>
   );
@@ -62,7 +59,7 @@ export class Architectural extends React.Component {
     return (
       <ScrollView style={styles.screen}>
         <View style={styles.items} >
-          {this.state.data.items.map(this.renderStatItem)}
+          {this.state.items.map(this.renderStatItem)}
         </View>
       </ScrollView>
     );

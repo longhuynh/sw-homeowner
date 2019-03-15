@@ -247,11 +247,11 @@ export const MainRoutes = [
     children: [],
   }, 
   {
-    id: 'CameraScreen',
-    title: 'CameraScreen',
-    screen: Screens.CameraScreen,
+    id: 'UploadImage',
+    title: 'Upload Image',
+    screen: Screens.UploadImage,
     children: [],
-  },
+  }, 
   {
     id: 'Cards',
     title: 'Cards',

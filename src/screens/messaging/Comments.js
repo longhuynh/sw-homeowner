@@ -4,9 +4,11 @@ import { SwStyleSheet, SwText, SwTextInput, SwCard } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
 import { PageNames } from '../../config/AppConstants';
-import { CommentServiceInstance } from '../../services/CommentService';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
 import { DbStorageKey } from '../../services/storageKey';
+import { ViolationServiceInstance } from '../../services/ViolationService';
+import { ArcServiceInstance } from '../../services/ArcService';
+import { WorkOrderServiceInstance } from '../../services/WorkOrderService';
 
 const moment = require('moment');
 
@@ -23,10 +25,10 @@ export class Comments extends React.Component {
     super(props);
     const comments = this.props.navigation.getParam('comments', []);
     const pageName = this.props.navigation.getParam('pageName', '');
-    const violationId = this.props.navigation.getParam('violationId', '');
+    const referenceId = this.props.navigation.getParam('referenceId', '');
 
     this.state = {
-      violationId: violationId,
+      referenceId: referenceId,
       comments: comments,
       pageName: pageName,
       comment: 'This is my comments'
@@ -60,8 +62,10 @@ export class Comments extends React.Component {
         await this.saveViolationComment(unit.UserIdEncrypted);
         break;
       case PageNames.Architectural:
+        await this.saveArcComment(unit.UserIdEncrypted);
         break;
       case PageNames.WorkOrder:
+        await this.saveWoComment(unit.UserIdEncrypted);
         break;
       default:
         break;
@@ -74,20 +78,66 @@ export class Comments extends React.Component {
     let savedComment = null;
 
     const pairs = [
-      { name: 'ViolationItemIdEncrypted', value: this.state.violationId },
+      { name: 'ViolationItemIdEncrypted', value: this.state.referenceId },
       { name: 'UserIdEncrypted', value: userIdEncrypted },
       { name: 'Note', value: this.state.comment }
     ];
     
     const jsonItems = jsonItemsBuilder(pairs);
 
-    await CommentServiceInstance.saveViolationComment(jsonItems)
+    await ViolationServiceInstance.saveComment(jsonItems)
       .then(response => {
         savedComment = response;
         console.log(JSON.stringify(response));
       })
       .catch(error => {
-        console.error(error);
+        console.log(error);
+      });
+
+      return savedComment;
+  }
+
+  async saveArcComment(userIdEncrypted) {
+    let savedComment = null;
+
+    const pairs = [
+      { name: 'ProjectIdEncrypted', value: this.state.referenceId },
+      { name: 'UserIdEncrypted', value: userIdEncrypted },
+      { name: 'Note', value: this.state.comment }
+    ];
+    
+    const jsonItems = jsonItemsBuilder(pairs);
+
+    await ArcServiceInstance.saveComment(jsonItems)
+      .then(response => {
+        savedComment = response;
+        console.log(JSON.stringify(response));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+      return savedComment;
+  }
+
+  async saveWoComment(userIdEncrypted) {
+    let savedComment = null;
+
+    const pairs = [
+      { name: 'WoIdEncrypted', value: this.state.referenceId },
+      { name: 'UserIdEncrypted', value: userIdEncrypted },
+      { name: 'Note', value: this.state.comment }
+    ];
+    
+    const jsonItems = jsonItemsBuilder(pairs);
+
+    await WorkOrderServiceInstance.saveComment(jsonItems)
+      .then(response => {
+        savedComment = response;
+        console.log(JSON.stringify(response));
+      })
+      .catch(error => {
+        console.log(error);
       });
 
       return savedComment;

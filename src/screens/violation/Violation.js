@@ -19,13 +19,13 @@ export class Violation extends React.Component {
   constructor(props) {
     super(props);
     const query = this.props.navigation.getParam('query', '');
-    const violationId = this.props.navigation.getParam('id', '');
+    const id = this.props.navigation.getParam('id', '');
 
     this.bindData(query);
     
     this.state = {
       query: query,
-      violationId: violationId,
+      id: id,
       violation: {},
       comments: [],
       documents: []
@@ -43,19 +43,21 @@ export class Violation extends React.Component {
     console.log(query);  
     
     await ViolationServiceInstance.getViolation(query)
-    .then(response => {
-      if (response != null && response != undefined) {
-        const dataValue = Object.values(response);
-        const violation = JSON.parse(dataValue);
+      .then(response => {
+        if (response != null && response != undefined) {
+          const dataValue = Object.values(response);
+          const violation = JSON.parse(dataValue);
 
-        this.setState({ violation: violation });
-        this.setState({ comments: violation.Comments || [] });
-        this.setState({ documents: violation.Documents || []});
-      }
-    })
-    .catch(error => {
-      console.error(error);
-    })
+          console.log(violation);
+
+          this.setState({ violation: violation });
+          this.setState({ comments: violation.Comments || [] });
+          this.setState({ documents: violation.Documents || []});
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      })
   }
 
   onMapsButtonPressed() {
@@ -66,14 +68,14 @@ export class Violation extends React.Component {
     this.props.navigation.navigate('Comments', {
       comments: this.state.comments, 
       pageName: PageNames.Violation,
-      violationId: this.state.violationId
+      referenceId: this.state.id
     });
   }
 
   onDocumentsButtonPressed() {
     this.props.navigation.navigate(PageNames.Documents, {
       documents: this.state.documents,
-      violationId: this.state.violationId
+      referenceId: this.state.id
     });
   }
 
