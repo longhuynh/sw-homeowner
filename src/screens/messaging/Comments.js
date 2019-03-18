@@ -3,6 +3,7 @@ import { FlatList, View, StyleSheet, AsyncStorage, Alert } from 'react-native';
 import { SwStyleSheet, SwText, SwTextInput, SwCard } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
+import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
 import { DbStorageKey } from '../../services/storageKey';
@@ -23,29 +24,88 @@ export class Comments extends React.Component {
   
   constructor(props) {
     super(props);
-    const comments = this.props.navigation.getParam('comments', []);
     const pageName = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');
 
     this.state = {
       referenceId: referenceId,
-      comments: comments,
+      comments: [],
       pageName: pageName,
-      comment: 'This is my comments'
+      comment: ''
     };
 
-    console.log(comments);
+    this.bindData();
   }
 
-  extractItemKey = (item) => `${item.ActivityNotesIdEncrypted}`;
-
-  onCommentInputChanged = (text) => {
-    this.setState({ comment: text });
+  bindData = async () => {
+    if(this.state.referenceId.trim() == ''){     
+      return;
+    }    
+      
+    const pageName = this.state.pageName;
+   
+    switch (pageName) {
+      case PageNames.Violation:      
+        await this.getViolationComments();
+        break;
+      case PageNames.Architectural:
+        await this.getArcComments();
+        break;
+      case PageNames.WorkOrder:
+        await this.getWoComments();
+        break;
+      default:
+        break;
+    }
   };
 
-  renderSeparator = () => (
-    <View style={styles.separator} />
-  );
+  async getViolationComments() {
+    const idEncrypted = this.state.referenceId;
+
+    await ViolationServiceInstance.getComments(idEncrypted)
+      .then(response => {      
+        this.generateData(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  async getArcComments() {
+    const idEncrypted = this.state.referenceId;
+
+    await ArcServiceInstance.getComments(idEncrypted)
+      .then(response => {      
+        this.generateData(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  async getWoComments() {
+    const idEncrypted = this.state.referenceId;
+
+    await WorkOrderServiceInstance.getComments(idEncrypted)
+      .then(response => {      
+        console.log(response);
+        this.generateData(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+    
+  generateData(response) {
+    console.log(response);
+
+    if (response != null && response != undefined) {
+      const dataValue = Object.values(response);
+      const comments = JSON.parse(dataValue);
+
+      this.setState({ comments: comments });
+    }
+  }
 
   onSaveButtonPressed = async () => {
     if(this.state.comment.trim() == ''){
@@ -73,7 +133,7 @@ export class Comments extends React.Component {
 
     this.props.navigation.navigate(pageName, {refresh: true});
   };
-  
+
   async saveViolationComment(userIdEncrypted) {
     let savedComment = null;
 
@@ -143,6 +203,16 @@ export class Comments extends React.Component {
       return savedComment;
   }
 
+  extractItemKey = (item) => `${item.IdEncrypted}`;
+
+  onCommentInputChanged = (text) => {
+    this.setState({ comment: text });
+  };
+
+  renderSeparator = () => (
+    <View style={styles.separator} />
+  );
+
   renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
       <View style={styles.content}>
@@ -158,6 +228,10 @@ export class Comments extends React.Component {
   render = () => (
     <View style={styles.screen} >
       <SwCard style={styles.container}>
+      <Badge value={this.state.comments.length} status="success" textStyle={{ fontSize: 25 }}
+          badgeStyle={{ width: 50, height: 50, borderRadius: 300 }}
+          containerStyle={{ position: 'absolute', top: -15, right: -15 }} />
+
         <View style={styles.comment}>
           <SwText swType='header5'>Add comment</SwText>
           <SwTextInput

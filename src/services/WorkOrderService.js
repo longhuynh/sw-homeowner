@@ -22,6 +22,40 @@ class WorkOrderService {
     }
   }
 
+  async getComments(idEncrypted) {
+    const url = `${ApiConfig.residentApiUrl}/GetUnitWorkOrderComments`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: ApiConfig.headers,
+        body: JSON.stringify({ idEncrypted: idEncrypted}),
+      });
+
+      return await response.json();
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getDocuments(idEncrypted) {
+    const url = `${ApiConfig.residentApiUrl}/GetUnitWorkOrderDocuments`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: ApiConfig.headers,
+        body: JSON.stringify({ idEncrypted: idEncrypted}),
+      });
+
+      return await response.json();
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   async saveComment(jsonItems) {
     const url = `${ApiConfig.residentApiUrl}/SaveWorkOrderNote`;
 

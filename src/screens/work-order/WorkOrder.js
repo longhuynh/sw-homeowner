@@ -1,8 +1,10 @@
 
 import React from 'react';
-import { View, ScrollView, Dimensions } from 'react-native';
+import { View } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { Badge } from 'react-native-elements';
+import { PageNames } from '../../config/AppConstants';
 
 export class WorkOrder extends React.Component {
   static navigationOptions = {
@@ -11,7 +13,14 @@ export class WorkOrder extends React.Component {
 
   constructor(props) {
     super(props);
-    const workOrderId = this.props.navigation.getParam('id', 1);
+    const workOrder = this.props.navigation.getParam('workOrder', {});
+
+    console.log(workOrder)
+
+    this.state = {
+      id: workOrder.WorkOrderIdEncrypted || '',
+      workOrder: workOrder
+    }
   }
 
   onMapsButtonPressed() {
@@ -19,48 +28,60 @@ export class WorkOrder extends React.Component {
   }
 
   onCommentsButtonPressed() {
-    this.props.navigation.navigate('Comments');
+    this.props.navigation.navigate(PageNames.Comments, {
+      pageName: PageNames.WorkOrder,
+      referenceId: this.state.id
+    });
   }
 
   onDocumentsButtonPressed() {
-    this.props.navigation.navigate('Documents');
+    this.props.navigation.navigate(PageNames.Documents, {
+      pageName: PageNames.WorkOrder,
+      referenceId: this.state.id
+    });
   }
-
   render = () => (
     <View style={styles.screen} >
       <SwCard style={styles.container}>
         <View style={styles.section}>
           <View style={styles.heading}>
-            <SwText swType='primary header4'>Category - Sub Category</SwText>
-            <SwText swType='secondary2 header5'>Pool - Cleaning</SwText>
+            <SwText swType='primary header4'>Category</SwText>
+            <SwText swType='secondary2 header5'>{this.state.workOrder.WoCategoryName}</SwText>
+          </View>
+          <View style={styles.heading}>
+            <SwText swType='primary header4'>Sub Category</SwText>
+            <SwText swType='secondary2 header5'>{this.state.workOrder.WoSubCategoryName}</SwText>
           </View>
           <View style={styles.heading}>
             <SwText swType='primary header4'>Status</SwText>
-            <SwText swType='secondary2 header5'>Assigned</SwText>
+            <SwText swType='secondary2 header5'>{this.state.workOrder.WoStatusTypeName}</SwText>
           </View>
           <View style={styles.heading}>
             <SwText swType='primary header4'>Priority</SwText>
-            <SwText swType='secondary2 header5'>Medium</SwText>
+            <SwText swType='secondary2 header5'>{this.state.workOrder.WoPriorityTypeName}</SwText>
           </View>
           <View style={styles.heading}>
             <SwText swType='primary header4'>Description</SwText>
-            <SwText numberOfLines={5} swType='secondary2 header5'>
-              Description is the pattern of narrative development that aims to make vivid a place, object, character, or group. Description is one of four rhetorical modes (also known as modes of discourse), along with exposition, argumentation, and narration.
-              </SwText>
+            <SwText numberOfLines={5} swType='secondary2 header5'>{this.state.workOrder.Description}</SwText>
           </View>
         </View>
 
         <View style={styles.bottom}>
           <View style={styles.row}>
             {/* <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onMapsButtonPressed() }}>
-              <Icon name='globe' size={35} style={styles.icon} />
+              <FontAwesome5 name='globe' size={35} style={styles.icon} />
             </SwButton> */}
             <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onCommentsButtonPressed() }}>
-              <Icon name='comment' size={35} style={styles.icon} />
+              <FontAwesome5 name='comments' size={35} style={styles.icon} />
             </SwButton>
-            <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onDocumentsButtonPressed() }}>
-              <SwText swType='moon large primary'>3</SwText>
-            </SwButton>
+            <View>
+              <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onDocumentsButtonPressed() }}>
+                <FontAwesome5 name='file' size={35} style={styles.icon} />
+              </SwButton>
+              <Badge value={this.state.workOrder.DocumentCount} status="success" textStyle={{ fontSize: 15 }}
+                badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
+                containerStyle={{ position: 'absolute', top: 20, right: -10 }} />
+            </View>
           </View>
         </View>
       </SwCard>

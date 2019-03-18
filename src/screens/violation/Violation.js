@@ -2,10 +2,11 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SwText, SwStyleSheet, SwButton } from 'sw-react-native-ui';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { ViolationServiceInstance } from '../../services/ViolationService';
 import { PageNames } from '../../config/AppConstants';
 import NavigationType from '../../config/navigation/NavigationType';
+import { Badge } from 'react-native-elements';
 
 export class Violation extends React.Component {
   static propTypes = {
@@ -15,7 +16,7 @@ export class Violation extends React.Component {
   static navigationOptions = {
     title: 'Violation Detail'.toUpperCase(),
   };
-
+log
   constructor(props) {
     super(props);
     const query = this.props.navigation.getParam('query', '');
@@ -26,9 +27,7 @@ export class Violation extends React.Component {
     this.state = {
       query: query,
       id: id,
-      violation: {},
-      comments: [],
-      documents: []
+      violation: {}
     };
   }
 
@@ -51,8 +50,6 @@ export class Violation extends React.Component {
           console.log(violation);
 
           this.setState({ violation: violation });
-          this.setState({ comments: violation.Comments || [] });
-          this.setState({ documents: violation.Documents || []});
         }
       })
       .catch(error => {
@@ -66,7 +63,6 @@ export class Violation extends React.Component {
 
   onCommentsButtonPressed() {
     this.props.navigation.navigate('Comments', {
-      comments: this.state.comments, 
       pageName: PageNames.Violation,
       referenceId: this.state.id
     });
@@ -74,7 +70,7 @@ export class Violation extends React.Component {
 
   onDocumentsButtonPressed() {
     this.props.navigation.navigate(PageNames.Documents, {
-      documents: this.state.documents,
+      pageName: PageNames.Violation,
       referenceId: this.state.id
     });
   }
@@ -108,14 +104,19 @@ export class Violation extends React.Component {
         <View style={styles.bottom}>
           <View style={styles.row}>
             {/* <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onMapsButtonPressed() }}>
-              <Icon name='globe' size={35} style={styles.icon} />
+              <FontAwesome5 name='globe' size={35} style={styles.icon} />
             </SwButton> */}
             <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onCommentsButtonPressed() }}>
-              <Icon name='comment' size={35} style={styles.icon} />
+            <FontAwesome5 name='comments' size={35} style={styles.icon} />
             </SwButton>
-            <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onDocumentsButtonPressed() }}>
-              <SwText swType='moon large primary'>{this.state.documents.length}</SwText>
-            </SwButton>
+            <View>
+              <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onDocumentsButtonPressed() }}>
+                <FontAwesome5 name='file' size={35} style={styles.icon} />
+              </SwButton>
+              <Badge value={this.state.violation.NumberOfDocument} status="success" textStyle={{ fontSize: 15 }}
+                badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
+                containerStyle={{ position: 'absolute', top: 20, right: -10 }} />
+            </View>          
           </View>
         </View>
       </View>

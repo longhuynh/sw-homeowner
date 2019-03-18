@@ -48,6 +48,7 @@ export class Architecturals extends React.Component {
 
     await ArcServiceInstance.getAll(query)
       .then(response => {        
+        console.log(response);
         if (response != null && response != undefined) {
           const dataValue = Object.values(response);
           const items = JSON.parse(dataValue);

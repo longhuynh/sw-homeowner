@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
-import FontAwesome from 'react-native-vector-icons/FontAwesome';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 
 export class Architectural extends React.Component {
   static navigationOptions = {
@@ -26,13 +26,13 @@ export class Architectural extends React.Component {
         name: 'Pics/Docs',
         screen: 'Documents',
         value: '5',
-        icon: 'camera'
+        icon: 'file'
       },
       {
         name: 'Comments',
         screen: 'Comments',
         value: '12',
-        icon: 'comment'
+        icon: 'comments'
       }
     ],
   };
@@ -49,7 +49,7 @@ export class Architectural extends React.Component {
             <SwText swType='header2'>{item.name}</SwText>
             <SwText swType='secondary2'>{item.value}</SwText>
           </View>
-          <FontAwesome name={item.icon} size={50} style={styles.icon} />
+          <FontAwesome5 name={item.icon} size={50} style={styles.icon} />
         </View>
       </SwCard>
     </TouchableOpacity>

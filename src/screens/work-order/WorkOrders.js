@@ -49,9 +49,11 @@ export class WorkOrders extends React.Component {
     await WorkOrderServiceInstance.getAll(query)
       .then(response => {    
         if (response != null && response != undefined) {
-          // const dataValue = Object.values(response);
-          // const items = JSON.parse(dataValue);
-          // this.setState({ items: items });
+          const dataValue = Object.values(response);
+          const items = JSON.parse(dataValue);
+
+          console.log(items);
+          this.setState({ items: items });
         }
       })
       .catch(error => {
@@ -59,15 +61,8 @@ export class WorkOrders extends React.Component {
       });
   }
 
-  navigateToArc(id){
-    const pairs = [
-      { name: 'WorkOrderIdEncrypted', value: id },
-      { name: 'AssociationIdEncrypted', value: this.state.unit.AssociationIdEncrypted }
-    ];
-
-    const query = jsonItemsBuilder(pairs);
-    
-    this.props.navigation.navigate(PageNames.Architectural, { query: query, id: id })
+  navigateToWorkOrder(workOrder){
+    this.props.navigation.navigate(PageNames.WorkOrder, { workOrder: workOrder});
   }
 
   refreshData() {
@@ -77,8 +72,8 @@ export class WorkOrders extends React.Component {
   }
 
   renderStatItem = (item) => (
-    <TouchableOpacity key={item.id}
-      onPress={() => this.props.navigation.navigate('WorkOrder', { id: item.WoIdEncrypted })}>
+    <TouchableOpacity key={item.WorkOrderIdEncrypted}
+      onPress={() => this.props.navigation.navigate('WorkOrder', { workOrder: item })}>
       <SwCard style={styles.itemContainer}>
         {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15 }}
           badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}

@@ -3,11 +3,13 @@ import React from 'react';
 import { View, FlatList, StyleSheet, Dimensions, TouchableOpacity, ActivityIndicator, Clipboard, Image, Share, Text  } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge } from 'react-native-elements';
-import Icon from 'react-native-vector-icons/FontAwesome';
-import { FileSystem, ImagePicker, Permissions } from 'expo';
+import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { ImagePicker, Permissions } from 'expo';
 import { PageNames } from '../../config/AppConstants';
 import { ApiConfig } from '../../services/config';
 import { ViolationServiceInstance } from '../../services/ViolationService';
+import { ArcServiceInstance } from '../../services/ArcService';
+import { WorkOrderServiceInstance } from '../../services/WorkOrderService';
 
 const screenHeight = Dimensions.get('window').height - 120;
 
@@ -18,18 +20,179 @@ export class Documents extends React.Component {
 
   constructor(props) {
     super(props);
-    const documents = this.props.navigation.getParam('documents', []);
+    const pageName = this.props.navigation.getParam('pageName', '');
+    const referenceId = this.props.navigation.getParam('referenceId', '');
 
     this.state = {
-      documents: documents
-    }
+      referenceId: referenceId,
+      documents: [],
+      pageName: pageName
+    };
 
-    console.log(this.state.documents);
+    this.bindData();
   }
 
-  getLocalPath(url) {
-    const filename = url.split('/').pop();
-    return `${FileSystem.documentDirectory}${filename}`;
+  bindData = async () => {
+    if(this.state.referenceId.trim() == ''){     
+      return;
+    }    
+      
+    const pageName = this.state.pageName;
+   
+    switch (pageName) {
+      case PageNames.Violation:      
+        await this.getViolationDocuments();
+        break;
+      case PageNames.Architectural:
+        await this.getArcDocuments();
+        break;
+      case PageNames.WorkOrder:
+        await this.getWoDocuments();
+        break;
+      default:
+        break;
+    }
+  };
+
+  async getViolationDocuments() {
+    const idEncrypted = this.state.referenceId;
+
+    await ViolationServiceInstance.getDocuments(idEncrypted)
+      .then(response => {      
+        this.generateData(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  async getArcDocuments() {
+    const idEncrypted = this.state.referenceId;
+
+    await ArcServiceInstance.getDocuments(idEncrypted)
+      .then(response => {      
+        this.generateData(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  async getWoDocuments() {
+    const idEncrypted = this.state.referenceId;
+
+    await WorkOrderServiceInstance.getDocuments(idEncrypted)
+      .then(response => {      
+        this.generateData(response);
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+    
+  generateData(response) {
+    if (response != null && response != undefined) {
+      const dataValue = Object.values(response);
+      const documents = JSON.parse(dataValue);
+
+      this.setState({ documents: documents });
+    }
+  }
+
+  onSaveButtonPressed = async () => {
+    if(this.state.comment.trim() == ''){
+      Alert.alert('Please enter comment');
+      return;
+    }    
+      
+    const pageName = this.state.pageName;
+    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
+    const unit = JSON.parse(unitData);
+   
+    switch (pageName) {
+      case PageNames.Violation:      
+        await this.saveViolationDocument(unit.UserIdEncrypted);
+        break;
+      case PageNames.Architectural:
+        await this.saveArcDocument(unit.UserIdEncrypted);
+        break;
+      case PageNames.WorkOrder:
+        await this.saveWoDocument(unit.UserIdEncrypted);
+        break;
+      default:
+        break;
+    }
+
+    this.props.navigation.navigate(pageName, {refresh: true});
+  };
+
+  async saveViolationDocument(userIdEncrypted) {
+    let savedDocument = null;
+
+    const pairs = [
+      { name: 'ViolationItemIdEncrypted', value: this.state.referenceId },
+      { name: 'UserIdEncrypted', value: userIdEncrypted },
+      { name: 'Note', value: this.state.comment }
+    ];
+    
+    const jsonItems = jsonItemsBuilder(pairs);
+
+    await ViolationServiceInstance.saveDocument(jsonItems)
+      .then(response => {
+        savedDocument = response;
+        console.log(JSON.stringify(response));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+      return savedDocument;
+  }
+
+  async saveArcDocument(userIdEncrypted) {
+    let savedDocument = null;
+
+    const pairs = [
+      { name: 'ProjectIdEncrypted', value: this.state.referenceId },
+      { name: 'UserIdEncrypted', value: userIdEncrypted },
+      { name: 'Note', value: this.state.comment }
+    ];
+    
+    const jsonItems = jsonItemsBuilder(pairs);
+
+    await ArcServiceInstance.saveDocument(jsonItems)
+      .then(response => {
+        savedDocument = response;
+        console.log(JSON.stringify(response));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+      return savedDocument;
+  }
+
+  async saveWoDocument(userIdEncrypted) {
+    let savedDocument = null;
+
+    const pairs = [
+      { name: 'WoIdEncrypted', value: this.state.referenceId },
+      { name: 'UserIdEncrypted', value: userIdEncrypted },
+      { name: 'Note', value: this.state.comment }
+    ];
+    
+    const jsonItems = jsonItemsBuilder(pairs);
+
+    await WorkOrderServiceInstance.saveDocument(jsonItems)
+      .then(response => {
+        savedDocument = response;
+        console.log(JSON.stringify(response));
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+      return savedDocument;
   }
 
   onViewFile(item) {
@@ -120,15 +283,13 @@ export class Documents extends React.Component {
         this.setState({ image: uploadResult.location });
       }
     } catch (e) {
-      console.log({ uploadResponse });
-      console.log({ uploadResult });
       console.log({ e });
     } finally {
       this.setState({ uploading: false });
     }
   };
 
-  extractItemKey = (item) => `${item.DocumentIdEncrypted}`;
+  extractItemKey = (item) => `${item.IdEncrypted}`;
 
   renderSeparator = () => (
     <View style={styles.separator} />
@@ -139,9 +300,9 @@ export class Documents extends React.Component {
       <View style={styles.itemContainer}>
         <View style={styles.content}>
           <View style={styles.contentHeader}>
-            <SwText swType='header5' style={styles.link}> {`${item.Text}`} ({`${item.Extension}`})</SwText>
+            <SwText swType='header5' style={styles.link}> {`${item.Name}`} ({`${item.Extension}`})</SwText>
           </View>
-          <SwText swType='primary3 mediumLine'>{`${item.CreatedDate}`} (Long Huynh)</SwText>
+          <SwText swType='primary3 mediumLine'>{`${item.CreatedDate} (${item.CreatedByUser})`}</SwText>
         </View>
       </View>
     </TouchableOpacity>
@@ -157,10 +318,10 @@ export class Documents extends React.Component {
         <View style={styles.top}>
           <View style={styles.row}>
             <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.takePhoto() }}>
-              <Icon name='camera' size={35} style={styles.icon} />
+              <FontAwesome5 name='camera' size={35} style={styles.icon} />
             </SwButton>
             <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.pickImage() }}>
-              <Icon name='upload' size={35} style={styles.icon} />
+              <FontAwesome5 name='upload' size={35} style={styles.icon} />
             </SwButton>
           </View>
         </View>

@@ -40,6 +40,40 @@ class ViolationService {
     }
   }
 
+  async getComments(idEncrypted) {
+    const url = `${ApiConfig.residentApiUrl}/GetUnitViolationComments`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: ApiConfig.headers,
+        body: JSON.stringify({ idEncrypted: idEncrypted}),
+      });
+
+      return await response.json();
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+  async getDocuments(idEncrypted) {
+    const url = `${ApiConfig.residentApiUrl}/GetUnitViolationDocuments`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: ApiConfig.headers,
+        body: JSON.stringify({ idEncrypted: idEncrypted}),
+      });
+
+      return await response.json();
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
   async saveComment(jsonItems) {
     const url = `${ApiConfig.residentApiUrl}/SaveViolationNote`;
 

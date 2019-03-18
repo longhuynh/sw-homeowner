@@ -1,16 +1,16 @@
 
 import React from 'react';
-import { View, Image, Dimensions } from 'react-native';
+import { View, Image } from 'react-native';
 import { SwStyleSheet } from 'sw-react-native-ui';
 import PDFReader from 'rn-pdf-reader-js';
-import { Constants } from 'expo';
-
-const { width, height } = Dimensions.get('window');
+import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode'
 
 export class DocumentViewer extends React.Component {
   static navigationOptions = {
     title: 'Document Viewer'.toUpperCase(),
   };
+
+  
 
   constructor(props) {
     super(props);
@@ -35,7 +35,10 @@ export class DocumentViewer extends React.Component {
 
     return (
       <View style={styles.container}>
-        <Image source={{ uri: this.state.url }} style={styles.content} />
+        <Image 
+          source={{ uri: this.state.url, cache:true }} 
+          resizeMode={ImageResizeMode.contain} 
+          style={styles.content}/>
       </View>
     )
   }
@@ -46,9 +49,9 @@ const styles = SwStyleSheet.create(theme => ({
     flex: 1,
     backgroundColor: theme.colors.screen.scroll,
   },
-  content: {
-    width: width,
-    height: height
+  content: { 
+    flex: 1,
+
   }
 
 }));
