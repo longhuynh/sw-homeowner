@@ -91,7 +91,24 @@ class ArcService {
     }
   }
 
-  
+  async uploadPhoto(formData, userIdEncrypted, projectIdEncrypted) {
+    const params = `userIdEnc=${userIdEncrypted}&projectIdEnc=${projectIdEncrypted}&app=arc`;
+
+    const url = `${ApiConfig.baseUrl}/SWWebservice/Ashx/ResidentPortalFileHandler.ashx?${params}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: ApiConfig.uploadHeaders,
+        body: formData,
+      });
+
+      return await response.json();
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
 
 }
 

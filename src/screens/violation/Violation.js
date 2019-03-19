@@ -16,7 +16,7 @@ export class Violation extends React.Component {
   static navigationOptions = {
     title: 'Violation Detail'.toUpperCase(),
   };
-log
+
   constructor(props) {
     super(props);
     const query = this.props.navigation.getParam('query', '');
@@ -71,7 +71,8 @@ log
   onDocumentsButtonPressed() {
     this.props.navigation.navigate(PageNames.Documents, {
       pageName: PageNames.Violation,
-      referenceId: this.state.id
+      referenceId: this.state.id,
+      activityId: this.state.violation.LatestActivityIdEncrypted
     });
   }
 

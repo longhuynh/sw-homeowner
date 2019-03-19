@@ -40,6 +40,7 @@ export class WorkOrder extends React.Component {
       referenceId: this.state.id
     });
   }
+  
   render = () => (
     <View style={styles.screen} >
       <SwCard style={styles.container}>

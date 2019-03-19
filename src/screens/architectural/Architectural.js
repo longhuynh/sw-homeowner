@@ -3,6 +3,8 @@ import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { PageNames } from '../../config/AppConstants';
+import { ArcServiceInstance } from '../../services/ArcService';
 
 export class Architectural extends React.Component {
   static navigationOptions = {
@@ -11,34 +13,66 @@ export class Architectural extends React.Component {
 
   constructor(props) {
     super(props);
-    const architecturalId = this.props.navigation.getParam('id', 1);
+    const query = this.props.navigation.getParam('query', '');
+    const id = this.props.navigation.getParam('id', '');
+
+    this.state = {
+      query: query,
+      id: id,
+      items: [],
+    };
+
+    this.bindData(query);
   }
 
-  state = {
-    items: [
-      {
-        name: 'Status',
-        screen: 'ArchitecturalStatus',
-        value: 'In Review',
-        icon: 'star'
-      },
-      {
-        name: 'Pics/Docs',
-        screen: 'Documents',
-        value: '5',
-        icon: 'file'
-      },
-      {
-        name: 'Comments',
-        screen: 'Comments',
-        value: '12',
-        icon: 'comments'
-      }
-    ],
-  };
+  async bindData(query) {
+    if (query == undefined || query == '')
+      return;
+
+    await ArcServiceInstance.getArc(query)
+      .then(response => {
+        if (response != null && response != undefined) {
+          const dataValue = Object.values(response);
+          const parsedData = JSON.parse(dataValue);
+
+          const items = this.generateData(parsedData);
+          this.setState({ items: items });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  generateData(parsedData) {
+    let items = [];
+    items.push({
+      name: 'Status',
+      screen: 'ArchitecturalStatus',
+      value: parsedData.Status || '',
+      icon: 'star'
+    });
+    items.push({
+      name: 'Pics/Docs',
+      screen: 'Documents',
+      value: parsedData.NumberOfDocuments.toString()  || '0',
+      icon: 'file'
+    });
+    items.push({
+      name: 'Comments',
+      screen: 'Comments',
+      value: parsedData.NumberOfComment.toString()  || '0',
+      icon: 'comments'
+    });
+
+    return items;
+  }
 
   navigateToScreen(screen) {
-    this.props.navigation.navigate(screen);
+    this.props.navigation.navigate(screen, {
+      pageName: PageNames.Architectural,
+      referenceId: this.state.id
+    });
   }
 
   renderStatItem = (item) => (

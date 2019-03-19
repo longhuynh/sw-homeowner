@@ -109,7 +109,6 @@ class ViolationService {
       console.log(error);
     }
   }
-
 }
 
 export const ViolationServiceInstance = new ViolationService();

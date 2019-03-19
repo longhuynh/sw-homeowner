@@ -73,6 +73,26 @@ class WorkOrderService {
     }
   }
 
+  async uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted) {
+    const params = `userIdEnc=${userIdEncrypted}&workOrderIdEnc=${workOrderIdEncypted}&app=wo`;
+
+    const url = `${ApiConfig.baseUrl}/SWWebservice/Ashx/ResidentPortalFileHandler.ashx?${params}`;
+
+    try {
+      const response = await fetch(url, {
+        method: 'POST',
+        headers: ApiConfig.uploadHeaders,
+        body: formData,
+      });
+
+      return await response.json();
+    }
+    catch (error) {
+      console.log(error);
+    }
+  }
+
+
 }
 
 export const WorkOrderServiceInstance = new WorkOrderService();

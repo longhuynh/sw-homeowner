@@ -122,7 +122,7 @@ export class Comments extends React.Component {
         await this.saveViolationComment(unit.UserIdEncrypted);
         break;
       case PageNames.Architectural:
-        await this.saveArcComment(unit.UserIdEncrypted);
+        await this.saveArcComment(unit.UserIdEncrypted, unit.AssociationIdEncrypted);
         break;
       case PageNames.WorkOrder:
         await this.saveWoComment(unit.UserIdEncrypted);
@@ -131,7 +131,7 @@ export class Comments extends React.Component {
         break;
     }
 
-    this.props.navigation.navigate(pageName, {refresh: true});
+    this.props.navigation.navigate(pageName);
   };
 
   async saveViolationComment(userIdEncrypted) {
@@ -157,16 +157,19 @@ export class Comments extends React.Component {
       return savedComment;
   }
 
-  async saveArcComment(userIdEncrypted) {
+  async saveArcComment(userIdEncrypted, associationIdEncrypted) {
     let savedComment = null;
 
     const pairs = [
       { name: 'ProjectIdEncrypted', value: this.state.referenceId },
       { name: 'UserIdEncrypted', value: userIdEncrypted },
-      { name: 'Note', value: this.state.comment }
+      { name: 'Note', value: this.state.comment },
+      { name: 'AssociationIdEncrypted', value: associationIdEncrypted }
     ];
-    
+
     const jsonItems = jsonItemsBuilder(pairs);
+
+    console.log(jsonItems);
 
     await ArcServiceInstance.saveComment(jsonItems)
       .then(response => {
@@ -184,7 +187,7 @@ export class Comments extends React.Component {
     let savedComment = null;
 
     const pairs = [
-      { name: 'WoIdEncrypted', value: this.state.referenceId },
+      { name: 'WorkOrderIdEncrypted', value: this.state.referenceId },
       { name: 'UserIdEncrypted', value: userIdEncrypted },
       { name: 'Note', value: this.state.comment }
     ];
@@ -217,7 +220,7 @@ export class Comments extends React.Component {
     <View style={styles.itemContainer}>
       <View style={styles.content}>
         <View style={styles.contentHeader}>
-          <SwText swType='header5'>{moment(item.CreatedDate.toString()).format('MM/DD/YYYY')} ({item.CreatedByUser})</SwText>
+          <SwText swType='header5'>{moment(new Date(item.CreatedDate.toString())).format('MM/DD/YYYY')} ({item.CreatedByUser})</SwText>
           <SwText swType='secondary4 hintColor'></SwText>
         </View>
         <SwText swType='primary3 mediumLine'>{item.Notes}</SwText>
@@ -228,9 +231,9 @@ export class Comments extends React.Component {
   render = () => (
     <View style={styles.screen} >
       <SwCard style={styles.container}>
-      <Badge value={this.state.comments.length} status="success" textStyle={{ fontSize: 25 }}
+      {/* <Badge value={this.state.comments.length} status="success" textStyle={{ fontSize: 25 }}
           badgeStyle={{ width: 50, height: 50, borderRadius: 300 }}
-          containerStyle={{ position: 'absolute', top: -15, right: -15 }} />
+          containerStyle={{ position: 'absolute', top: -15, right: -15 }} /> */}
 
         <View style={styles.comment}>
           <SwText swType='header5'>Add comment</SwText>

@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, FlatList, StyleSheet, Dimensions, TouchableOpacity, ActivityIndicator, Clipboard, Image, Share, Text  } from 'react-native';
+import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Clipboard, Image, Share, Text, AsyncStorage } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge } from 'react-native-elements';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
@@ -10,8 +10,9 @@ import { ApiConfig } from '../../services/config';
 import { ViolationServiceInstance } from '../../services/ViolationService';
 import { ArcServiceInstance } from '../../services/ArcService';
 import { WorkOrderServiceInstance } from '../../services/WorkOrderService';
+import { DbStorageKey } from '../../services/storageKey';
 
-const screenHeight = Dimensions.get('window').height - 120;
+const moment = require('moment');
 
 export class Documents extends React.Component {
   static navigationOptions = {
@@ -22,9 +23,11 @@ export class Documents extends React.Component {
     super(props);
     const pageName = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');
+    const activityId = this.props.navigation.getParam('activityId', '');
 
     this.state = {
       referenceId: referenceId,
+      activityId: activityId,
       documents: [],
       pageName: pageName
     };
@@ -68,9 +71,10 @@ export class Documents extends React.Component {
 
   async getArcDocuments() {
     const idEncrypted = this.state.referenceId;
-
+    console.log(idEncrypted);
     await ArcServiceInstance.getDocuments(idEncrypted)
       .then(response => {      
+        console.log(response);
         this.generateData(response);
       })
       .catch(error => {
@@ -98,101 +102,68 @@ export class Documents extends React.Component {
       this.setState({ documents: documents });
     }
   }
-
-  onSaveButtonPressed = async () => {
-    if(this.state.comment.trim() == ''){
-      Alert.alert('Please enter comment');
-      return;
-    }    
-      
+  
+  async uploadImageAsync(uri){
+    let uriParts = uri.split('.');
+    let fileType = uriParts[uriParts.length - 1];
+  
+    let formData = new FormData();
+    formData.append('photo', {
+      uri,
+      name: `Doc_${moment().format('YYYYDDMMHHmmss')}.${fileType}`,
+      type: `image/${fileType}`,
+    });
+  
     const pageName = this.state.pageName;
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
     const unit = JSON.parse(unitData);
    
     switch (pageName) {
       case PageNames.Violation:      
-        await this.saveViolationDocument(unit.UserIdEncrypted);
+        await this.saveViolationDocument(formData, unit.AssociationIdEncrypted, unit.UserIdEncrypted, this.state.activityId);
         break;
       case PageNames.Architectural:
-        await this.saveArcDocument(unit.UserIdEncrypted);
+        await this.saveArcDocument(formData, unit.UserIdEncrypted, this.state.referenceId);
         break;
       case PageNames.WorkOrder:
-        await this.saveWoDocument(unit.UserIdEncrypted);
+        await this.saveWoDocument(formData, unit.UserIdEncrypted, this.state.referenceId);
         break;
       default:
         break;
     }
-
-    this.props.navigation.navigate(pageName, {refresh: true});
-  };
-
-  async saveViolationDocument(userIdEncrypted) {
-    let savedDocument = null;
-
-    const pairs = [
-      { name: 'ViolationItemIdEncrypted', value: this.state.referenceId },
-      { name: 'UserIdEncrypted', value: userIdEncrypted },
-      { name: 'Note', value: this.state.comment }
-    ];
-    
-    const jsonItems = jsonItemsBuilder(pairs);
-
-    await ViolationServiceInstance.saveDocument(jsonItems)
-      .then(response => {
-        savedDocument = response;
-        console.log(JSON.stringify(response));
-      })
-      .catch(error => {
-        console.log(error);
-      });
-
-      return savedDocument;
   }
 
-  async saveArcDocument(userIdEncrypted) {
-    let savedDocument = null;
-
-    const pairs = [
-      { name: 'ProjectIdEncrypted', value: this.state.referenceId },
-      { name: 'UserIdEncrypted', value: userIdEncrypted },
-      { name: 'Note', value: this.state.comment }
-    ];
-    
-    const jsonItems = jsonItemsBuilder(pairs);
-
-    await ArcServiceInstance.saveDocument(jsonItems)
+  async saveViolationDocument(formData, associationIdEncrypted, userIdEncrypted, activityId) {
+    await ViolationServiceInstance.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId) 
       .then(response => {
-        savedDocument = response;
         console.log(JSON.stringify(response));
+        this.bindData();
       })
       .catch(error => {
         console.log(error);
       });
-
-      return savedDocument;
   }
 
-  async saveWoDocument(userIdEncrypted) {
-    let savedDocument = null;
-
-    const pairs = [
-      { name: 'WoIdEncrypted', value: this.state.referenceId },
-      { name: 'UserIdEncrypted', value: userIdEncrypted },
-      { name: 'Note', value: this.state.comment }
-    ];
-    
-    const jsonItems = jsonItemsBuilder(pairs);
-
-    await WorkOrderServiceInstance.saveDocument(jsonItems)
+  async saveArcDocument(formData, projectIdEncrypted)  {
+    await ArcServiceInstance.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted) 
       .then(response => {
-        savedDocument = response;
         console.log(JSON.stringify(response));
+        this.bindData();
       })
       .catch(error => {
         console.log(error);
       });
+  }
 
-      return savedDocument;
+  async saveWoDocument(formData, userIdEncrypted, workOrderIdEncypted) {
+    await WorkOrderServiceInstance.uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted)
+      .then(response => {
+        console.log(JSON.stringify(response));
+        this.bindData();
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   onViewFile(item) {
@@ -277,10 +248,10 @@ export class Documents extends React.Component {
       this.setState({ uploading: true });
 
       if (!pickerResult.cancelled) {
-        uploadResponse = await uploadImageAsync(pickerResult.uri);
+        uploadResponse = await this.uploadImageAsync(pickerResult.uri);
         //uploadResult = await uploadResponse.json();
 
-        this.setState({ image: uploadResult.location });
+        //this.setState({ image: uploadResult.location });
       }
     } catch (e) {
       console.log({ e });
@@ -302,7 +273,7 @@ export class Documents extends React.Component {
           <View style={styles.contentHeader}>
             <SwText swType='header5' style={styles.link}> {`${item.Name}`} ({`${item.Extension}`})</SwText>
           </View>
-          <SwText swType='primary3 mediumLine'>{`${item.CreatedDate} (${item.CreatedByUser})`}</SwText>
+          <SwText swType='primary3 mediumLine'>{moment(new Date(item.CreatedDate.toString())).format('MM/DD/YYYY')} ({item.CreatedByUser})</SwText>
         </View>
       </View>
     </TouchableOpacity>
@@ -338,22 +309,6 @@ export class Documents extends React.Component {
   )
 }
 
-async function uploadImageAsync(uri) {
-  let uriParts = uri.split('.');
-  let fileType = uriParts[uriParts.length - 1];
-
-  console.log(uri);
-
-  let formData = new FormData();
-  formData.append('photo', {
-    uri,
-    name: `photo.${fileType}`,
-    type: `image/${fileType}`,
-  });
-
-  await ViolationServiceInstance.uploadPhoto(formData, 'AwPQuMFIWBjXZ9n_Nw8', 'U1TZ-MhdSwzAFX805Go', 'ajSauOB8OT4EG7LCghE');
-}
-
 const styles = SwStyleSheet.create(theme => ({
   screen: {
     flex: 1,
@@ -367,11 +322,6 @@ const styles = SwStyleSheet.create(theme => ({
     paddingHorizontal: 15,
     borderColor: theme.colors.border.card,
     backgroundColor: theme.colors.screen.base,
-  },
-  card: {
-    borderRadius: 3,
-    height: screenHeight,
-    paddingHorizontal: 15,
   },
   link: {
     color: theme.colors.info
