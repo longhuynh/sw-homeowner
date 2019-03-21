@@ -4,7 +4,7 @@ import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Clipbo
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge } from 'react-native-elements';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { ImagePicker, Permissions } from 'expo';
+import { ImagePicker, Permissions, ImageManipulator } from 'expo';
 import { PageNames } from '../../config/AppConstants';
 import { ApiConfig } from '../../services/config';
 import { ViolationServiceInstance } from '../../services/ViolationService';
@@ -36,14 +36,14 @@ export class Documents extends React.Component {
   }
 
   bindData = async () => {
-    if(this.state.referenceId.trim() == ''){     
+    if (this.state.referenceId.trim() == '') {
       return;
-    }    
-      
+    }
+
     const pageName = this.state.pageName;
-   
+
     switch (pageName) {
-      case PageNames.Violation:      
+      case PageNames.Violation:
         await this.getViolationDocuments();
         break;
       case PageNames.Architectural:
@@ -61,7 +61,7 @@ export class Documents extends React.Component {
     const idEncrypted = this.state.referenceId;
 
     await ViolationServiceInstance.getDocuments(idEncrypted)
-      .then(response => {      
+      .then(response => {
         this.generateData(response);
       })
       .catch(error => {
@@ -73,7 +73,7 @@ export class Documents extends React.Component {
     const idEncrypted = this.state.referenceId;
     console.log(idEncrypted);
     await ArcServiceInstance.getDocuments(idEncrypted)
-      .then(response => {      
+      .then(response => {
         console.log(response);
         this.generateData(response);
       })
@@ -86,14 +86,14 @@ export class Documents extends React.Component {
     const idEncrypted = this.state.referenceId;
 
     await WorkOrderServiceInstance.getDocuments(idEncrypted)
-      .then(response => {      
+      .then(response => {
         this.generateData(response);
       })
       .catch(error => {
         console.log(error);
       });
   }
-    
+
   generateData(response) {
     if (response != null && response != undefined) {
       const dataValue = Object.values(response);
@@ -102,24 +102,40 @@ export class Documents extends React.Component {
       this.setState({ documents: documents });
     }
   }
-  
-  async uploadImageAsync(uri){
-    let uriParts = uri.split('.');
-    let fileType = uriParts[uriParts.length - 1];
-  
+
+  async uploadImageAsync(pickerResult) {
+    let uri = pickerResult.uri;
+    const uriParts = uri.split('.');
+    const fileType = uriParts[uriParts.length - 1];
+
+    const maxWidth = 1024;
+    const maxHeight = 1024;
+
+    if (pickerResult.width > maxWidth || pickerResult.height > maxHeight) {
+      const ratio = maxWidth / pickerResult.width;
+
+      const resizeImage = await ImageManipulator.manipulateAsync(
+        uri,
+        [{ resize: { width: maxWidth, height: pickerResult.height * ratio } }],
+        { format: fileType },
+      );
+
+      uri = resizeImage.uri;
+    }
+
     let formData = new FormData();
     formData.append('photo', {
       uri,
       name: `Doc_${moment().format('YYYYDDMMHHmmss')}.${fileType}`,
       type: `image/${fileType}`,
     });
-  
+
     const pageName = this.state.pageName;
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
     const unit = JSON.parse(unitData);
-   
+
     switch (pageName) {
-      case PageNames.Violation:      
+      case PageNames.Violation:
         await this.saveViolationDocument(formData, unit.AssociationIdEncrypted, unit.UserIdEncrypted, this.state.activityId);
         break;
       case PageNames.Architectural:
@@ -134,7 +150,7 @@ export class Documents extends React.Component {
   }
 
   async saveViolationDocument(formData, associationIdEncrypted, userIdEncrypted, activityId) {
-    await ViolationServiceInstance.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId) 
+    await ViolationServiceInstance.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId)
       .then(response => {
         console.log(JSON.stringify(response));
         this.bindData();
@@ -144,8 +160,8 @@ export class Documents extends React.Component {
       });
   }
 
-  async saveArcDocument(formData, projectIdEncrypted)  {
-    await ArcServiceInstance.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted) 
+  async saveArcDocument(formData, projectIdEncrypted) {
+    await ArcServiceInstance.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted)
       .then(response => {
         console.log(JSON.stringify(response));
         this.bindData();
@@ -168,9 +184,9 @@ export class Documents extends React.Component {
 
   onViewFile(item) {
     const url = item.Url.replace('..', ApiConfig.baseUrl);
-    this.props.navigation.navigate(PageNames.DocumentViewer, {url: url, extension: item.Extension} );
+    this.props.navigation.navigate(PageNames.DocumentViewer, { url: url, extension: item.Extension });
   }
-  
+
   maybeRenderUploadingOverlay = () => {
     if (this.state.uploading) {
       return (
@@ -248,7 +264,7 @@ export class Documents extends React.Component {
       this.setState({ uploading: true });
 
       if (!pickerResult.cancelled) {
-        uploadResponse = await this.uploadImageAsync(pickerResult.uri);
+        uploadResponse = await this.uploadImageAsync(pickerResult);
         //uploadResult = await uploadResponse.json();
 
         //this.setState({ image: uploadResult.location });

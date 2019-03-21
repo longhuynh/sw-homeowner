@@ -5,7 +5,7 @@ import { Input, Button } from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { View, Text, Keyboard, ImageBackground, Dimensions, AsyncStorage } from 'react-native';
 import { PageNames } from '../../config/AppConstants';
-import { LoginServiceInstance } from '../../services/LoginService';
+import { LoginServiceInstance, CurrentUser } from '../../services/LoginService';
 import { OwnerServiceInstance } from '../../services/OwnerService';
 import { DbStorageKey, AppStorageKey } from '../../services/storageKey';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
@@ -43,10 +43,7 @@ export class Login extends React.Component {
 
         if (response != null && response != undefined) {
           this.setState({ loginFailed: false });
-
-          await AsyncStorage.setItem(DbStorageKey.User, JSON.stringify(response));
-
-          console.log(response);
+          console.log(CurrentUser);
 
           const unitOwners = OwnerServiceInstance.populateUnitOwners(response);
 

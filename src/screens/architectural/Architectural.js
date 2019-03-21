@@ -5,6 +5,7 @@ import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { PageNames } from '../../config/AppConstants';
 import { ArcServiceInstance } from '../../services/ArcService';
+import { Architecturals } from './Architecturals';
 
 export class Architectural extends React.Component {
   static navigationOptions = {
@@ -23,6 +24,8 @@ export class Architectural extends React.Component {
     };
 
     this.bindData(query);
+
+    console.log(Architecturals.state);
   }
 
   async bindData(query) {

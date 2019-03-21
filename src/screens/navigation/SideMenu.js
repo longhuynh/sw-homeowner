@@ -2,18 +2,23 @@ import React from 'react';
 import { TouchableHighlight, View, ScrollView, Platform, StyleSheet} from 'react-native';
 import { SwStyleSheet, SwText, SwTheme} from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { data } from '../../data/DataProvider';
 import { Avatar} from '../../components/index';
 import { MenuRoutes } from '../../config/navigation/Routes';
 import { FontAwesome } from '../../assets/icons';
 import NavigationType from '../../config/navigation/NavigationType';
+import { CurrentUser } from '../../services/LoginService';
 
 export class SideMenu extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
 
-  user = data.getUser();
+  user = CurrentUser;
+
+  getFullName(){
+    const fullName = this.user.FirstName + ' ' + this.user.LastName;
+    return fullName.length < 20 ? fullName : fullName.substring(0, 15) + ' ...';
+  }
 
   onMenuItemPressed = (item) => {
     this.props.navigation.navigate(item.id);
@@ -23,12 +28,11 @@ export class SideMenu extends React.Component {
     this.props.navigation.navigate('Profile');
   };
 
-  renderIcon = () => (
-    <Avatar
-      img={this.user.photo}
-      swType='circle'
-      style={styles.avatar}
-    />
+  renderAvatar = () => (
+    <Avatar 
+      style={styles.avatar} 
+      swType='circle' 
+      img={require('../../data/img/avatars/no-avatar.png')} />
   );
 
   renderMenu = () => MenuRoutes.map(this.renderMenuItem);
@@ -58,10 +62,10 @@ export class SideMenu extends React.Component {
           activeOpacity={1}
           onPress={() => this.onProfilePressed()}>
           <View style={[styles.container, styles.content]}>
-            {this.renderIcon()}      
+            {this.renderAvatar()}      
             <View style={styles.userInfo}>
-              <SwText swType='header5'>{`${this.user.firstName} ${this.user.lastName}`}</SwText>
-              <SwText swType='secondary4'>{`${this.user.city}, ${this.user.state}`}</SwText>          
+              <SwText numberOfLines={1} swType='header5'>{this.getFullName()}</SwText>
+              <SwText numberOfLines={1} swType='secondary4'>{this.user.Email}</SwText>          
             </View>
           </View>
         </TouchableHighlight>

@@ -47,8 +47,8 @@ export class UnitOwners extends React.Component {
       key={unit.IdEncrypted}
       onPress={() => this.onItemPressed(unit)}>
       <Icon name='home' size={30} type='font-awesome' iconStyle={styles.icon} />
-      <SwText swType='primary small center'>{unit.OwnerFirstName} {unit.OwnerLastName}</SwText>
-      <SwText swType='small center'>{unit.UnitAddress}</SwText>
+      <SwText numberOfLines={2} swType='primary small center'>{unit.OwnerFirstName} {unit.OwnerLastName}</SwText>
+      <SwText numberOfLines={2} swType='small center'>{unit.UnitAddress}</SwText>
     </SwButton>
   );
 

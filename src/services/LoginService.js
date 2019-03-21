@@ -1,5 +1,7 @@
 import { ApiConfig } from "./config";
 
+const User = {};
+
 class LoginService {
   constructor() {
     console.log("LoginService constructor");
@@ -14,8 +16,12 @@ class LoginService {
         headers: ApiConfig.headers,
         body: JSON.stringify({ UserName: username, Password: password }),
       });
+
+      const user =  await response.json();
+
+      Object.assign(User, user);
       
-      return await response.json();
+      return user;
     }
     catch (error) {
       console.log(error);
@@ -25,3 +31,4 @@ class LoginService {
 }
 
 export const LoginServiceInstance = new LoginService();
+export const CurrentUser = User;

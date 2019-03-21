@@ -14,14 +14,14 @@
     },
     "ios": {
       "bundleIdentifier": "com.smartwebs.homeowner",
-      "buildNumber": "0.2.0",
+      "buildNumber": "0.3.0",
       "supportsTablet": true
     },
     "android": {
       "package": "com.smartwebs.homeowner",
-      "versionCode": 18
+      "versionCode": 22
     },
-    "version": "0.2.0",
+    "version": "0.3.0",
     "description": ""
   }
 }

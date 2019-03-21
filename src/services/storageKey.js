@@ -1,7 +1,6 @@
 import { AsyncStorage } from 'react-native';
 
 export const DbStorageKey = {
-    User: "@Db:User",
     UnitOwners: "@Db:UnitOwners",
     SelectedUnit: "@Db:SelectedUnit"
 };
