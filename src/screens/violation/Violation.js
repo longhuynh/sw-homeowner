@@ -13,8 +13,12 @@ export class Violation extends React.Component {
     navigation: NavigationType.isRequired,
   };
 
-  static navigationOptions = {
-    title: 'Violation Detail'.toUpperCase(),
+  static navigationOptions = ({ navigation }) => {
+    let name = navigation.state.params ? navigation.state.params.name : '';
+
+    return ({
+      headerTitle: Violation.renderNavigationTitle(name)
+    });
   };
 
   constructor(props) {
@@ -26,15 +30,12 @@ export class Violation extends React.Component {
     
     this.state = {
       query: query,
+      refresh: false,
       id: id,
       violation: {}
     };
   }
-
-  componentWillMount() {
-
-  }
-
+  
   async bindData(query){
     if(query == undefined || query == '')
       return;
@@ -76,6 +77,17 @@ export class Violation extends React.Component {
     });
   }
 
+  static renderNavigationTitle = (name) => {
+    return (
+      <View>
+        <View style={styles.header}>
+          <SwText swType='header4 center' numberOfLines={1}>{name}</SwText>
+          <SwText swType='secondary2 secondaryColor center'>Detail</SwText>
+        </View>
+      </View>
+    )
+  }
+
   render = () => (
     <View style={styles.screen} >
       <View style={styles.container}>
@@ -114,9 +126,9 @@ export class Violation extends React.Component {
               <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onDocumentsButtonPressed() }}>
                 <FontAwesome5 name='file' size={35} style={styles.icon} />
               </SwButton>
-              <Badge value={this.state.violation.NumberOfDocument} status="success" textStyle={{ fontSize: 15 }}
+              {/* <Badge value={this.state.violation.NumberOfDocument} status="success" textStyle={{ fontSize: 15 }}
                 badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
-                containerStyle={{ position: 'absolute', top: 20, right: -10 }} />
+                containerStyle={{ position: 'absolute', top: 20, right: -10 }} /> */}
             </View>          
           </View>
         </View>

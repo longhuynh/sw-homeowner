@@ -14,7 +14,7 @@ export class ChatList extends React.Component {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = {
-    title: 'Chats List'.toUpperCase(),
+    title: 'Chats List',
   };
 
   state = {

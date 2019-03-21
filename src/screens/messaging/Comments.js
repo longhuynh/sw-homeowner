@@ -19,7 +19,7 @@ export class Comments extends React.Component {
   };
 
   static navigationOptions = {
-    title: 'Comments'.toUpperCase(),
+    title: 'Comments',
   };
   
   constructor(props) {
@@ -131,7 +131,7 @@ export class Comments extends React.Component {
         break;
     }
 
-    this.props.navigation.navigate(pageName);
+    this.props.navigation.navigate(pageName, {refresh: true});
   };
 
   async saveViolationComment(userIdEncrypted) {

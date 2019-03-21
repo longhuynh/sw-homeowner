@@ -21,7 +21,7 @@ export class Contacts extends React.Component {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = {
-    title: 'Contacts'.toUpperCase(),
+    title: 'Contacts',
   };
 
   state = {

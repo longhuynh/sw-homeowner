@@ -8,7 +8,7 @@ import { UIConstants } from '../../config/AppConstants';
 
 export class Cards extends React.Component {
   static navigationOptions = {
-    title: 'Cards'.toUpperCase(),
+    title: 'Cards',
   };
 
   state = {
@@ -104,8 +104,8 @@ export class Cards extends React.Component {
             </View>
             <View swCardFooter>
               <View>
-                <SwText swType='header4 inverseColor'>{item.currency.toUpperCase()}</SwText>
-                <SwText swType='header6 inverseColor'>{item.name.toUpperCase()}</SwText>
+                <SwText swType='header4 inverseColor'>{item.currency}</SwText>
+                <SwText swType='header6 inverseColor'>{item.name}</SwText>
               </View>
               <SwText
                 swType='header2 inverseColor'>{this.formatCurrency(item.amount, item.currency)}

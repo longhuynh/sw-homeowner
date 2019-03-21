@@ -10,8 +10,10 @@ import { WorkOrderServiceInstance } from '../../services/WorkOrderService';
 const moment = require('moment');
 
 export class WorkOrders extends React.Component {
-  static navigationOptions = {
-    title: 'Work Orders'.toUpperCase(),
+  static navigationOptions = ({ navigation }) => {
+    return ({
+      headerTitle: WorkOrders.renderNavigationTitle()
+    });
   };
 
   constructor(props) {
@@ -69,6 +71,17 @@ export class WorkOrders extends React.Component {
     this.setState({ refreshing: true })
     this.bindData(this.state.query);
     this.setState({ refreshing: false });
+  }
+
+  static renderNavigationTitle = () => {
+    return (
+      <View>
+        <View style={styles.header}>
+          <SwText swType='header4 center'>Work Orders</SwText>
+          <SwText swType='secondary2 secondaryColor center'>Overview</SwText>
+        </View>
+      </View>
+    )
   }
 
   renderStatItem = (item) => (

@@ -13,7 +13,7 @@ export class UnitOwners extends React.Component {
   };
 
   static navigationOptions = {
-    title: 'Change Owner Units'.toUpperCase(),
+    title: 'Change Owner Units',
   };
 
   constructor(props) {

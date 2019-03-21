@@ -6,7 +6,7 @@ import { DbStorageKey } from '../../services/storageKey';
 
 export class ProfileSettings extends React.Component {
   static navigationOptions = {
-    title: 'Profile Settings'.toUpperCase(),
+    title: 'Profile Settings',
   };
 
   constructor(props) {

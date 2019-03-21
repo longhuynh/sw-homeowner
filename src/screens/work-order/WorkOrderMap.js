@@ -27,7 +27,7 @@ const Markers = [
 
 export class WorkOrderMap extends React.Component {
   static navigationOptions = {
-    title: 'Work Order Map'.toUpperCase(),
+    title: 'Work Order Map',
   };
 
   static propTypes = {

@@ -19,6 +19,7 @@ export class Login extends React.Component {
 
   static navigationOptions = {
     header: null,
+    drawerLockMode: 'locked-open'
   };
 
   constructor(props) {

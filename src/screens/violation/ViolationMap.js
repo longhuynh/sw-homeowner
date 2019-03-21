@@ -33,7 +33,7 @@ const DefaultPadding = { top: 40, right: 40, bottom: 40, left: 40 };
 
 export class ViolationMap extends React.Component {
   static navigationOptions = {
-    title: 'Violation Map'.toUpperCase(),
+    title: 'Violation Map',
   };
 
   static propTypes = {

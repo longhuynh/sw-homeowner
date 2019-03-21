@@ -5,7 +5,7 @@ import Icon from 'react-native-vector-icons/FontAwesome';
 
 export class ArchitecturalStatus extends React.Component {
   static navigationOptions = {
-    title: 'Status'.toUpperCase(),
+    title: 'Status',
   };
 
   state = {

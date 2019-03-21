@@ -12,7 +12,7 @@ export class AddToCardForm extends React.Component {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = {
-    title: 'Add Card'.toUpperCase(),
+    title: 'Add Card',
   };
 
   state = {

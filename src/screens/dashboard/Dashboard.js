@@ -150,8 +150,8 @@ export class Dashboard extends React.Component {
     return (
       <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation)}>
         <View style={styles.header}>
-          <SwText swType='header5'>{ownerFullName}</SwText>
-          <SwText swType='secondary2 secondaryColor'>{address}</SwText>
+          <SwText swType='header4 center'>{ownerFullName}</SwText>
+          <SwText swType='secondary2 secondaryColor center'>{address}</SwText>
         </View>
         <Badge value={numberOfUnit} status="success" textStyle={{ fontSize: 15 }}
           badgeStyle={{ width: 20, height: 20, borderRadius: 300 }}

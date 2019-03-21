@@ -7,7 +7,7 @@ import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode'
 
 export class DocumentViewer extends React.Component {
   static navigationOptions = {
-    title: 'Document Viewer'.toUpperCase(),
+    title: 'Document Viewer',
   };
 
   

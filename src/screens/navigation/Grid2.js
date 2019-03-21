@@ -9,7 +9,7 @@ export class GridV2 extends React.Component {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = {
-    title: 'Grid Menu'.toUpperCase(),
+    title: 'Grid Menu',
   };
 
   state = {

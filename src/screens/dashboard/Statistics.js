@@ -18,7 +18,7 @@
 
 // export class Statistics extends React.Component {
 //   static navigationOptions = {
-//     title: 'Dashboard'.toUpperCase(),
+//     title: 'Dashboard',
 //   };
 
 //   state = {

@@ -7,7 +7,7 @@ import { GradientButton } from '../../components/gradient-button/GradientButton'
 
 export class Themes extends React.Component {
   static navigationOptions = {
-    title: 'Theme'.toUpperCase(),
+    title: 'Theme',
   };
 
   onLightThemeApplyButtonPressed = () => {

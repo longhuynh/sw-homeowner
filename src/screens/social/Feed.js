@@ -9,7 +9,7 @@ const moment = require('moment');
 
 export class Feed extends React.Component {
   static navigationOptions = {
-    title: 'Feed'.toUpperCase(),
+    title: 'Feed',
   };
 
   state = {

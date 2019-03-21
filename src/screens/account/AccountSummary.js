@@ -9,7 +9,7 @@ const screenHeight = Dimensions.get('window').height - 350;
 
 export class AccountSummary extends React.Component {
   static navigationOptions = {
-    title: 'Account Summary'.toUpperCase(),
+    title: 'Account Summary',
   };
 
   state = {

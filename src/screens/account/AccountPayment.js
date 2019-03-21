@@ -6,7 +6,7 @@ import { PageNames } from '../../config/AppConstants';
 
 export class AccountPayment extends React.Component {
   static navigationOptions = {
-    title: 'Account Payment '.toUpperCase(),
+    title: 'Account Payment ',
   };
 
   state = {

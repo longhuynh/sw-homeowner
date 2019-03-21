@@ -5,11 +5,14 @@ import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { PageNames } from '../../config/AppConstants';
 import { ArcServiceInstance } from '../../services/ArcService';
-import { Architecturals } from './Architecturals';
 
 export class Architectural extends React.Component {
-  static navigationOptions = {
-    title: 'Arc/Arb Detail'.toUpperCase(),
+  static navigationOptions = ({ navigation }) => {
+    let name = navigation.state.params ? navigation.state.params.name : '';
+
+    return ({
+      headerTitle: Architectural.renderNavigationTitle(name)
+    });
   };
 
   constructor(props) {
@@ -24,8 +27,6 @@ export class Architectural extends React.Component {
     };
 
     this.bindData(query);
-
-    console.log(Architecturals.state);
   }
 
   async bindData(query) {
@@ -76,6 +77,17 @@ export class Architectural extends React.Component {
       pageName: PageNames.Architectural,
       referenceId: this.state.id
     });
+  }
+
+  static renderNavigationTitle = (name) => {
+    return (
+      <View>
+        <View style={styles.header}>
+          <SwText swType='header4 center' numberOfLines={1}>{name}</SwText>
+          <SwText swType='secondary2 secondaryColor center'>Detail</SwText>
+        </View>
+      </View>
+    )
   }
 
   renderStatItem = (item) => (

@@ -9,9 +9,11 @@ export class LoginMenu extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
+
   static navigationOptions = {
-    title: 'Login'.toUpperCase(),
+    title: 'Login',
   };
+
   render = () => (
     <CategoryMenu navigation={this.props.navigation} items={Routes.LoginRoutes} />
   );
@@ -21,9 +23,11 @@ export class NavigationMenu extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
+
   static navigationOptions = {
-    title: 'Navigation'.toUpperCase(),
+    title: 'Navigation',
   };
+
   render = () => (
     <CategoryMenu navigation={this.props.navigation} items={Routes.NavigationRoutes} />
   );
@@ -33,9 +37,11 @@ export class SocialMenu extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
+
   static navigationOptions = {
-    title: 'Social'.toUpperCase(),
+    title: 'Social',
   };
+
   render = () => (
     <CategoryMenu navigation={this.props.navigation} items={Routes.SocialRoutes} />
   );
@@ -45,9 +51,11 @@ export class ArticleMenu extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
+
   static navigationOptions = {
-    title: 'Articles'.toUpperCase(),
+    title: 'Articles',
   };
+
   render = () => (
     <CategoryMenu navigation={this.props.navigation} items={Routes.ArticleRoutes} />
   );
@@ -57,9 +65,11 @@ export class MessagingMenu extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
+
   static navigationOptions = {
-    title: 'Messaging'.toUpperCase(),
+    title: 'Messaging',
   };
+  
   render = () => (
     <CategoryMenu navigation={this.props.navigation} items={Routes.MessagingRoutes} />
   );

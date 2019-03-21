@@ -10,8 +10,10 @@ import { jsonItemsBuilder } from '../../services/jsonBuilder';
 const moment = require('moment');
 
 export class Architecturals extends React.Component {
-  static navigationOptions = {
-    title: 'Arc/Arb'.toUpperCase(),
+  static navigationOptions = ({ navigation }) => {
+    return ({
+      headerTitle: Architecturals.renderNavigationTitle()
+    });
   };
 
   constructor(props) {
@@ -60,7 +62,9 @@ export class Architecturals extends React.Component {
       });
   }
 
-  navigateToArc(id){
+  navigateToArc(item){
+    const id = item.ProjectIdEncrypted;
+
     const pairs = [
       { name: 'ProjectIdEncrypted', value: id },
       { name: 'AssociationIdEncrypted', value: this.state.unit.AssociationIdEncrypted }
@@ -68,7 +72,11 @@ export class Architecturals extends React.Component {
 
     const query = jsonItemsBuilder(pairs);
     
-    this.props.navigation.navigate(PageNames.Architectural, { query: query, id: id })
+    this.props.navigation.navigate(PageNames.Architectural, {
+      name: item.ProjectTitle,
+      query: query, 
+      id: id
+    });
   }
 
   refreshData() {
@@ -77,10 +85,21 @@ export class Architecturals extends React.Component {
     this.setState({ refreshing: false });
   }
 
+  static renderNavigationTitle = () => {
+    return (
+      <View>
+        <View style={styles.header}>
+          <SwText swType='header4 center'>ARC/ARB</SwText>
+          <SwText swType='secondary2 secondaryColor center'>Overview</SwText>
+        </View>
+      </View>
+    )
+  }
+
   renderStatItem = (item) => (
     <TouchableOpacity 
       key={item.ProjectIdEncrypted}
-      onPress={() => this.navigateToArc(item.ProjectIdEncrypted)}>
+      onPress={() => this.navigateToArc(item)}>
        <SwCard style={styles.itemContainer}>
        {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15  }}
           badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}

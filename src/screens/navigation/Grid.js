@@ -11,7 +11,7 @@ export class GridV1 extends React.Component {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = {
-    title: 'Grid Menu'.toUpperCase(),
+    title: 'Grid Menu',
   };
 
   constructor(props) {

@@ -10,8 +10,10 @@ import { PageNames } from '../../config/AppConstants';
 const moment = require('moment');
 
 export class Violations extends React.Component {
-  static navigationOptions = {
-    title: 'Violations'.toUpperCase(),
+  static navigationOptions = ({ navigation }) => {
+    return ({
+      headerTitle: Violations.renderNavigationTitle()
+    });
   };
 
   constructor(props) {
@@ -59,15 +61,21 @@ export class Violations extends React.Component {
       });
   }
 
-  navigateToViolation(id){
+  navigateToViolation(item){
+    const id = item.ViolationItemIdEncrypted;
+
     const pairs = [
-      { name: 'ViolationItemIdEncrypted', value: id },
+      { name: 'ViolationItemIdEncrypted', value: id},
       { name: 'AssociationIdEncrypted', value: this.state.unit.AssociationIdEncrypted }
     ];
 
     const query = jsonItemsBuilder(pairs);
     
-    this.props.navigation.navigate(PageNames.Violation, { query: query, id: id })
+    this.props.navigation.navigate(PageNames.Violation, {
+        name: item.ViolationType,
+        query: query, 
+        id: id
+      });
   }
 
   refreshData() {
@@ -76,9 +84,20 @@ export class Violations extends React.Component {
     this.setState({ refreshing: false });
   }
 
+  static renderNavigationTitle = () => {
+    return (
+      <View>
+        <View style={styles.header}>
+          <SwText swType='header4 center'>Violations</SwText>
+          <SwText swType='secondary2 secondaryColor center'>Overview</SwText>
+        </View>
+      </View>
+    )
+  }
+
   renderItem = (item) => (
     <TouchableOpacity key={item.ViolationItemIdEncrypted}
-      onPress={() => this.navigateToViolation(item.ViolationItemIdEncrypted)}>
+      onPress={() => this.navigateToViolation(item)}>
       <SwCard style={styles.itemContainer}>
         {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15 }} 
               badgeStyle={{width: 30, height:30, borderRadius: 300 }} 

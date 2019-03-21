@@ -7,10 +7,13 @@ import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
 
 export class WorkOrder extends React.Component {
-  static navigationOptions = {
-    title: 'Work Order Detail'.toUpperCase(),
-  };
+  static navigationOptions = ({ navigation }) => {
+    let name = navigation.state.params ? navigation.state.params.workOrder.Name : '';
 
+    return ({
+      headerTitle: WorkOrder.renderNavigationTitle(name)
+    });
+  };
   constructor(props) {
     super(props);
     const workOrder = this.props.navigation.getParam('workOrder', {});
@@ -40,7 +43,19 @@ export class WorkOrder extends React.Component {
       referenceId: this.state.id
     });
   }
+
   
+  static renderNavigationTitle = (name) => {
+    return (
+      <View>
+        <View style={styles.header}>
+          <SwText swType='header4 center' numberOfLines={1}>{name}</SwText>
+          <SwText swType='secondary2 secondaryColor center'>Detail</SwText>
+        </View>
+      </View>
+    )
+  }
+
   render = () => (
     <View style={styles.screen} >
       <SwCard style={styles.container}>
@@ -79,9 +94,9 @@ export class WorkOrder extends React.Component {
               <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onDocumentsButtonPressed() }}>
                 <FontAwesome5 name='file' size={35} style={styles.icon} />
               </SwButton>
-              <Badge value={this.state.workOrder.DocumentCount} status="success" textStyle={{ fontSize: 15 }}
+              {/* <Badge value={this.state.workOrder.DocumentCount} status="success" textStyle={{ fontSize: 15 }}
                 badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
-                containerStyle={{ position: 'absolute', top: 20, right: -10 }} />
+                containerStyle={{ position: 'absolute', top: 20, right: -10 }} /> */}
             </View>
           </View>
         </View>
