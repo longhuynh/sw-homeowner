@@ -9,16 +9,23 @@ export class AccountPayment extends React.Component {
     title: 'Account Payment ',
   };
 
-  state = {
-    amountDue: '25.00',
-    convenienceFee: '3.35',
-    total: '28.35'
-  };
+  constructor(props) {
+    super(props);
+
+    const balance = this.props.navigation.getParam('balance', {});
+
+    this.state = {
+      amountDue: balance,
+      convenienceFee: '0',
+      total: balance
+    };
+  } 
+
 
   onAmountDueInputChanged = (text) => {
     this.setState({ amountDue: text });
 
-    var total = parseFloat(text) + 3.35;
+    var total = parseFloat(text) + this.state.convenienceFee;
     this.setState({ total: total.toString() });
   };
 

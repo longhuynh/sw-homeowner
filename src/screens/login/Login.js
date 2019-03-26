@@ -26,8 +26,8 @@ export class Login extends React.Component {
     super(props);
 
     this.state = {
-      username: 'smartwebssc',
-      password: 'sc989',
+      username: 'smartwebsscscarolina',
+      password: 'scscarolina989',
       loginFailed: false,
       showLoading: false,
     };
@@ -68,6 +68,7 @@ export class Login extends React.Component {
             const query = jsonItemsBuilder(pairs);
 
             navigationParams = {
+              unit: unit,
               unitIdEncrypted: unit.IdEncrypted,
               ownerFullName: ownerFullName,
               address: unit.UnitAddress,

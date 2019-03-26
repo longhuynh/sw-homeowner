@@ -1,107 +1,178 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Dimensions } from 'react-native';
+import { ScrollView, View, StyleSheet, Dimensions, ActivityIndicator } from 'react-native';
 import { SwText, SwTextInput, SwTabSet, SwTab, SwStyleSheet } from 'sw-react-native-ui';
 import { Table, Row, Rows } from 'react-native-table-component';
 import { GradientButton } from '../../components/index';
 import { PageNames } from '../../config/AppConstants';
+import { AccountServiceInstance } from '../../services/AccountService';
+import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
 const screenHeight = Dimensions.get('window').height - 350;
+const moment = require('moment');
 
 export class AccountSummary extends React.Component {
   static navigationOptions = {
     title: 'Account Summary',
   };
 
-  state = {
-    balance: '25.00'
-  };
+  constructor(props) {
+    super(props);
 
-  transactions = {
-    columns: ['Date', 'Amount', 'Type', 'Description'],
-    rows: [
-      ['6/11/18', '$790.45', 'Charge', 'Semi Annual Assessment'],
-      ['6/10/18', '$90.15', 'Credit', 'Early Payment'],   
-      ['5/11/18', '$70.25', 'Reserve', 'Clubhouse'],
-      ['5/10/18', '$90.15', 'Credit', 'Early Payment'],   
-      ['4/11/18', '$70.25', 'Reserve', 'Clubhouse'],
-      ['3/4/18', '$79.45', 'Charge', 'The homeowner request the credit since they help out the annual fund raising event']
-    ]
-  };
+    const unit = this.props.navigation.getParam('unit', {});
 
-  callHistories = {
-    columns: ['Date', 'Note'],
-    rows: [
-      ['6/11/18', 'Semi Annual Assessment'],
-      ['6/1/18', 'Early Payment'],
-      ['5/11/18', 'Clubhouse'],
-      ['4/4/18', 'The homeowner request the credit since they help out the annual fund raising event']
-    ]
-  };
+    this.state = {
+      balance: '',
+      dataLoaded: false,
+      unit: unit,
+      transactionColumns: ['Date', 'Amount', 'Type', 'Description'],
+      transactionData: [],
+      callHistoryColumns: ['Date', 'Note'],
+      callHistoryData: []
+    };
+  }
+
+  async componentWillMount() {
+    this.bindData(this.state.unit);
+  }
+
+  async bindData(unit) {
+    const pairs = [
+      { name: 'DateSince', value: '' },
+      { name: 'OwnerIdEncrypted', value: unit.OwnerIdEncrypted },
+      { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted },
+      { name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted }
+    ];
+
+    const query = jsonItemsBuilder(pairs);
+
+    if (query == undefined || query == '')
+      return;
+
+    await AccountServiceInstance.getAccountSummary(query)
+      .then(response => {
+        if (response != null && response != undefined) {
+          const dataValue = Object.values(response);
+          const parsedData = JSON.parse(dataValue);
+
+          const { transactionData, callHistoryData } = this.generateData(parsedData);
+
+          this.setState({ balance: parsedData.Balance });
+          this.setState({ transactionData: transactionData });
+          this.setState({ callHistoryData: callHistoryData });
+          this.setState({ dataLoaded: true });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }
+
+  generateData(parsedData) {
+    console.log(parsedData);
+
+    let transactionData = [];
+    const transactionArray = parsedData.Transactions || [];
+
+    transactionArray.forEach(t => {
+      let row = [];
+
+      row.push(moment(new Date(t.Date)).format('M/DD/YY'));
+      row.push(`$${t.Amount}`);
+      row.push(t.Type);
+      row.push(t.Description);
+
+      transactionData.push(row);
+    });
+
+    let callHistoryData = [];
+    const callHistoryArray = parsedData.CallHistory || [];
+
+    callHistoryArray.forEach(t => {
+      let row = [];
+
+      row.push(moment(new Date(t.CreatedDate)).format('M/DD/YY'));
+      row.push(t.Detail1);
+
+      callHistoryData.push(row);
+    });
+
+    return { transactionData, callHistoryData };
+  }
 
   onPayButtonPressed = () => {
-    this.props.navigation.navigate(PageNames.AccountPayment);
+    this.props.navigation.navigate(PageNames.AccountPayment, { balance: this.state.balance });
   };
 
-  renderTransactions = () => (
-    <View>
-      <Table borderStyle={{ borderWidth: 2, borderColor: 'transparent' }}>
-        <Row flexArr={[1, 1, 1, 2]} data={this.transactions.columns} style={styles.tableHeader} textStyle={styles.headerText} />
-        <Rows flexArr={[1, 1, 1, 2]} data={this.transactions.rows} textStyle={styles.dataText} />
-      </Table>
-    </View>
-  );
+  renderTransactions = () => {
+    return (
+      <View>
+        <Table borderStyle={{ borderWidth: 2, borderColor: 'transparent' }}>
+          <Row flexArr={[4, 4, 4, 7]} data={this.state.transactionColumns} style={styles.tableHeader} textStyle={styles.headerText} />
+          <Rows flexArr={[4, 4, 4, 7]} data={this.state.transactionData} textStyle={styles.dataText} />
+        </Table>
+      </View>
+    )
+  };
 
-  renderCallHistories = () => (
-    <View>
-      <Table borderStyle={{ borderWidth: 2, borderColor: 'transparent' }}>
-        <Row flexArr={[1, 4]} data={this.callHistories.columns} style={styles.tableHeader} textStyle={styles.headerText} />
-        <Rows flexArr={[1, 4]} data={this.callHistories.rows} textStyle={styles.dataText} />
-      </Table>
-    </View>
-  );
+  renderCallHistories = () => {
+    return (
+      <View>
+        <Table borderStyle={{ borderWidth: 2, borderColor: 'transparent' }}>
+          <Row flexArr={[1, 4]} data={this.state.callHistoryColumns} style={styles.tableHeader} textStyle={styles.headerText} />
+          <Rows flexArr={[1, 4]} data={this.state.callHistoryData} textStyle={styles.dataText} />
+        </Table>
+      </View>
+    )
+  };
 
-  render = () => (
-    <View style={styles.root}>
-      <View style={styles.container}>
-        <View style={styles.section}>
-          <View style={[styles.row, styles.heading]}>
-            <SwText swType='header6 primary'>BALANCE</SwText>
+  render = () => {
+    return (
+      <View style={styles.root}>
+        <View style={styles.container}>
+          <View style={styles.section}>
+            <View style={[styles.row, styles.heading]}>
+              <SwText swType='header6 primary'>BALANCE</SwText>
+            </View>
+            <View style={styles.row}>
+              <SwTextInput
+                label='Amount Due'
+                returnKeyType='next'
+                value={this.state.balance}
+                swType='right clear'
+                editable={false}
+                selectTextOnFocus={false}
+                color='white'
+              />
+            </View>
           </View>
-          <View style={styles.row}>
-            <SwTextInput
-              label='Amount Due'
-              returnKeyType='next'
-              value={this.state.balance}
-              swType='right clear'
-              editable={false}
-              selectTextOnFocus={false}
-              color='white'
-            />
-          </View>
-        </View>
 
-        <GradientButton
-          swType='small'
-          style={styles.payButton}
-          text='PAY'
-          onPress={this.onPayButtonPressed}
-        />
-
-        <View style={styles.section}>
-          <ScrollView style={styles.tabContainer}>
-            <SwTabSet>
-              <SwTab title='TRANSACTIONS' swType='header6 primary'>
-                {this.renderTransactions()}
-              </SwTab>
-              <SwTab title='CALL HISTORY' swType='header6 primary'>
-                {this.renderCallHistories()}
-              </SwTab>
-            </SwTabSet>    
-          </ScrollView>
+          <GradientButton
+            swType='small'
+            style={styles.payButton}
+            text='PAY'
+            onPress={this.onPayButtonPressed}
+          />
+          {
+            this.state.dataLoaded ? (
+              <View style={styles.section}>
+                <ScrollView style={styles.tabContainer}>
+                  <SwTabSet>
+                    <SwTab title='TRANSACTIONS' swType='header6 primary'>
+                      {this.renderTransactions()}
+                    </SwTab>
+                    <SwTab title='CALL HISTORY' swType='header6 primary'>
+                      {this.renderCallHistories()}
+                    </SwTab>
+                  </SwTabSet>
+                </ScrollView>
+              </View>
+            ) : (
+                <ActivityIndicator size="large" color="#00ff00" />
+              )}
         </View>
       </View>
-    </View>
-  );
+    )
+  };
 }
 
 const styles = SwStyleSheet.create(theme => ({
@@ -115,7 +186,7 @@ const styles = SwStyleSheet.create(theme => ({
     marginVertical: 17,
     backgroundColor: theme.colors.screen.base,
   },
-  tabContainer:{
+  tabContainer: {
     height: screenHeight,
     paddingHorizontal: 10
   },

@@ -7,10 +7,8 @@ import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode'
 
 export class DocumentViewer extends React.Component {
   static navigationOptions = {
-    title: 'Document Viewer',
-  };
-
-  
+    title: 'Document',
+  };  
 
   constructor(props) {
     super(props);
@@ -51,7 +49,6 @@ const styles = SwStyleSheet.create(theme => ({
   },
   content: { 
     flex: 1,
-
   }
 
 }));

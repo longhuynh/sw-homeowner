@@ -29,9 +29,12 @@ export class Dashboard extends React.Component {
   constructor(props) {
     super(props);
     const query = this.props.navigation.getParam('query', '');
+    const unit = this.props.navigation.getParam('unit', {});
 
     this.state = {
       query: query,
+      accountData: {},
+      unit: unit,
       refreshing: false,
       items: []
     };
@@ -57,6 +60,7 @@ export class Dashboard extends React.Component {
       unit = _.find(owners, { IdEncrypted: unitIdEncrypted });
       console.log(JSON.stringify(unit));
 
+      this.setState({ unit: unit });
       await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
 
       const query = nextProps.navigation.state.params.query;
@@ -71,6 +75,9 @@ export class Dashboard extends React.Component {
 
   componentWillUpdate() {
     this.shouldUpdate = false;
+  }
+
+  async componentDidMount() {
   }
 
   async bindData(query) {
@@ -126,7 +133,7 @@ export class Dashboard extends React.Component {
   }
 
   navigateToScreen(screen) {
-    this.props.navigation.navigate(screen);
+    this.props.navigation.navigate(screen, { unit: this.state.unit });
   }
 
   refreshData() {
