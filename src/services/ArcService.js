@@ -1,6 +1,6 @@
 import { ApiConfig } from "./config";
 
-class ArcService {
+export class ArcService {
   constructor() {
     console.log("ArcService constructor");
   }
@@ -111,5 +111,3 @@ class ArcService {
   }
 
 }
-
-export const ArcServiceInstance = new ArcService();

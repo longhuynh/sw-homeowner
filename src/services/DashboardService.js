@@ -1,6 +1,6 @@
 import { ApiConfig } from "./config";
 
-class DashboardService {
+export class DashboardService {
   async getDashboard(jsonItems) {
     const url = `${ApiConfig.residentApiUrl}/GetUnitSummaryData`;
     
@@ -18,5 +18,3 @@ class DashboardService {
   }
 
 }
-
-export const DashboardServiceInstance = new DashboardService();

@@ -3,7 +3,7 @@ import React from 'react';
 import { View } from 'react-native';
 import { SwText, SwStyleSheet, SwButton } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { ViolationServiceInstance } from '../../services/ViolationService';
+import { ViolationService } from '../../services/ViolationService';
 import { PageNames } from '../../config/AppConstants';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';
@@ -26,6 +26,8 @@ export class Violation extends React.Component {
     const query = this.props.navigation.getParam('query', '');
     const id = this.props.navigation.getParam('id', '');
 
+    this.violationService = new ViolationService();
+
     this.bindData(query);
     
     this.state = {
@@ -42,7 +44,7 @@ export class Violation extends React.Component {
 
     console.log(query);  
     
-    await ViolationServiceInstance.getViolation(query)
+    await this.violationService.getViolation(query)
       .then(response => {
         if (response != null && response != undefined) {
           const dataValue = Object.values(response);

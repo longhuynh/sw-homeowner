@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { Badge, Icon } from 'react-native-elements';
-import { ViolationServiceInstance } from '../../services/ViolationService';
+import { ViolationService } from '../../services/ViolationService';
 import { DbStorageKey } from '../../services/storageKey';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
 import { PageNames } from '../../config/AppConstants';
@@ -18,6 +18,9 @@ export class Violations extends React.Component {
 
   constructor(props) {
     super(props);
+    
+    this.violationService = new ViolationService();
+
     this.state = {
       query: '',
       refreshing: false,
@@ -48,7 +51,7 @@ export class Violations extends React.Component {
 
     console.log(query);  
 
-    await ViolationServiceInstance.getAll(query)
+    await this.violationService.getAll(query)
       .then(response => {
         if (response != null && response != undefined) {
           const dataValue = Object.values(response);

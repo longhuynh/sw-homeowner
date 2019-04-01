@@ -6,7 +6,7 @@ import { Avatar } from '../../components/avatar/Avatar';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
-import { DashboardServiceInstance } from '../../services/DashboardService';
+import { DashboardService } from '../../services/DashboardService';
 import { DbStorageKey } from '../../services/storageKey';
 import _ from 'lodash';
 
@@ -30,6 +30,8 @@ export class Dashboard extends React.Component {
     super(props);
     const query = this.props.navigation.getParam('query', '');
     const unit = this.props.navigation.getParam('unit', {});
+
+    this.dashboardService = new DashboardService();
 
     this.state = {
       query: query,
@@ -84,7 +86,7 @@ export class Dashboard extends React.Component {
     if (query == undefined || query == '')
       return;
 
-    await DashboardServiceInstance.getDashboard(query)
+    await this.dashboardService.getDashboard(query)
       .then(response => {
         if (response != null && response != undefined) {
           const dataValue = Object.values(response);

@@ -7,9 +7,9 @@ import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
 import { DbStorageKey } from '../../services/storageKey';
-import { ViolationServiceInstance } from '../../services/ViolationService';
-import { ArcServiceInstance } from '../../services/ArcService';
-import { WorkOrderServiceInstance } from '../../services/WorkOrderService';
+import { ViolationService } from '../../services/ViolationService';
+import { ArcService } from '../../services/ArcService';
+import { WorkOrderService } from '../../services/WorkOrderService';
 
 const moment = require('moment');
 
@@ -26,6 +26,10 @@ export class Comments extends React.Component {
     super(props);
     const pageName = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');
+
+    this.arcService = new ArcService();
+    this.violationService = new ViolationService();
+    this.workOrderService = new WorkOrderService();
 
     this.state = {
       referenceId: referenceId,
@@ -62,7 +66,7 @@ export class Comments extends React.Component {
   async getViolationComments() {
     const idEncrypted = this.state.referenceId;
 
-    await ViolationServiceInstance.getComments(idEncrypted)
+    await this.violationService.getComments(idEncrypted)
       .then(response => {      
         this.generateData(response);
       })
@@ -74,7 +78,7 @@ export class Comments extends React.Component {
   async getArcComments() {
     const idEncrypted = this.state.referenceId;
 
-    await ArcServiceInstance.getComments(idEncrypted)
+    await this.arcService.getComments(idEncrypted)
       .then(response => {      
         this.generateData(response);
       })
@@ -86,7 +90,7 @@ export class Comments extends React.Component {
   async getWoComments() {
     const idEncrypted = this.state.referenceId;
 
-    await WorkOrderServiceInstance.getComments(idEncrypted)
+    await this.workOrderService.getComments(idEncrypted)
       .then(response => {      
         console.log(response);
         this.generateData(response);
@@ -145,7 +149,7 @@ export class Comments extends React.Component {
     
     const jsonItems = jsonItemsBuilder(pairs);
 
-    await ViolationServiceInstance.saveComment(jsonItems)
+    await this.violationService.saveComment(jsonItems)
       .then(response => {
         savedComment = response;
         console.log(JSON.stringify(response));
@@ -171,7 +175,7 @@ export class Comments extends React.Component {
 
     console.log(jsonItems);
 
-    await ArcServiceInstance.saveComment(jsonItems)
+    await this.arcService.saveComment(jsonItems)
       .then(response => {
         savedComment = response;
         console.log(JSON.stringify(response));
@@ -194,7 +198,7 @@ export class Comments extends React.Component {
     
     const jsonItems = jsonItemsBuilder(pairs);
 
-    await WorkOrderServiceInstance.saveComment(jsonItems)
+    await this.workOrderService.saveComment(jsonItems)
       .then(response => {
         savedComment = response;
         console.log(JSON.stringify(response));

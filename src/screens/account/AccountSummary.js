@@ -4,7 +4,7 @@ import { SwText, SwTextInput, SwTabSet, SwTab, SwStyleSheet } from 'sw-react-nat
 import { Table, Row, Rows } from 'react-native-table-component';
 import { GradientButton } from '../../components/index';
 import { PageNames } from '../../config/AppConstants';
-import { AccountServiceInstance } from '../../services/AccountService';
+import { AccountService } from '../../services/AccountService';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
 const screenHeight = Dimensions.get('window').height - 350;
@@ -17,6 +17,8 @@ export class AccountSummary extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.accountService = new AccountService();
 
     const unit = this.props.navigation.getParam('unit', {});
 
@@ -48,7 +50,7 @@ export class AccountSummary extends React.Component {
     if (query == undefined || query == '')
       return;
 
-    await AccountServiceInstance.getAccountSummary(query)
+    await this.accountService.getAccountSummary(query)
       .then(response => {
         if (response != null && response != undefined) {
           const dataValue = Object.values(response);

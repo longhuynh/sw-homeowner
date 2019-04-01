@@ -1,7 +1,7 @@
 import { ApiConfig } from "./config";
 
 
-class ViolationService {
+export class ViolationService {
   constructor() {
     console.log("ViolationService constructor");
   }
@@ -110,5 +110,3 @@ class ViolationService {
     }
   }
 }
-
-export const ViolationServiceInstance = new ViolationService();

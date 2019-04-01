@@ -1,6 +1,6 @@
 import { ApiConfig } from "./config";
 
-class AccountService {
+export class AccountService {
   async getAccountSummary(jsonItems) {
     const url = `${ApiConfig.residentApiUrl}/AccountSummary`;
     
@@ -19,5 +19,3 @@ class AccountService {
   }
 
 }
-
-export const AccountServiceInstance = new AccountService();

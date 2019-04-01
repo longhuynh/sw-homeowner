@@ -2,7 +2,7 @@ import { ApiConfig } from "./config";
 
 const User = {};
 
-class LoginService {
+export class LoginService {
   constructor() {
     console.log("LoginService constructor");
   }
@@ -30,5 +30,4 @@ class LoginService {
 
 }
 
-export const LoginServiceInstance = new LoginService();
 export const CurrentUser = User;

@@ -7,9 +7,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { ImagePicker, Permissions, ImageManipulator } from 'expo';
 import { PageNames } from '../../config/AppConstants';
 import { ApiConfig } from '../../services/config';
-import { ViolationServiceInstance } from '../../services/ViolationService';
-import { ArcServiceInstance } from '../../services/ArcService';
-import { WorkOrderServiceInstance } from '../../services/WorkOrderService';
+import { ViolationService } from '../../services/ViolationService';
+import { ArcService } from '../../services/ArcService';
+import { WorkOrderService } from '../../services/WorkOrderService';
 import { DbStorageKey } from '../../services/storageKey';
 
 const moment = require('moment');
@@ -24,6 +24,10 @@ export class Documents extends React.Component {
     const pageName = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');
     const activityId = this.props.navigation.getParam('activityId', '');
+
+    this.arcService = new ArcService();
+    this.violationService = new ViolationService();
+    this.workOrderService = new WorkOrderService();
 
     this.state = {
       referenceId: referenceId,
@@ -60,7 +64,7 @@ export class Documents extends React.Component {
   async getViolationDocuments() {
     const idEncrypted = this.state.referenceId;
 
-    await ViolationServiceInstance.getDocuments(idEncrypted)
+    await this.violationService.getDocuments(idEncrypted)
       .then(response => {
         this.generateData(response);
       })
@@ -72,7 +76,7 @@ export class Documents extends React.Component {
   async getArcDocuments() {
     const idEncrypted = this.state.referenceId;
     console.log(idEncrypted);
-    await ArcServiceInstance.getDocuments(idEncrypted)
+    await this.arcService.getDocuments(idEncrypted)
       .then(response => {
         console.log(response);
         this.generateData(response);
@@ -85,7 +89,7 @@ export class Documents extends React.Component {
   async getWoDocuments() {
     const idEncrypted = this.state.referenceId;
 
-    await WorkOrderServiceInstance.getDocuments(idEncrypted)
+    await this.workOrderService.getDocuments(idEncrypted)
       .then(response => {
         this.generateData(response);
       })
@@ -150,7 +154,7 @@ export class Documents extends React.Component {
   }
 
   async saveViolationDocument(formData, associationIdEncrypted, userIdEncrypted, activityId) {
-    await ViolationServiceInstance.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId)
+    await this.violationService.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId)
       .then(response => {
         console.log(JSON.stringify(response));
         this.bindData();
@@ -161,7 +165,7 @@ export class Documents extends React.Component {
   }
 
   async saveArcDocument(formData, projectIdEncrypted) {
-    await ArcServiceInstance.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted)
+    await this.arcService.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted)
       .then(response => {
         console.log(JSON.stringify(response));
         this.bindData();
@@ -172,7 +176,7 @@ export class Documents extends React.Component {
   }
 
   async saveWoDocument(formData, userIdEncrypted, workOrderIdEncypted) {
-    await WorkOrderServiceInstance.uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted)
+    await this.workOrderService.uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted)
       .then(response => {
         console.log(JSON.stringify(response));
         this.bindData();

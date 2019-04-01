@@ -2,7 +2,7 @@ import React from 'react';
 import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { Badge, Icon} from 'react-native-elements';
-import { ArcServiceInstance } from '../../services/ArcService';
+import { ArcService } from '../../services/ArcService';
 import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
@@ -18,6 +18,8 @@ export class Architecturals extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.arcService = new ArcService();
 
     this.state = {
       query: '',
@@ -48,7 +50,7 @@ export class Architecturals extends React.Component {
     if (query == undefined || query == '')
       return;
 
-    await ArcServiceInstance.getAll(query)
+    await this.arcService.getAll(query)
       .then(response => {        
         console.log(response);
         if (response != null && response != undefined) {

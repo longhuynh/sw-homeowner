@@ -1,6 +1,6 @@
 import { ApiConfig } from "./config";
 
-class WorkOrderService {
+export class WorkOrderService {
   constructor() {
     console.log("WorkOrderService constructor");
   }
@@ -94,5 +94,3 @@ class WorkOrderService {
 
 
 }
-
-export const WorkOrderServiceInstance = new WorkOrderService();

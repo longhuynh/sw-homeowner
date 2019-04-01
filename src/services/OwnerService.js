@@ -1,4 +1,4 @@
-class OwnerService {
+export class OwnerService {
   populateUnitOwners = (user) => {
     const unitOwners = [];
 
@@ -34,5 +34,3 @@ class OwnerService {
     return unitOwners;
   };
 }
-
-export const OwnerServiceInstance = new OwnerService();

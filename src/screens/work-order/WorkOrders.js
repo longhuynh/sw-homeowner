@@ -5,7 +5,7 @@ import { Badge, Icon } from 'react-native-elements';
 import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
-import { WorkOrderServiceInstance } from '../../services/WorkOrderService';
+import { WorkOrderService } from '../../services/WorkOrderService';
 
 const moment = require('moment');
 
@@ -18,6 +18,8 @@ export class WorkOrders extends React.Component {
 
   constructor(props) {
     super(props);
+
+    this.workOrderService = new WorkOrderService();
 
     this.state = {
       query: '',
@@ -48,7 +50,7 @@ export class WorkOrders extends React.Component {
     if (query == undefined || query == '')
       return;
 
-    await WorkOrderServiceInstance.getAll(query)
+    await this.workOrderService.getAll(query)
       .then(response => {    
         if (response != null && response != undefined) {
           const dataValue = Object.values(response);

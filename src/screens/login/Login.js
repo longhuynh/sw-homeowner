@@ -5,8 +5,8 @@ import { Input, Button } from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { View, Text, Keyboard, ImageBackground, Dimensions, AsyncStorage } from 'react-native';
 import { PageNames } from '../../config/AppConstants';
-import { LoginServiceInstance, CurrentUser } from '../../services/LoginService';
-import { OwnerServiceInstance } from '../../services/OwnerService';
+import { LoginService, CurrentUser } from '../../services/LoginService';
+import { OwnerService } from '../../services/OwnerService';
 import { DbStorageKey, AppStorageKey } from '../../services/storageKey';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
@@ -24,6 +24,9 @@ export class Login extends React.Component {
 
   constructor(props) {
     super(props);
+    
+    this.loginService = new LoginService();
+    this.ownerService = new OwnerService();
 
     this.state = {
       username: 'smartwebsscscarolina',
@@ -38,7 +41,7 @@ export class Login extends React.Component {
   }
 
   async submitLoginCredentials() {
-    await LoginServiceInstance.login(this.state.username, this.state.password)
+    await this.loginService.login(this.state.username, this.state.password)
       .then(async (response) => {
         this.setState({ showLoading: true });
 
@@ -46,7 +49,7 @@ export class Login extends React.Component {
           this.setState({ loginFailed: false });
           console.log(CurrentUser);
 
-          const unitOwners = OwnerServiceInstance.populateUnitOwners(response);
+          const unitOwners = this.ownerService.populateUnitOwners(response);
 
           await AsyncStorage.setItem(DbStorageKey.UnitOwners, JSON.stringify(unitOwners));
           await AsyncStorage.setItem(AppStorageKey.IsLogin, 'true');

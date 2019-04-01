@@ -4,7 +4,7 @@ import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { PageNames } from '../../config/AppConstants';
-import { ArcServiceInstance } from '../../services/ArcService';
+import { ArcService } from '../../services/ArcService';
 
 export class Architectural extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -20,6 +20,8 @@ export class Architectural extends React.Component {
     const query = this.props.navigation.getParam('query', '');
     const id = this.props.navigation.getParam('id', '');
 
+    this.arcService = new ArcService();
+
     this.state = {
       query: query,
       id: id,
@@ -33,7 +35,7 @@ export class Architectural extends React.Component {
     if (query == undefined || query == '')
       return;
 
-    await ArcServiceInstance.getArc(query)
+    await this.arcService.getArc(query)
       .then(response => {
         if (response != null && response != undefined) {
           const dataValue = Object.values(response);
