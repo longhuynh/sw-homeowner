@@ -59,8 +59,6 @@ export class Dashboard extends React.Component {
       const owners = JSON.parse(ownersData);
       unit = _.find(owners, { IdEncrypted: unitIdEncrypted });
 
-      console.log(JSON.stringify(unit));
-
       this.setState({ unit: unit });      
       await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
 

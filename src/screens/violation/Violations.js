@@ -6,6 +6,7 @@ import { ViolationService } from '../../services/ViolationService';
 import { DbStorageKey } from '../../services/storageKey';
 import { jsonItemsBuilder } from '../../services/jsonBuilder';
 import { PageNames } from '../../config/AppConstants';
+import _ from 'lodash';
 
 const moment = require('moment');
 
@@ -22,7 +23,6 @@ export class Violations extends React.Component {
     this.violationService = new ViolationService();
 
     this.state = {
-      query: '',
       refreshing: false,
       items: [ ],
       unit: {}
@@ -34,29 +34,17 @@ export class Violations extends React.Component {
     const unit = JSON.parse(unitData);
     this.setState({unit: unit});
 
-    const pairs = [
-      { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
-      { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted }
-    ];
-
-    const query = jsonItemsBuilder(pairs);
-    this.setState({query: query});
-
-    await this.bindData(query);
+    await this.bindData();
   }
 
-  async bindData(query) {
-    if (query == undefined || query == '')
-      return;
+  async bindData() {
+    const unit = this.state.unit;  
 
-    console.log(query);  
-
-    await this.violationService.getAll(query)
+    await this.violationService.getAll(unit.AssociationIdEncrypted, unit.OwnerIdEncrypted, unit.IdEncrypted)
       .then(response => {
         if (response != null && response != undefined) {
-          const dataValue = Object.values(response);
-          const items = JSON.parse(dataValue);
-          this.setState({ items: items });
+          const violationItems = response.GetViolationItemsResult;
+          this.setState({ items: violationItems });
         }
       })
       .catch(error => {
@@ -65,25 +53,16 @@ export class Violations extends React.Component {
   }
 
   navigateToViolation(item){
-    const id = item.ViolationItemIdEncrypted;
-
-    const pairs = [
-      { name: 'ViolationItemIdEncrypted', value: id},
-      { name: 'AssociationIdEncrypted', value: this.state.unit.AssociationIdEncrypted }
-    ];
-
-    const query = jsonItemsBuilder(pairs);
-    
+    const violation  = _.find(this.state.items, {ViolationItemIdEncrypted: item.ViolationItemIdEncrypted});
     this.props.navigation.navigate(PageNames.Violation, {
-        name: item.ViolationType,
-        query: query, 
-        id: id
+        name: `${item.CategoryName} - ${item.SubCategoryName}`,
+        violation: violation
       });
   }
 
   refreshData() {
     this.setState({ refreshing: true })
-    this.bindData(this.state.query);
+    this.bindData();
     this.setState({ refreshing: false });
   }
 
@@ -106,11 +85,11 @@ export class Violations extends React.Component {
               badgeStyle={{width: 30, height:30, borderRadius: 300 }} 
               containerStyle={{ position: 'absolute', top: -10, right: -10,  }}/> */}
         <View style={styles.content}>
-          <SwText swType='header2' numberOfLines={1}>{item.ViolationType}</SwText>
+          <SwText swType='header2' numberOfLines={1}>{`${item.CategoryName} - ${item.SubCategoryName}`}</SwText>
           <View style={styles.detail}>
-            <SwText swType='secondary2'>{item.OpenClosed}</SwText>
+            <SwText swType='secondary2'>{item.Activities[0].StatusTypeName}</SwText>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.ViolationCreatedDate)).format('MM/DD/YYYY')}</SwText>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.Activities[0].CreatedDate)).format('MM/DD/YYYY')}</SwText>
             </View>
           </View>
         </View>

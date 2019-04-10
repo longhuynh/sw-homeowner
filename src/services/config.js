@@ -3,6 +3,7 @@ class BaseConfig {
   baseUrl = 'https://office.offline.smartwebs.net';
   residentApiUrl = `${this.baseUrl}/SWWebService/Services/ResidentPortal/ResidentialPortalService.svc`;
   unitApiUrl = `${this.baseUrl}/SWWebservice/Services/UnitsArea/UnitsAreaService.svc`;
+  violationApiUrl = `${this.baseUrl}/SWWebservice/Services/ViolationArea/ViolationAreaService.svc`;
 
   headers = {
     'Accept': 'application/x-jsonr+json, application/json, text/plain',

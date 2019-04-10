@@ -24,6 +24,7 @@ export class Documents extends React.Component {
     const pageName = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');
     const activityId = this.props.navigation.getParam('activityId', '');
+    const documents = this.props.navigation.getParam('documents', []);
 
     this.arcService = new ArcService();
     this.violationService = new ViolationService();
@@ -32,80 +33,78 @@ export class Documents extends React.Component {
     this.state = {
       referenceId: referenceId,
       activityId: activityId,
-      documents: [],
+      documents: documents,
       pageName: pageName
     };
-
-    this.bindData();
   }
 
-  bindData = async () => {
-    if (this.state.referenceId.trim() == '') {
-      return;
-    }
+  // bindData = async () => {
+  //   if (this.state.referenceId.trim() == '') {
+  //     return;
+  //   }
 
-    const pageName = this.state.pageName;
+  //   const pageName = this.state.pageName;
 
-    switch (pageName) {
-      case PageNames.Violation:
-        await this.getViolationDocuments();
-        break;
-      case PageNames.Architectural:
-        await this.getArcDocuments();
-        break;
-      case PageNames.WorkOrder:
-        await this.getWoDocuments();
-        break;
-      default:
-        break;
-    }
-  };
+  //   switch (pageName) {
+  //     case PageNames.Violation:
+  //       await this.getViolationDocuments();
+  //       break;
+  //     case PageNames.Architectural:
+  //       await this.getArcDocuments();
+  //       break;
+  //     case PageNames.WorkOrder:
+  //       await this.getWoDocuments();
+  //       break;
+  //     default:
+  //       break;
+  //   }
+  // };
 
-  async getViolationDocuments() {
-    const idEncrypted = this.state.referenceId;
+  // async getViolationDocuments() {
+  //   const idEncrypted = this.state.referenceId;
 
-    await this.violationService.getDocuments(idEncrypted)
-      .then(response => {
-        this.generateData(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
+  //   await this.violationService.getDocuments(idEncrypted)
+  //     .then(response => {
+  //       this.generateData(response);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
 
-  async getArcDocuments() {
-    const idEncrypted = this.state.referenceId;
-    console.log(idEncrypted);
-    await this.arcService.getDocuments(idEncrypted)
-      .then(response => {
-        console.log(response);
-        this.generateData(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
+  // async getArcDocuments() {
+  //   const idEncrypted = this.state.referenceId;
+  //   console.log(idEncrypted);
+  //   await this.arcService.getDocuments(idEncrypted)
+  //     .then(response => {
+  //       console.log(response);
+  //       this.generateData(response);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
 
-  async getWoDocuments() {
-    const idEncrypted = this.state.referenceId;
+  // async getWoDocuments() {
+  //   const idEncrypted = this.state.referenceId;
 
-    await this.workOrderService.getDocuments(idEncrypted)
-      .then(response => {
-        this.generateData(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
+  //   await this.workOrderService.getDocuments(idEncrypted)
+  //     .then(response => {
+  //       this.generateData(response);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
 
-  generateData(response) {
-    if (response != null && response != undefined) {
-      const dataValue = Object.values(response);
-      const documents = JSON.parse(dataValue);
+  // generateData(response) {
+  //   if (response != null && response != undefined) {
+  //     const dataValue = Object.values(response);
+  //     const documents = JSON.parse(dataValue);
 
-      this.setState({ documents: documents });
-    }
-  }
+  //     this.setState({ documents: documents });
+  //   }
+  // }
 
   async uploadImageAsync(pickerResult) {
     let uri = pickerResult.uri;
@@ -157,7 +156,7 @@ export class Documents extends React.Component {
     await this.violationService.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId)
       .then(response => {
         console.log(JSON.stringify(response));
-        this.bindData();
+        //this.bindData();
       })
       .catch(error => {
         console.log(error);
@@ -168,7 +167,7 @@ export class Documents extends React.Component {
     await this.arcService.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted)
       .then(response => {
         console.log(JSON.stringify(response));
-        this.bindData();
+        //this.bindData();
       })
       .catch(error => {
         console.log(error);
@@ -179,7 +178,7 @@ export class Documents extends React.Component {
     await this.workOrderService.uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted)
       .then(response => {
         console.log(JSON.stringify(response));
-        this.bindData();
+        //this.bindData();
       })
       .catch(error => {
         console.log(error);
@@ -187,7 +186,7 @@ export class Documents extends React.Component {
   }
 
   onViewFile(item) {
-    const url = item.Url.replace('..', ApiConfig.baseUrl);
+    const url = `${ApiConfig.baseUrl}${item.Url}`;
     this.props.navigation.navigate(PageNames.DocumentViewer, { url: url, extension: item.Extension });
   }
 

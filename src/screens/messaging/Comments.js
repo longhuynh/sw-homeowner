@@ -26,6 +26,7 @@ export class Comments extends React.Component {
     super(props);
     const pageName = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');
+    const comments = this.props.navigation.getParam('comments', []);
 
     this.arcService = new ArcService();
     this.violationService = new ViolationService();
@@ -33,83 +34,48 @@ export class Comments extends React.Component {
 
     this.state = {
       referenceId: referenceId,
-      comments: [],
+      comments: comments,
       pageName: pageName,
       comment: ''
     };
 
-    this.bindData();
   }
 
-  bindData = async () => {
-    if(this.state.referenceId.trim() == ''){     
-      return;
-    }    
-      
-    const pageName = this.state.pageName;
-   
-    switch (pageName) {
-      case PageNames.Violation:      
-        await this.getViolationComments();
-        break;
-      case PageNames.Architectural:
-        await this.getArcComments();
-        break;
-      case PageNames.WorkOrder:
-        await this.getWoComments();
-        break;
-      default:
-        break;
-    }
-  };
+  // async getArcComments() {
+  //   const idEncrypted = this.state.referenceId;
 
-  async getViolationComments() {
-    const idEncrypted = this.state.referenceId;
+  //   await this.arcService.getComments(idEncrypted)
+  //     .then(response => {      
+  //       this.generateData(response);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
 
-    await this.violationService.getComments(idEncrypted)
-      .then(response => {      
-        this.generateData(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
+  // async getWoComments() {
+  //   const idEncrypted = this.state.referenceId;
 
-  async getArcComments() {
-    const idEncrypted = this.state.referenceId;
-
-    await this.arcService.getComments(idEncrypted)
-      .then(response => {      
-        this.generateData(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
-
-  async getWoComments() {
-    const idEncrypted = this.state.referenceId;
-
-    await this.workOrderService.getComments(idEncrypted)
-      .then(response => {      
-        console.log(response);
-        this.generateData(response);
-      })
-      .catch(error => {
-        console.log(error);
-      });
-  }
+  //   await this.workOrderService.getComments(idEncrypted)
+  //     .then(response => {      
+  //       console.log(response);
+  //       this.generateData(response);
+  //     })
+  //     .catch(error => {
+  //       console.log(error);
+  //     });
+  // }
     
-  generateData(response) {
-    console.log(response);
+  // generateData(response) {
+  //   console.log(response);
 
-    if (response != null && response != undefined) {
-      const dataValue = Object.values(response);
-      const comments = JSON.parse(dataValue);
+  //   if (response != null && response != undefined) {
+  //     const dataValue = Object.values(response);
+  //     const comments = JSON.parse(dataValue);
 
-      this.setState({ comments: comments });
-    }
-  }
+  //     this.setState({ comments: comments });
+  //   }
+  // }
 
   onSaveButtonPressed = async () => {
     if(this.state.comment.trim() == ''){
@@ -227,7 +193,7 @@ export class Comments extends React.Component {
           <SwText swType='header5'>{moment(new Date(item.CreatedDate.toString())).format('MM/DD/YYYY')} ({item.CreatedByUser})</SwText>
           <SwText swType='secondary4 hintColor'></SwText>
         </View>
-        <SwText swType='primary3 mediumLine'>{item.Notes}</SwText>
+        <SwText swType='primary3 mediumLine'>{item.Text}</SwText>
       </View>
     </View>
   );

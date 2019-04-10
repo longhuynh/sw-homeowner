@@ -7,6 +7,7 @@ import { ViolationService } from '../../services/ViolationService';
 import { PageNames } from '../../config/AppConstants';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';
+import _ from 'lodash';
 
 export class Violation extends React.Component {
   static propTypes = {
@@ -23,41 +24,15 @@ export class Violation extends React.Component {
 
   constructor(props) {
     super(props);
-    const query = this.props.navigation.getParam('query', '');
-    const id = this.props.navigation.getParam('id', '');
-
+    const violation = this.props.navigation.getParam('violation', {});
     this.violationService = new ViolationService();
 
-    this.bindData(query);
-    
     this.state = {
-      query: query,
       refresh: false,
-      id: id,
-      violation: {}
+      id: violation.ViolationItemIdEncrypted,
+      violation: violation,
+      documents: violation.Activities[0].Documents
     };
-  }
-  
-  async bindData(query){
-    if(query == undefined || query == '')
-      return;
-
-    console.log(query);  
-    
-    await this.violationService.getViolation(query)
-      .then(response => {
-        if (response != null && response != undefined) {
-          const dataValue = Object.values(response);
-          const violation = JSON.parse(dataValue);
-
-          console.log(violation);
-
-          this.setState({ violation: violation });
-        }
-      })
-      .catch(error => {
-        console.log(error);
-      })
   }
 
   onMapsButtonPressed() {
@@ -65,17 +40,41 @@ export class Violation extends React.Component {
   }
 
   onCommentsButtonPressed() {
+    const comments = _.flatMap(this.state.violation.Activities[0].Notes,
+      (n) => [
+        {
+          IdEncrypted: n.ActivityNotesCreatedByUserIdEnc,
+          CreatedDate: n.CreatedDate,
+          CreatedByUser: `${n.CreatedByUserFirstName} ${n.CreateByUserLastName}`,
+          Text: n.Text
+        }
+      ]);
+
     this.props.navigation.navigate('Comments', {
       pageName: PageNames.Violation,
-      referenceId: this.state.id
+      referenceId: this.state.violation.Activities[0].ActivityIdEncrypted,
+      comments: comments,
     });
   }
 
   onDocumentsButtonPressed() {
+    const documents = _.flatMap(this.state.documents,
+      (d) => [
+        {
+          IdEncrypted: d.DocumentId,
+          Name: d.Name,
+          Extension: d.Extension,
+          Url: d.Href,
+          CreatedDate: d.DateStamp,
+          CreatedByUser: `${d.CreatedByUserFirstName} ${d.CreateByUserLastName}`,
+        }
+      ]);
+
     this.props.navigation.navigate(PageNames.Documents, {
       pageName: PageNames.Violation,
       referenceId: this.state.id,
-      activityId: this.state.violation.LatestActivityIdEncrypted
+      activityId: this.state.violation.Activities[0].ActivityIdEncrypted,
+      documents: documents
     });
   }
 
@@ -95,23 +94,27 @@ export class Violation extends React.Component {
       <View style={styles.container}>
         <View style={styles.section}>
           <View style={styles.heading}>
-            <SwText swType='primary header4'>Category - Sub Category</SwText>
-            <SwText swType='secondary2 header5'>{this.state.violation.ViolationType}</SwText>
+            <SwText swType='primary header4'>Category</SwText>
+            <SwText swType='secondary2 header5'>{this.state.violation.CategoryName}</SwText>
+          </View>
+          <View style={styles.heading}>
+            <SwText swType='primary header4'>Sub Category</SwText>
+            <SwText swType='secondary2 header5'>{this.state.violation.SubCategoryName}</SwText>
           </View>
           <View style={styles.heading}>
             <SwText swType='primary header4'>Location</SwText>
-            <SwText swType='secondary2 header5'>{this.state.violation.Location}</SwText>
+            <SwText swType='secondary2 header5'>{this.state.violation.LocationName}</SwText>
           </View>
           <View style={styles.heading}>
             <SwText swType='primary header4'>Stage</SwText>
             <SwButton style={styles.stageButton} swType='icon circle'>
-              <SwText swType='moon large primary'>{this.state.violation.Stage}</SwText>
+              <SwText swType='moon large primary'>{this.state.violation.Activities[0].StageCode}</SwText>
             </SwButton>
           </View>
           <View style={styles.heading}>
             <SwText swType='primary header4'>Call to Action</SwText>
             <SwText numberOfLines={10} swType='secondary2 header5'>
-              {this.state.violation.CallToAction}
+              {/* {this.state.violation.CallToAction} */} N/A
             </SwText>
           </View>
         </View>
@@ -122,7 +125,7 @@ export class Violation extends React.Component {
               <FontAwesome5 name='globe' size={35} style={styles.icon} />
             </SwButton> */}
             <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onCommentsButtonPressed() }}>
-            <FontAwesome5 name='comments' size={35} style={styles.icon} />
+              <FontAwesome5 name='comments' size={35} style={styles.icon} />
             </SwButton>
             <View>
               <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.onDocumentsButtonPressed() }}>
@@ -131,7 +134,7 @@ export class Violation extends React.Component {
               {/* <Badge value={this.state.violation.NumberOfDocument} status="success" textStyle={{ fontSize: 15 }}
                 badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
                 containerStyle={{ position: 'absolute', top: 20, right: -10 }} /> */}
-            </View>          
+            </View>
           </View>
         </View>
       </View>

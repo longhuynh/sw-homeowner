@@ -20,13 +20,13 @@ export class UnitOwners extends React.Component {
 
   constructor(props) {
     super(props);    
+
     const unitOwners = Object.values(CurrentUnitOwners);
-    console.log( unitOwners);
+
     this.state = {
         original: unitOwners,
         filtered: unitOwners
-    }
-  
+    }  
   } 
 
   
@@ -45,7 +45,7 @@ export class UnitOwners extends React.Component {
       };
       return filterResult.firstName !== -1 || filterResult.lastName !== -1 ? unit : undefined;
     });
-    console.log( units);
+
     this.setState({
         original: this.state.original,
         filtered: units,
