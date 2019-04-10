@@ -29,8 +29,8 @@ export class Login extends React.Component {
     this.ownerService = new OwnerService();
 
     this.state = {
-      username: 'smartwebsscscarolina',
-      password: 'scscarolina989',
+      username: 'smartwebssc',
+      password: 'sc989',
       loginFailed: false,
       showLoading: false,
     };

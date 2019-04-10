@@ -1,11 +1,13 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, AsyncStorage } from 'react-native';
-import { SwText, SwButton, SwStyleSheet } from 'sw-react-native-ui';
+import { FlatList, View, StyleSheet, TouchableOpacity } from 'react-native';
+import _ from 'lodash';
+import { SwStyleSheet, SwText, SwTextInput } from 'sw-react-native-ui';
+import { FontAwesome } from '../../assets/icons';
 import NavigationType from '../../config/navigation/NavigationType';
-import { PageNames } from '../../config/AppConstants';
 import { Icon } from 'react-native-elements';
-import { DbStorageKey } from '../../services/storageKey';
-import { jsonItemsBuilder } from '../../services/jsonBuilder';
+import { CurrentUnitOwners } from '../../services/OwnerService';
+import { PageNames } from '../../config/AppConstants';
+
 
 export class UnitOwners extends React.Component {
   static propTypes = {
@@ -17,89 +19,139 @@ export class UnitOwners extends React.Component {
   };
 
   constructor(props) {
-    super(props);
-  }
-
-  state = {
-    dimensions: undefined,
-    unitOwners: []
-  };
-
-  async componentWillMount(){   
-    const unitOwners = await AsyncStorage.getItem(DbStorageKey.UnitOwners);   
-    this.setState({unitOwners: JSON.parse(unitOwners) });
-  }
-
-  onContainerLayout = (event) => {
-    if (this.state.height) {
-      return;
+    super(props);    
+    const unitOwners = Object.values(CurrentUnitOwners);
+    console.log( unitOwners);
+    this.state = {
+        original: unitOwners,
+        filtered: unitOwners
     }
-    const dimensions = event.nativeEvent.layout;
-    this.setState({ dimensions });
+  
+  } 
+
+  
+  async componentWillMount() {
+
+  }
+
+  extractItemKey = (item) => `${item.IdEncrypted}`;
+
+  onInputChanged = (event) => {
+    const pattern = new RegExp(event.nativeEvent.text, 'i');
+    const units = _.filter(this.state.original, unit => {
+      const filterResult = {
+        firstName: unit.OwnerFirstName.search(pattern),
+        lastName: unit.OwnerLastName.search(pattern),
+      };
+      return filterResult.firstName !== -1 || filterResult.lastName !== -1 ? unit : undefined;
+    });
+    console.log( units);
+    this.setState({
+        original: this.state.original,
+        filtered: units,
+    });
   };
 
-  renderItems = () => this.state.unitOwners.map(this.renderItem);
-
-  renderItem = (unit) => (
-    <SwButton
-      swType='tile'
-      style={{ height: this.state.dimensions.width / 3, width: this.state.dimensions.width / 3 }}
-      key={unit.IdEncrypted}
-      onPress={() => this.onItemPressed(unit)}>
-      <Icon name='home' size={30} type='font-awesome' iconStyle={styles.icon} />
-      <SwText numberOfLines={2} swType='primary small center'>{unit.OwnerFirstName} {unit.OwnerLastName}</SwText>
-      <SwText numberOfLines={2} swType='small center'>{unit.UnitAddress}</SwText>
-    </SwButton>
-  );
-
-  onItemPressed = async (unit) => {
+  onItemPressed = (unit) => {
     const ownerFullName = `${unit.OwnerFirstName || ''} ${unit.OwnerLastName || ''}`;
-    const pairs = [
-      {name: 'UnitIdEncrypted', value: unit.IdEncrypted},
-      {name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted},
-      {name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted}
-    ];
-
-    const query = jsonItemsBuilder(pairs);
 
     const navigationParams = {
       unitIdEncrypted: unit.IdEncrypted,
-      ownerFullName: ownerFullName, 
+      ownerFullName: ownerFullName,
       address: unit.UnitAddress,
-      numberOfUnit: this.state.unitOwners.length,
-      query: query
+      numberOfUnit: this.state.original.length
     };
 
     this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
   };
 
-  render() {
-    const unitOwners = this.state.dimensions === undefined ? <View /> : this.renderItems();
+  renderSeparator = () => (
+    <View style={styles.separator} />
+  );
 
+  renderInputLabel = () => (
+    <SwText swType='awesome'>{FontAwesome.search}</SwText>
+  );
+
+  renderHeader = () => (
+    <View style={styles.searchContainer}>
+      <SwTextInput
+        autoCapitalize='none'
+        autoCorrect={false}
+        onChange={this.onInputChanged}
+        label={this.renderInputLabel()}
+        swType='row'
+        placeholder='Search'
+      />
+    </View>
+  );
+
+  renderItem = ({ item }) => {
     return (
-      <ScrollView
-        style={styles.root}
-        onLayout={this.onContainerLayout}
-        contentContainerStyle={styles.rootContainer}>
-        {unitOwners}
-      </ScrollView>
+      <TouchableOpacity onPress={() => this.onItemPressed(item)}>
+        <View style={styles.container}>
+          <Icon name='home' size={40} type='font-awesome' iconStyle={styles.icon} />
+          <View style={styles.content}>
+            <View style={styles.contentHeader}>
+              <SwText swType='header5'>{`${item.OwnerFirstName} ${item.OwnerLastName}`}</SwText>
+            </View>
+            <SwText numberOfLines={2} swType='primary3 mediumLine'>
+              {item.UnitAddress}
+            </SwText>
+          </View>
+        </View>
+      </TouchableOpacity>
     );
-  }
+  };
+
+  render = () => {
+    return (
+      <FlatList
+        style={styles.root}
+        data={this.state.filtered}
+        extraData={this.state}
+        ListHeaderComponent={this.renderHeader}
+        ItemSeparatorComponent={this.renderSeparator}
+        keyExtractor={this.extractItemKey}
+        renderItem={this.renderItem}
+      />
+    )
+  };
 }
 
 const styles = SwStyleSheet.create(theme => ({
   root: {
     backgroundColor: theme.colors.screen.base,
   },
-  rootContainer: {
-    flexDirection: 'row',
-    flexWrap: 'wrap',
+  searchContainer: {
+    backgroundColor: theme.colors.screen.bold,
+    paddingHorizontal: 16,
+    paddingVertical: 10,
+    height: 60,
+    alignItems: 'center',
   },
-  empty: {
-    borderWidth: StyleSheet.hairlineWidth,
-    borderColor: theme.colors.border.base,
+  container: {
+    paddingLeft: 19,
+    paddingRight: 16,
+    paddingBottom: 12,
+    paddingTop: 7,
+    flexDirection: 'row',
+  },
+  content: {
+    marginLeft: 16,
+    flex: 1,
+  },
+  contentHeader: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    marginBottom: 6,
+  },
+  separator: {
+    height: StyleSheet.hairlineWidth,
+    backgroundColor: theme.colors.border.base,
   },
   icon: {
-    color: theme.colors.primary
+    color: theme.colors.primary,
+    paddingTop: 5,
   },
 }));

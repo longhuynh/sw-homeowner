@@ -28,20 +28,18 @@ export class Dashboard extends React.Component {
 
   constructor(props) {
     super(props);
-    const query = this.props.navigation.getParam('query', '');
     const unit = this.props.navigation.getParam('unit', {});
 
     this.dashboardService = new DashboardService();
 
     this.state = {
-      query: query,
       accountData: {},
       unit: unit,
       refreshing: false,
       items: []
     };
 
-    this.bindData(query);
+    this.bindData();
   }
 
   shouldUpdate = false;
@@ -60,16 +58,15 @@ export class Dashboard extends React.Component {
     if (unit.IdEncrypted != unitIdEncrypted) {
       const owners = JSON.parse(ownersData);
       unit = _.find(owners, { IdEncrypted: unitIdEncrypted });
+
       console.log(JSON.stringify(unit));
 
-      this.setState({ unit: unit });
+      this.setState({ unit: unit });      
       await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
 
-      const query = nextProps.navigation.state.params.query;
-      this.setState({ query: query });
       this.shouldUpdate = true;
 
-      this.bindData(query);
+      this.bindData();
     }
 
     return this.shouldUpdate;
@@ -82,17 +79,12 @@ export class Dashboard extends React.Component {
   async componentDidMount() {
   }
 
-  async bindData(query) {
-    if (query == undefined || query == '')
-      return;
-
-    await this.dashboardService.getDashboard(query)
+  async bindData() {
+    const unit = this.state.unit;
+    await this.dashboardService.getDashboard(unit.IdEncrypted, unit.AssociationIdEncrypted)
       .then(response => {
         if (response != null && response != undefined) {
-          const dataValue = Object.values(response);
-          const parsedData = JSON.parse(dataValue);
-
-          const items = this.generateData(parsedData);
+          const items = this.generateData(response.GetUnitCountersResult);
           this.setState({ items: items });
         }
       })
@@ -101,33 +93,33 @@ export class Dashboard extends React.Component {
       });
   }
 
-  generateData(parsedData) {
+  generateData(data) {
     let items = [];
     items.push({
       name: 'Balance',
       screen: 'AccountSummary',
-      value: parsedData.Balance || '$0.00',
+      value: data.Balance || '$0.00',
       icon: 'dollar-sign',
       background: 'rgb(134, 19, 136)'
     });
     items.push({
       name: 'Arc/Arb',
       screen: 'Architecturals',
-      value: parsedData.ActiveArchitecturalCount || 0,
+      value: data.ArcProjectsCount || 0,
       icon: 'hammer',
       background: 'rgb(59, 157, 214)'
     });
     items.push({
       name: 'Work Orders',
       screen: 'WorkOrders',
-      value: parsedData.ActiveWorkOrderCount || 0,
+      value: data.WorkordersCount || 0,
       icon: 'wrench',
       background: 'rgb(255, 127, 29)'
     });
     items.push({
       name: 'Violations',
       screen: 'Violations',
-      value: parsedData.ActiveViolationCount || 0,
+      value: data.ViolationsCount || 0,
       icon: 'exclamation-triangle',
       background: 'rgb(102, 188, 69)'
     });
@@ -139,7 +131,7 @@ export class Dashboard extends React.Component {
   }
 
   refreshData() {
-    this.setState({ refreshing: true })
+    this.setState({ refreshing: true });
     this.bindData(this.state.query);
     this.setState({ refreshing: false });
   }

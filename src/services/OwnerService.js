@@ -1,3 +1,5 @@
+const UnitOwners = {};
+
 export class OwnerService {
   populateUnitOwners = (user) => {
     const unitOwners = [];
@@ -31,6 +33,10 @@ export class OwnerService {
       });
     });
 
+    Object.assign(UnitOwners, unitOwners);
+
     return unitOwners;
   };
 }
+
+export const CurrentUnitOwners = UnitOwners;
