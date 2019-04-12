@@ -41,42 +41,6 @@ export class Comments extends React.Component {
 
   }
 
-  // async getArcComments() {
-  //   const idEncrypted = this.state.referenceId;
-
-  //   await this.arcService.getComments(idEncrypted)
-  //     .then(response => {      
-  //       this.generateData(response);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
-
-  // async getWoComments() {
-  //   const idEncrypted = this.state.referenceId;
-
-  //   await this.workOrderService.getComments(idEncrypted)
-  //     .then(response => {      
-  //       console.log(response);
-  //       this.generateData(response);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
-    
-  // generateData(response) {
-  //   console.log(response);
-
-  //   if (response != null && response != undefined) {
-  //     const dataValue = Object.values(response);
-  //     const comments = JSON.parse(dataValue);
-
-  //     this.setState({ comments: comments });
-  //   }
-  // }
-
   onSaveButtonPressed = async () => {
     if(this.state.comment.trim() == ''){
       Alert.alert('Please enter comment');
@@ -107,15 +71,7 @@ export class Comments extends React.Component {
   async saveViolationComment(userIdEncrypted) {
     let savedComment = null;
 
-    const pairs = [
-      { name: 'ViolationItemIdEncrypted', value: this.state.referenceId },
-      { name: 'UserIdEncrypted', value: userIdEncrypted },
-      { name: 'Note', value: this.state.comment }
-    ];
-    
-    const jsonItems = jsonItemsBuilder(pairs);
-
-    await this.violationService.saveComment(jsonItems)
+    await this.violationService.saveComment(this.state.referenceId, this.state.comment, userIdEncrypted)
       .then(response => {
         savedComment = response;
         console.log(JSON.stringify(response));

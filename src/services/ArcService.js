@@ -1,113 +1,56 @@
-import { ApiConfig } from "./config";
+import { HttpService } from "./config";
 
 export class ArcService {
   constructor() {
     console.log("ArcService constructor");
   }
   
-  async getAll(jsonItems) {
-    const url = `${ApiConfig.residentApiUrl}/GetUnitArcProjects`;
+  async getAll(associationIdEncrypted, unitIdEncrypted) {
+    const url = `${HttpService.unitApiUrl}/GetUnitArcProjects`;
+    const data = { 
+      associationIdEncrypted: associationIdEncrypted,
+      unitIdEncrypted: unitIdEncrypted      
+    };
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify(jsonItems),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.post(url, data);
   }
 
-  async getArc(jsonItems) {
-    const url = `${ApiConfig.residentApiUrl}/GetUnitProjectDetail`;
+  async getArc(associationIdEncrypted, projectIdEncrypted) {
+    const url = `${HttpService.arcApiUrl}/GetProjectDetails`;
+    const data = { 
+      associationIdEncrypted: associationIdEncrypted,
+      projectIdEncrypted: projectIdEncrypted
+    };
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify(jsonItems),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.post(url, data);
   }
 
   
   async getComments(idEncrypted) {
-    const url = `${ApiConfig.residentApiUrl}/GetUnitProjectComments`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify({ idEncrypted: idEncrypted}),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    const url = `${HttpService.residentApiUrl}/GetUnitProjectComments`;
+    const data = { idEncrypted: idEncrypted};
+    
+    return HttpService.post(url, data);
   }
 
   async getDocuments(idEncrypted) {
-    const url = `${ApiConfig.residentApiUrl}/GetUnitProjectDocuments`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify({ idEncrypted: idEncrypted}),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    const url = `${HttpService.residentApiUrl}/GetUnitProjectDocuments`;
+    const data = { idEncrypted: idEncrypted};
+    
+    return HttpService.post(url, data);
   }
 
   async saveComment(jsonItems) {
-    const url = `${ApiConfig.residentApiUrl}/SaveProjectNote`;
+    const url = `${HttpService.residentApiUrl}/SaveProjectNote`;
     
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify(jsonItems),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.post(url, jsonItems);
   }
 
   async uploadPhoto(formData, userIdEncrypted, projectIdEncrypted) {
     const params = `userIdEnc=${userIdEncrypted}&projectIdEnc=${projectIdEncrypted}&app=arc`;
+    const url = `${HttpService.baseUrl}/SWWebservice/Ashx/ResidentPortalFileHandler.ashx?${params}`;
 
-    const url = `${ApiConfig.baseUrl}/SWWebservice/Ashx/ResidentPortalFileHandler.ashx?${params}`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.uploadHeaders,
-        body: formData,
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.upload(url, formData);
   }
 
 }

@@ -1,10 +1,9 @@
 import React from 'react';
-import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { Badge, Icon } from 'react-native-elements';
 import { ViolationService } from '../../services/ViolationService';
 import { DbStorageKey } from '../../services/storageKey';
-import { jsonItemsBuilder } from '../../services/jsonBuilder';
 import { PageNames } from '../../config/AppConstants';
 import _ from 'lodash';
 
@@ -19,12 +18,13 @@ export class Violations extends React.Component {
 
   constructor(props) {
     super(props);
-    
+
     this.violationService = new ViolationService();
 
     this.state = {
+      showLoading: true,
       refreshing: false,
-      items: [ ],
+      items: [],
       unit: {}
     };
   }
@@ -32,19 +32,20 @@ export class Violations extends React.Component {
   async componentWillMount() {
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
     const unit = JSON.parse(unitData);
-    this.setState({unit: unit});
+    this.setState({ unit: unit });
 
     await this.bindData();
   }
 
   async bindData() {
-    const unit = this.state.unit;  
+    const unit = this.state.unit;
 
     await this.violationService.getAll(unit.AssociationIdEncrypted, unit.OwnerIdEncrypted, unit.IdEncrypted)
       .then(response => {
         if (response != null && response != undefined) {
-          const violationItems = response.GetViolationItemsResult;
-          this.setState({ items: violationItems });
+          const items = response.GetViolationItemsResult;
+          this.setState({ items: items });
+          this.setState({ showLoading: false });
         }
       })
       .catch(error => {
@@ -52,12 +53,12 @@ export class Violations extends React.Component {
       });
   }
 
-  navigateToViolation(item){
-    const violation  = _.find(this.state.items, {ViolationItemIdEncrypted: item.ViolationItemIdEncrypted});
+  navigateToViolation(item) {
+    const violation = _.find(this.state.items, { ViolationItemIdEncrypted: item.ViolationItemIdEncrypted });
     this.props.navigation.navigate(PageNames.Violation, {
-        name: `${item.CategoryName} - ${item.SubCategoryName}`,
-        violation: violation
-      });
+      name: `${item.CategoryName} - ${item.SubCategoryName}`,
+      violation: violation
+    });
   }
 
   refreshData() {
@@ -107,18 +108,30 @@ export class Violations extends React.Component {
 
   render = () => {
     return (
-      <ScrollView style={styles.screen} refreshControl={this.refreshControl()}>
-        <View style={styles.container} >
-          {this.state.items.map(this.renderItem)}
-        </View>
-      </ScrollView>
+      <View style={styles.root}>
+        {
+          this.state.showLoading ? (
+            <ActivityIndicator size="large" color="#00ff00" marginVertical={100} />
+          ) : (
+              <ScrollView style={styles.screen} refreshControl={this.refreshControl()}>
+                <View style={styles.container} >
+                  {this.state.items.map(this.renderItem)}
+                </View>
+              </ScrollView>
+            )
+        }
+      </View>
     );
   }
 }
 
 const styles = SwStyleSheet.create(theme => ({
+  root: {
+    flex: 1,
+    backgroundColor: theme.colors.screen.base,
+  },
   screen: {
-    backgroundColor: theme.colors.screen.scroll,   
+    backgroundColor: theme.colors.screen.scroll,
   },
   container: {
     justifyContent: 'space-between',

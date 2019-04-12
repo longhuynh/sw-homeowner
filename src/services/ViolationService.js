@@ -1,4 +1,4 @@
-import { ApiConfig } from "./config";
+import { HttpService } from "./config";
 
 
 export class ViolationService {
@@ -7,7 +7,7 @@ export class ViolationService {
   }
 
   async getAll(associationIdEnc, ownerIdEncrypted, unitIdEncrypted) {
-    const url = `${ApiConfig.violationApiUrl}/GetViolationItems`;
+    const url = `${HttpService.violationApiUrl}/GetViolationItems`;
     const data = { 
       associationIdEnc: associationIdEnc,
       ownerIdEncrypted: ownerIdEncrypted,
@@ -17,53 +17,24 @@ export class ViolationService {
       viewHistory: false
     };
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify(data),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.post(url, data);
   }
 
-  async saveComment(jsonItems) {
-    const url = `${ApiConfig.violationApiUrl}/SaveViolationNote`;
+  async saveComment(activityIdEnc, note, userIdEnc) {
+    const url = `${HttpService.violationApiUrl}/AddNote`;
+    const data = { 
+      activityIdEnc: activityIdEnc,
+      note: note,
+      userIdEnc: userIdEnc
+    };
 
-    try {   
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify(jsonItems),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.post(url, data);
   }
 
   async uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId) {
     const params = `associationIdEnc=${associationIdEncrypted}&userIdEnc=${userIdEncrypted}&activityId=${activityId}`;
+    const url = `${HttpService.baseUrl}/SWWebservice/Ashx/AdditionFileHandler.ashx?${params}`;
 
-    const url = `${ApiConfig.baseUrl}/SWWebservice/Ashx/AdditionFileHandler.ashx?${params}`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.uploadHeaders,
-        body: formData,
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.upload(url, formData);
   }
 }

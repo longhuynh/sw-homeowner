@@ -24,7 +24,7 @@ export class AccountSummary extends React.Component {
 
     this.state = {
       balance: '',
-      dataLoaded: false,
+      showLoading: true,
       unit: unit,
       transactionColumns: ['Date', 'Amount', 'Type', 'Description'],
       transactionData: [],
@@ -61,7 +61,7 @@ export class AccountSummary extends React.Component {
           this.setState({ balance: parsedData.Balance });
           this.setState({ transactionData: transactionData });
           this.setState({ callHistoryData: callHistoryData });
-          this.setState({ dataLoaded: true });
+          this.setState({ showLoading: false });
         }
       })
       .catch(error => {
@@ -155,7 +155,9 @@ export class AccountSummary extends React.Component {
             onPress={this.onPayButtonPressed}
           />
           {
-            this.state.dataLoaded ? (
+            this.state.showLoading ? (
+              <ActivityIndicator size="large" color="#00ff00" />
+            ) : (
               <View style={styles.section}>
                 <ScrollView style={styles.tabContainer}>
                   <SwTabSet>
@@ -168,9 +170,8 @@ export class AccountSummary extends React.Component {
                   </SwTabSet>
                 </ScrollView>
               </View>
-            ) : (
-                <ActivityIndicator size="large" color="#00ff00" />
-              )}
+            )
+          }
         </View>
       </View>
     )

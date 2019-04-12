@@ -1,4 +1,4 @@
-import { ApiConfig } from "./config";
+import { HttpService } from "./config";
 
 const User = {};
 
@@ -8,24 +8,13 @@ export class LoginService {
   }
 
   async login(username, password) {
-    const url = `${ApiConfig.authenticationUrl}/User/Authenticate`;
+    const url = `${HttpService.authenticationUrl}/User/Authenticate`;
+    const data = { UserName: username, Password: password };
+
+    const user =  await HttpService.put(url, data);
+    Object.assign(User, user || {});
     
-    try {
-      const response = await fetch(url, {
-        method: 'PUT',
-        headers: ApiConfig.headers,
-        body: JSON.stringify({ UserName: username, Password: password }),
-      });
-
-      const user =  await response.json();
-
-      Object.assign(User, user);
-      
-      return user;
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return user;
   }
 
 }

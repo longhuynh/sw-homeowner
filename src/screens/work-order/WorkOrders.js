@@ -22,7 +22,6 @@ export class WorkOrders extends React.Component {
     this.workOrderService = new WorkOrderService();
 
     this.state = {
-      query: '',
       refreshing: false,
       items: [],
       unit: {}
@@ -32,30 +31,18 @@ export class WorkOrders extends React.Component {
   async componentWillMount() {
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
     const unit = JSON.parse(unitData);
+    this.setState({unit: unit});  
 
-    this.setState({unit: unit});
-
-    const pairs = [
-      { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
-      { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted }
-    ];
-
-    const query = jsonItemsBuilder(pairs);
-    this.setState({query: query});
-
-    await this.bindData(query);
+    await this.bindData();
   }
 
-  async bindData(query) {
-    if (query == undefined || query == '')
-      return;
+  async bindData() {
+    const unit = this.state.unit;
 
-    await this.workOrderService.getAll(query)
+    await this.workOrderService.getAll(unit.AssociationIdEncrypted, unit.IdEncrypted)
       .then(response => {    
         if (response != null && response != undefined) {
-          const dataValue = Object.values(response);
-          const items = JSON.parse(dataValue);
-
+          const items = response.GetUnitWorkordersResult;
           console.log(items);
           this.setState({ items: items });
         }
@@ -71,7 +58,7 @@ export class WorkOrders extends React.Component {
 
   refreshData() {
     this.setState({ refreshing: true })
-    this.bindData(this.state.query);
+    this.bindData();
     this.setState({ refreshing: false });
   }
 
@@ -87,7 +74,7 @@ export class WorkOrders extends React.Component {
   }
 
   renderStatItem = (item) => (
-    <TouchableOpacity key={item.WorkOrderIdEncrypted}
+    <TouchableOpacity key={item.WoNumber}
       onPress={() => this.props.navigation.navigate('WorkOrder', { workOrder: item })}>
       <SwCard style={styles.itemContainer}>
         {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15 }}

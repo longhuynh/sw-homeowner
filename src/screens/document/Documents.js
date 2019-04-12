@@ -6,7 +6,7 @@ import { Badge } from 'react-native-elements';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { ImagePicker, Permissions, ImageManipulator } from 'expo';
 import { PageNames } from '../../config/AppConstants';
-import { ApiConfig } from '../../services/config';
+import { HttpService } from '../../services/config';
 import { ViolationService } from '../../services/ViolationService';
 import { ArcService } from '../../services/ArcService';
 import { WorkOrderService } from '../../services/WorkOrderService';
@@ -186,7 +186,7 @@ export class Documents extends React.Component {
   }
 
   onViewFile(item) {
-    const url = `${ApiConfig.baseUrl}${item.Url}`;
+    const url = `${HttpService.baseUrl}${item.Url}`;
     this.props.navigation.navigate(PageNames.DocumentViewer, { url: url, extension: item.Extension });
   }
 

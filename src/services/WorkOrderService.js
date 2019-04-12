@@ -1,96 +1,44 @@
-import { ApiConfig } from "./config";
+import { HttpService } from "./config";
 
 export class WorkOrderService {
   constructor() {
     console.log("WorkOrderService constructor");
   }
 
-  async getAll(jsonItems) {
-    const url = `${ApiConfig.residentApiUrl}/GetUnitWorkorders`;
+  async getAll(associationIdEncrypted, unitIdEncrypted) {
+    const url = `${HttpService.unitApiUrl}/GetUnitWorkorders`;
+    const data = { 
+      associationIdEncrypted: associationIdEncrypted,
+      unitIdEncrypted: unitIdEncrypted
+    };
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify(jsonItems),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.post(url, data);
   }
 
   async getComments(idEncrypted) {
-    const url = `${ApiConfig.residentApiUrl}/GetUnitWorkOrderComments`;
+    const url = `${HttpService.residentApiUrl}/GetUnitWorkOrderComments`;
+    const data = { idEncrypted: idEncrypted};
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify({ idEncrypted: idEncrypted}),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.post(url, data);
   }
 
   async getDocuments(idEncrypted) {
-    const url = `${ApiConfig.residentApiUrl}/GetUnitWorkOrderDocuments`;
+    const url = `${HttpService.residentApiUrl}/GetUnitWorkOrderDocuments`;
+    const data = { idEncrypted: idEncrypted};
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify({ idEncrypted: idEncrypted}),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.post(url, data);
   }
 
   async saveComment(jsonItems) {
-    const url = `${ApiConfig.residentApiUrl}/SaveWorkOrderNote`;
+    const url = `${HttpService.residentApiUrl}/SaveWorkOrderNote`;
 
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.headers,
-        body: JSON.stringify(jsonItems),
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.post(url, jsonItems);
   }
 
   async uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted) {
     const params = `userIdEnc=${userIdEncrypted}&workOrderIdEnc=${workOrderIdEncypted}&app=wo`;
+    const url = `${HttpService.baseUrl}/SWWebservice/Ashx/ResidentPortalFileHandler.ashx?${params}`;
 
-    const url = `${ApiConfig.baseUrl}/SWWebservice/Ashx/ResidentPortalFileHandler.ashx?${params}`;
-
-    try {
-      const response = await fetch(url, {
-        method: 'POST',
-        headers: ApiConfig.uploadHeaders,
-        body: formData,
-      });
-
-      return await response.json();
-    }
-    catch (error) {
-      console.log(error);
-    }
+    return HttpService.upload(url, formData);
   }
-
-
 }

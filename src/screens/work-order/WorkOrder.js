@@ -21,7 +21,7 @@ export class WorkOrder extends React.Component {
     console.log(workOrder)
 
     this.state = {
-      id: workOrder.WorkOrderIdEncrypted || '',
+      id: workOrder.WoNumber || '',
       workOrder: workOrder
     }
   }
@@ -43,7 +43,6 @@ export class WorkOrder extends React.Component {
       referenceId: this.state.id
     });
   }
-
   
   static renderNavigationTitle = (name) => {
     return (

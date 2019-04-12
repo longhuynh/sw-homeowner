@@ -5,6 +5,8 @@ import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { PageNames } from '../../config/AppConstants';
 import { ArcService } from '../../services/ArcService';
+import guid from '../../utils/guid';
+import _ from 'lodash';
 
 export class Architectural extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -17,68 +19,114 @@ export class Architectural extends React.Component {
 
   constructor(props) {
     super(props);
-    const query = this.props.navigation.getParam('query', '');
-    const id = this.props.navigation.getParam('id', '');
+    const projectIdEncrypted = this.props.navigation.getParam('projectIdEncrypted', '');
+    const associationIdEncrypted = this.props.navigation.getParam('associationIdEncrypted', '');
 
     this.arcService = new ArcService();
 
     this.state = {
-      query: query,
-      id: id,
+      projectIdEncrypted: projectIdEncrypted,
+      associationIdEncrypted: associationIdEncrypted,
       items: [],
+      comments: [],
+      documents: []
     };
 
-    this.bindData(query);
+    this.bindData();
   }
 
-  async bindData(query) {
-    if (query == undefined || query == '')
-      return;
-
-    await this.arcService.getArc(query)
-      .then(response => {
+  async bindData() {
+    console.log('bindData');
+    await this.arcService.getArc(this.state.projectIdEncrypted, this.state.associationIdEncrypted)
+      .then(response => {  
         if (response != null && response != undefined) {
-          const dataValue = Object.values(response);
-          const parsedData = JSON.parse(dataValue);
-
-          const items = this.generateData(parsedData);
+          const data = response.GetProjectDetailsResult;
+          const items = this.generateData(data);
           this.setState({ items: items });
         }
       })
-      .catch(error => {
+      .catch(error => {``
         console.log(error);
       });
   }
 
-  generateData(parsedData) {
+  generateData(data) {
     let items = [];
+    const documents = this.getDocuments(data.Documents);
+    const comments = this.getComments(_.filter(data.ProjectHistory, {'MakePublic': true}));
+
+    this.setState({ 
+      documents: documents, 
+      comments: comments 
+    });
+
     items.push({
       name: 'Status',
       screen: 'ArchitecturalStatus',
-      value: parsedData.Status || '',
+      value: data.Project.Status || '',
       icon: 'star'
     });
+
     items.push({
       name: 'Pics/Docs',
       screen: 'Documents',
-      value: parsedData.NumberOfDocuments.toString()  || '0',
+      value: documents.length.toString()  || '0',
       icon: 'file'
     });
+
     items.push({
       name: 'Comments',
       screen: 'Comments',
-      value: parsedData.NumberOfComment.toString()  || '0',
+      value: comments.length.toString()  || '0',
       icon: 'comments'
     });
 
     return items;
   }
 
+  getDocuments(documents){
+    return  _.flatMap(documents,
+      (d) => [
+        {
+          IdEncrypted: d.DocumentIdEncrypted,
+          Name: d.Name,
+          Extension: d.PhysicalName.split('.')[1],
+          Url: `/${d.PartialPath.split('\\').join('/')}${d.PhysicalName}`,
+          CreatedDate: d.DateStamp,
+          CreatedByUser: `System`,
+        }
+      ]);
+  }
+
+  getComments(comments){
+    return _.flatMap(comments,
+      (n) => [
+        {
+          IdEncrypted: guid(15),
+          CreatedDate: n.LastUpdatedDate,
+          CreatedByUser: `${n.FirstName} ${n.LastName}`,
+          Text: n.Notes
+        }
+      ]);
+  }
+
   navigateToScreen(screen) {
-    this.props.navigation.navigate(screen, {
-      pageName: PageNames.Architectural,
-      referenceId: this.state.id
-    });
+    let params = {};
+    if(screen == PageNames.Documents){
+      params = {
+        pageName: PageNames.Architectural,
+        referenceId: this.state.projectIdEncrypted,
+        documents: this.state.documents
+      };
+    } else {     
+      params = {
+        pageName: PageNames.Architectural,
+        referenceId: this.state.projectIdEncrypted,
+        comments: this.state.comments
+      };
+    }
+    
+    this.props.navigation.navigate(screen, params);
   }
 
   static renderNavigationTitle = (name) => {

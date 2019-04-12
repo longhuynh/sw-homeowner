@@ -22,7 +22,6 @@ export class Architecturals extends React.Component {
     this.arcService = new ArcService();
 
     this.state = {
-      query: '',
       refreshing: false,
       items: [],
       unit: {}
@@ -32,30 +31,18 @@ export class Architecturals extends React.Component {
   async componentWillMount() {
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
     const unit = JSON.parse(unitData);
-
     this.setState({unit: unit});
 
-    const pairs = [
-      { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
-      { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted }
-    ];
-
-    const query = jsonItemsBuilder(pairs);
-    this.setState({query: query});
-
-    await this.bindData(query);
+    await this.bindData();
   }
 
-  async bindData(query) {
-    if (query == undefined || query == '')
-      return;
+  async bindData() {
 
-    await this.arcService.getAll(query)
+    await this.arcService.getAll(this.state.unit.AssociationIdEncrypted, this.state.unit.IdEncrypted)
       .then(response => {        
         console.log(response);
         if (response != null && response != undefined) {
-          const dataValue = Object.values(response);
-          const items = JSON.parse(dataValue);
+          const items = response.GetUnitArcProjectsResult;
           this.setState({ items: items });
         }
       })
@@ -64,26 +51,17 @@ export class Architecturals extends React.Component {
       });
   }
 
-  navigateToArc(item){
-    const id = item.ProjectIdEncrypted;
-
-    const pairs = [
-      { name: 'ProjectIdEncrypted', value: id },
-      { name: 'AssociationIdEncrypted', value: this.state.unit.AssociationIdEncrypted }
-    ];
-
-    const query = jsonItemsBuilder(pairs);
-    
+  navigateToArc(item){    
     this.props.navigation.navigate(PageNames.Architectural, {
       name: item.ProjectTitle,
-      query: query, 
-      id: id
+      projectIdEncrypted: item.ProjectIdEncrypted, 
+      associationIdEncrypted: this.state.unit.AssociationIdEncrypted
     });
   }
 
   refreshData() {
     this.setState({ refreshing: true })
-    this.bindData(this.state.query);
+    this.bindData();
     this.setState({ refreshing: false });
   }
 
