@@ -5,7 +5,8 @@ export class DashboardService {
     const url = `${HttpService.unitApiUrl}/GetUnitCounters`;
     const data = { 
       unitIdEncrypted: unitIdEncrypted, 
-      associationIdEncrypted: associationIdEncrypted 
+      associationIdEncrypted: associationIdEncrypted,
+      includeBalance: true
     };
 
     return HttpService.post(url, data);

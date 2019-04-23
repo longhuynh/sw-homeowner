@@ -35,9 +35,8 @@ export class Architectural extends React.Component {
     this.bindData();
   }
 
-  async bindData() {
-    console.log('bindData');
-    await this.arcService.getArc(this.state.projectIdEncrypted, this.state.associationIdEncrypted)
+  async bindData() {   
+    await this.arcService.getArc(this.state.associationIdEncrypted, this.state.projectIdEncrypted)
       .then(response => {  
         if (response != null && response != undefined) {
           const data = response.GetProjectDetailsResult;
@@ -45,7 +44,7 @@ export class Architectural extends React.Component {
           this.setState({ items: items });
         }
       })
-      .catch(error => {``
+      .catch(error => {
         console.log(error);
       });
   }

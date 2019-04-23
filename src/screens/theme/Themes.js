@@ -53,7 +53,6 @@ const styles = SwStyleSheet.create(theme => ({
     backgroundColor: theme.colors.screen.base,
     flex: 1,
     paddingHorizontal: 72,
-
   },
   image: {
     height: 160,

@@ -1,10 +1,14 @@
 import { HttpService } from "./config";
 
 export class AccountService {
-  async getAccountSummary(jsonItems) {
-    const url = `${HttpService.residentApiUrl}/AccountSummary`;
+  async getAccountSummary(unitIdEncrypted, associationIdEncrypted) {
+    const url = `${HttpService.unitApiUrl}/GetAccountSummary`;
+    const data = { 
+      unitIdEncrypted: unitIdEncrypted, 
+      associationIdEncrypted: associationIdEncrypted
+    };
     
-    return HttpService.post(url, jsonItems);
+    return HttpService.post(url, data);
   }
 
 }

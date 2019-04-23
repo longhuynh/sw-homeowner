@@ -114,7 +114,7 @@ export class Violation extends React.Component {
           <View style={styles.heading}>
             <SwText swType='primary header4'>Call to Action</SwText>
             <SwText numberOfLines={10} swType='secondary2 header5'>
-              {/* {this.state.violation.CallToAction} */} N/A
+              {this.state.violation.Activities[0].CallToAction}
             </SwText>
           </View>
         </View>

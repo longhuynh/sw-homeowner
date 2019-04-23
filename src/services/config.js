@@ -55,8 +55,8 @@ class BaseConfig {
         headers: this.uploadHeaders,
         body: formData,
       });
-  
-      return response.ok ? await response.json() : null;
+
+      return response.ok;
     }
     catch (error) {
       console.log(error);

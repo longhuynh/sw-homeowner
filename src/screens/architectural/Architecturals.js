@@ -5,7 +5,6 @@ import { Badge, Icon} from 'react-native-elements';
 import { ArcService } from '../../services/ArcService';
 import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
-import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
 const moment = require('moment');
 

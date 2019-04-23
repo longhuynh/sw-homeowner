@@ -4,7 +4,6 @@ import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { Badge, Icon } from 'react-native-elements';
 import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
-import { jsonItemsBuilder } from '../../services/jsonBuilder';
 import { WorkOrderService } from '../../services/WorkOrderService';
 
 const moment = require('moment');

@@ -51,21 +51,25 @@ export class Comments extends React.Component {
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
     const unit = JSON.parse(unitData);
    
+    let savedComment = null;
+
     switch (pageName) {
       case PageNames.Violation:      
-        await this.saveViolationComment(unit.UserIdEncrypted);
+        savedComment = await this.saveViolationComment(unit.UserIdEncrypted);
         break;
       case PageNames.Architectural:
-        await this.saveArcComment(unit.UserIdEncrypted, unit.AssociationIdEncrypted);
+        savedComment = await this.saveArcComment(unit.UserIdEncrypted, unit.AssociationIdEncrypted);
         break;
       case PageNames.WorkOrder:
-        await this.saveWoComment(unit.UserIdEncrypted);
+        savedComment = await this.saveWoComment(unit.UserIdEncrypted);
         break;
       default:
         break;
     }
 
-    this.props.navigation.navigate(pageName, {refresh: true});
+    if(savedComment != null){
+      this.props.navigation.navigate(pageName, {refresh: true});
+    }   
   };
 
   async saveViolationComment(userIdEncrypted) {
@@ -73,8 +77,9 @@ export class Comments extends React.Component {
 
     await this.violationService.saveComment(this.state.referenceId, this.state.comment, userIdEncrypted)
       .then(response => {
-        savedComment = response;
-        console.log(JSON.stringify(response));
+        if(response != null){
+          savedComment = response;
+        }         
       })
       .catch(error => {
         console.log(error);
@@ -86,21 +91,22 @@ export class Comments extends React.Component {
   async saveArcComment(userIdEncrypted, associationIdEncrypted) {
     let savedComment = null;
 
-    const pairs = [
-      { name: 'ProjectIdEncrypted', value: this.state.referenceId },
-      { name: 'UserIdEncrypted', value: userIdEncrypted },
-      { name: 'Note', value: this.state.comment },
-      { name: 'AssociationIdEncrypted', value: associationIdEncrypted }
-    ];
-
-    const jsonItems = jsonItemsBuilder(pairs);
-
-    console.log(jsonItems);
-
-    await this.arcService.saveComment(jsonItems)
+    const projectHistoryDto = {
+      Approvers: [],
+      AssociationIdEncrypted: associationIdEncrypted,
+      MakePublic: true,
+      ProjectIdEncrypted: this.state.referenceId,
+      SendToApprovers: true,
+      SendToOffice: true,
+      Text: this.state.comment,
+      UserIdEncrypted: userIdEncrypted
+    };
+    
+    await this.arcService.saveComment(projectHistoryDto)
       .then(response => {
-        savedComment = response;
-        console.log(JSON.stringify(response));
+        if(response != null){
+          savedComment = response;
+        }         
       })
       .catch(error => {
         console.log(error);

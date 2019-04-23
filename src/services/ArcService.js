@@ -15,7 +15,7 @@ export class ArcService {
     return HttpService.post(url, data);
   }
 
-  async getArc(associationIdEncrypted, projectIdEncrypted) {
+  async getArc(associationIdEncrypted, projectIdEncrypted) {    
     const url = `${HttpService.arcApiUrl}/GetProjectDetails`;
     const data = { 
       associationIdEncrypted: associationIdEncrypted,
@@ -25,25 +25,13 @@ export class ArcService {
     return HttpService.post(url, data);
   }
 
-  
-  async getComments(idEncrypted) {
-    const url = `${HttpService.residentApiUrl}/GetUnitProjectComments`;
-    const data = { idEncrypted: idEncrypted};
-    
-    return HttpService.post(url, data);
-  }
+  async saveComment(projectHistoryDto) {
+    const url = `${HttpService.arcApiUrl}/SaveProjectHistory`;
+    const data = { 
+      projectHistoryDto: projectHistoryDto
+    };
 
-  async getDocuments(idEncrypted) {
-    const url = `${HttpService.residentApiUrl}/GetUnitProjectDocuments`;
-    const data = { idEncrypted: idEncrypted};
-    
     return HttpService.post(url, data);
-  }
-
-  async saveComment(jsonItems) {
-    const url = `${HttpService.residentApiUrl}/SaveProjectNote`;
-    
-    return HttpService.post(url, jsonItems);
   }
 
   async uploadPhoto(formData, userIdEncrypted, projectIdEncrypted) {

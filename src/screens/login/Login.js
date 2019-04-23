@@ -8,7 +8,6 @@ import { PageNames } from '../../config/AppConstants';
 import { LoginService, CurrentUser } from '../../services/LoginService';
 import { OwnerService } from '../../services/OwnerService';
 import { DbStorageKey, AppStorageKey } from '../../services/storageKey';
-import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,8 +28,8 @@ export class Login extends React.Component {
     this.ownerService = new OwnerService();
 
     this.state = {
-      username: 'smartwebssc',
-      password: 'sc989',
+      username: 'smartwebsscscarolina',
+      password: 'scscarolina989',
       loginFailed: false,
       showLoading: false,
     };
@@ -61,22 +60,13 @@ export class Login extends React.Component {
             await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
   
             const ownerFullName = `${unit.OwnerFirstName || ''} ${unit.OwnerLastName || ''}`;
-  
-            const pairs = [
-              { name: 'UnitIdEncrypted', value: unit.IdEncrypted },
-              { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted },
-              { name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted }
-            ];
-
-            const query = jsonItemsBuilder(pairs);
 
             navigationParams = {
               unit: unit,
               unitIdEncrypted: unit.IdEncrypted,
               ownerFullName: ownerFullName,
               address: unit.UnitAddress,
-              numberOfUnit: unitOwners.length,
-              query: query
+              numberOfUnit: unitOwners.length
             };  
           }    
 

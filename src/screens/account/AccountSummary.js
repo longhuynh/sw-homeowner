@@ -5,7 +5,6 @@ import { Table, Row, Rows } from 'react-native-table-component';
 import { GradientButton } from '../../components/index';
 import { PageNames } from '../../config/AppConstants';
 import { AccountService } from '../../services/AccountService';
-import { jsonItemsBuilder } from '../../services/jsonBuilder';
 
 const screenHeight = Dimensions.get('window').height - 350;
 const moment = require('moment');
@@ -34,24 +33,15 @@ export class AccountSummary extends React.Component {
   }
 
   async componentWillMount() {
-    this.bindData(this.state.unit);
+    this.bindData();
   }
 
-  async bindData(unit) {
-    const pairs = [
-      { name: 'DateSince', value: '' },
-      { name: 'OwnerIdEncrypted', value: unit.OwnerIdEncrypted },
-      { name: 'AssociationIdEncrypted', value: unit.AssociationIdEncrypted },
-      { name: 'ManagementIdEncrypted', value: unit.ManagementIdEncrypted }
-    ];
+  async bindData() {
+    const unit = this.state.unit;
 
-    const query = jsonItemsBuilder(pairs);
-
-    if (query == undefined || query == '')
-      return;
-
-    await this.accountService.getAccountSummary(query)
+    await this.accountService.getAccountSummary(unit.IdEncrypted, unit.AssociationIdEncrypted )
       .then(response => {
+        console.log(response);
         if (response != null && response != undefined) {
           const dataValue = Object.values(response);
           const parsedData = JSON.parse(dataValue);
@@ -92,8 +82,8 @@ export class AccountSummary extends React.Component {
     callHistoryArray.forEach(t => {
       let row = [];
 
-      row.push(moment(new Date(t.CreatedDate)).format('M/DD/YY'));
-      row.push(t.Detail1);
+      row.push(moment(new Date(t.Date)).format('M/DD/YY'));
+      row.push(t.Note);
 
       callHistoryData.push(row);
     });

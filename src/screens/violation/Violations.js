@@ -45,6 +45,7 @@ export class Violations extends React.Component {
         if (response != null && response != undefined) {
           const items = response.GetViolationItemsResult;
           this.setState({ items: items });
+          console.log(items);
           this.setState({ showLoading: false });
         }
       })
