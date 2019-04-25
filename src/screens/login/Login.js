@@ -28,8 +28,8 @@ export class Login extends React.Component {
     this.ownerService = new OwnerService();
 
     this.state = {
-      username: 'smartwebsscscarolina',
-      password: 'scscarolina989',
+      username: 'smartwebssc',
+      password: 'sc989',
       loginFailed: false,
       showLoading: false,
     };
@@ -44,7 +44,7 @@ export class Login extends React.Component {
       .then(async (response) => {
         this.setState({ showLoading: true });
 
-        if (response != null && response != undefined) {
+        if (response != null) {
           this.setState({ loginFailed: false });
           console.log(CurrentUser);
 

@@ -41,14 +41,11 @@ export class AccountSummary extends React.Component {
 
     await this.accountService.getAccountSummary(unit.IdEncrypted, unit.AssociationIdEncrypted )
       .then(response => {
-        console.log(response);
-        if (response != null && response != undefined) {
-          const dataValue = Object.values(response);
-          const parsedData = JSON.parse(dataValue);
+        if (response != null) {
+          const r = response.GetAccountSummaryResult;
+          const { transactionData, callHistoryData } = this.generateData(r);        
 
-          const { transactionData, callHistoryData } = this.generateData(parsedData);
-
-          this.setState({ balance: parsedData.Balance });
+          this.setState({ balance: r.Balance.toString() });
           this.setState({ transactionData: transactionData });
           this.setState({ callHistoryData: callHistoryData });
           this.setState({ showLoading: false });
@@ -59,16 +56,14 @@ export class AccountSummary extends React.Component {
       });
   }
 
-  generateData(parsedData) {
-    console.log(parsedData);
-
+  generateData(data) {
     let transactionData = [];
-    const transactionArray = parsedData.Transactions || [];
+    const transactionArray = data.Transactions || [];
 
     transactionArray.forEach(t => {
       let row = [];
 
-      row.push(moment(new Date(t.Date)).format('M/DD/YY'));
+      row.push(moment(t.Date).format('M/DD/YY'));
       row.push(`$${t.Amount}`);
       row.push(t.Type);
       row.push(t.Description);
@@ -77,12 +72,12 @@ export class AccountSummary extends React.Component {
     });
 
     let callHistoryData = [];
-    const callHistoryArray = parsedData.CallHistory || [];
+    const callHistoryArray = data.CallHistory || [];
 
     callHistoryArray.forEach(t => {
       let row = [];
 
-      row.push(moment(new Date(t.Date)).format('M/DD/YY'));
+      row.push(moment(t.Date).format('M/DD/YY'));
       row.push(t.Note);
 
       callHistoryData.push(row);

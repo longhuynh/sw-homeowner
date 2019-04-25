@@ -81,7 +81,7 @@ export class Dashboard extends React.Component {
     const unit = this.state.unit;
     await this.dashboardService.getDashboard(unit.IdEncrypted, unit.AssociationIdEncrypted)
       .then(response => {
-        if (response != null && response != undefined) {
+        if (response != null) {
           const items = this.generateData(response.GetUnitCountersResult);
           this.setState({ items: items });
         }

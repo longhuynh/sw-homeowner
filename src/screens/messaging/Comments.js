@@ -5,7 +5,6 @@ import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
 import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
-import { jsonItemsBuilder } from '../../services/jsonBuilder';
 import { DbStorageKey } from '../../services/storageKey';
 import { ViolationService } from '../../services/ViolationService';
 import { ArcService } from '../../services/ArcService';
@@ -38,7 +37,6 @@ export class Comments extends React.Component {
       pageName: pageName,
       comment: ''
     };
-
   }
 
   onSaveButtonPressed = async () => {
@@ -118,15 +116,8 @@ export class Comments extends React.Component {
   async saveWoComment(userIdEncrypted) {
     let savedComment = null;
 
-    const pairs = [
-      { name: 'WorkOrderIdEncrypted', value: this.state.referenceId },
-      { name: 'UserIdEncrypted', value: userIdEncrypted },
-      { name: 'Note', value: this.state.comment }
-    ];
-    
-    const jsonItems = jsonItemsBuilder(pairs);
-
-    await this.workOrderService.saveComment(jsonItems)
+    await this.workOrderService.saveComment(userIdEncrypted, 
+            this.state.referenceId , this.state.comment)
       .then(response => {
         savedComment = response;
         console.log(JSON.stringify(response));

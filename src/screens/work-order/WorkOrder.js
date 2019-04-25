@@ -5,6 +5,7 @@ import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
+import { WorkOrderService } from '../../services/WorkOrderService';
 
 export class WorkOrder extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -18,12 +19,40 @@ export class WorkOrder extends React.Component {
     super(props);
     const workOrder = this.props.navigation.getParam('workOrder', {});
 
+    this.workOrderService = new WorkOrderService();
+
     console.log(workOrder)
 
     this.state = {
-      id: workOrder.WoNumber || '',
+      id: workOrder.IdEncrypted || '',
       workOrder: workOrder
     }
+  }
+
+  async componentDidMount() {
+    await this.workOrderService.getDocuments(this.state.id)
+      .then(response => {    
+        console.log(response);
+        // if (response != null) {
+        //   const items = response.GetUnitWorkordersResult;
+        //   this.setState({ items: items });
+        // }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+
+    await this.workOrderService.getComments(this.state.id)
+      .then(response => {    
+        console.log(response);
+        // if (response != null) {
+        //   const items = response.GetUnitWorkordersResult;
+        //   this.setState({ items: items });
+        // }
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   onMapsButtonPressed() {

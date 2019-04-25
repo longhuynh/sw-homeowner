@@ -42,7 +42,7 @@ export class Violations extends React.Component {
 
     await this.violationService.getAll(unit.AssociationIdEncrypted, unit.OwnerIdEncrypted, unit.IdEncrypted)
       .then(response => {
-        if (response != null && response != undefined) {
+        if (response != null) {
           const items = response.GetViolationItemsResult;
           this.setState({ items: items });
           console.log(items);

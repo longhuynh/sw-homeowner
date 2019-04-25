@@ -40,7 +40,7 @@ export class Architecturals extends React.Component {
     await this.arcService.getAll(this.state.unit.AssociationIdEncrypted, this.state.unit.IdEncrypted)
       .then(response => {        
         console.log(response);
-        if (response != null && response != undefined) {
+        if (response != null) {
           const items = response.GetUnitArcProjectsResult;
           this.setState({ items: items });
         }

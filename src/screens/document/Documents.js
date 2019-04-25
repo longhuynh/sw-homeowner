@@ -98,7 +98,7 @@ export class Documents extends React.Component {
   // }
 
   // generateData(response) {
-  //   if (response != null && response != undefined) {
+  //   if (response != null) {
   //     const dataValue = Object.values(response);
   //     const documents = JSON.parse(dataValue);
 

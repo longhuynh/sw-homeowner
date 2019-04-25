@@ -16,23 +16,28 @@ export class WorkOrderService {
   }
 
   async getComments(idEncrypted) {
-    const url = `${HttpService.residentApiUrl}/GetUnitWorkOrderComments`;
+    const url = `${HttpService.unitApiUrl}/GetWorkOrderComments`;
     const data = { idEncrypted: idEncrypted};
 
     return HttpService.post(url, data);
   }
 
   async getDocuments(idEncrypted) {
-    const url = `${HttpService.residentApiUrl}/GetUnitWorkOrderDocuments`;
+    const url = `${HttpService.unitApiUrl}/GetWorkOrderDocuments`;
     const data = { idEncrypted: idEncrypted};
 
     return HttpService.post(url, data);
   }
 
-  async saveComment(jsonItems) {
-    const url = `${HttpService.residentApiUrl}/SaveWorkOrderNote`;
+  async saveComment(userIdEncrypted, idEncrypted, note) {
+    const url = `${HttpService.unitApiUrl}/SaveWorkOrderNote`;
+    const data = { 
+        userIdEncrypted: userIdEncrypted,
+        idEncrypted: idEncrypted,
+        note: note
+      };
 
-    return HttpService.post(url, jsonItems);
+    return HttpService.post(url, data);
   }
 
   async uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted) {

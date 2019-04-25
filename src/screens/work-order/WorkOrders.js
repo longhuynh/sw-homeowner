@@ -40,9 +40,9 @@ export class WorkOrders extends React.Component {
 
     await this.workOrderService.getAll(unit.AssociationIdEncrypted, unit.IdEncrypted)
       .then(response => {    
-        if (response != null && response != undefined) {
+        console.log(response);
+        if (response != null) {
           const items = response.GetUnitWorkordersResult;
-          console.log(items);
           this.setState({ items: items });
         }
       })
@@ -73,7 +73,7 @@ export class WorkOrders extends React.Component {
   }
 
   renderStatItem = (item) => (
-    <TouchableOpacity key={item.WoNumber}
+    <TouchableOpacity key={item.IdEncrypted}
       onPress={() => this.props.navigation.navigate('WorkOrder', { workOrder: item })}>
       <SwCard style={styles.itemContainer}>
         {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15 }}
@@ -99,7 +99,6 @@ export class WorkOrders extends React.Component {
         onRefresh={() => this.refreshData()} />
     )
   }
-
 
   render = () => {
     return (
