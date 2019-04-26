@@ -3,11 +3,13 @@ import React from 'react';
 import { View } from 'react-native';
 import { SwText, SwStyleSheet, SwButton } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
-import { ViolationService } from '../../services/ViolationService';
 import { PageNames } from '../../config/AppConstants';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';
 import _ from 'lodash';
+import { ViolationService } from '../../services/ViolationService';
+import { CommentService } from '../../services/CommentService';
+import { DocumentService } from '../../services/DocumentService';
 
 export class Violation extends React.Component {
   static propTypes = {
@@ -25,13 +27,15 @@ export class Violation extends React.Component {
   constructor(props) {
     super(props);
     const violation = this.props.navigation.getParam('violation', {});
+
     this.violationService = new ViolationService();
+    this.commentService = new CommentService();
+    this.documentService = new DocumentService();
 
     this.state = {
       refresh: false,
       id: violation.ViolationItemIdEncrypted,
-      violation: violation,
-      documents: violation.Activities[0].Documents
+      violation: violation
     };
   }
 
@@ -40,41 +44,23 @@ export class Violation extends React.Component {
   }
 
   onCommentsButtonPressed() {
-    const comments = _.flatMap(this.state.violation.Activities[0].Notes,
-      (n) => [
-        {
-          IdEncrypted: n.ActivityNotesCreatedByUserIdEnc,
-          CreatedDate: n.CreatedDate,
-          CreatedByUser: `${n.CreatedByUserFirstName} ${n.CreateByUserLastName}`,
-          Text: n.Text
-        }
-      ]);
+    const comments = this.violationService.getComments(this.state.violation);
+    this.commentService.setComments(comments);
 
     this.props.navigation.navigate('Comments', {
       pageName: PageNames.Violation,
-      referenceId: this.state.violation.Activities[0].ActivityIdEncrypted,
-      comments: comments,
+      referenceId: this.state.violation.Activities[0].ActivityIdEncrypted
     });
   }
 
   onDocumentsButtonPressed() {
-    const documents = _.flatMap(this.state.documents,
-      (d) => [
-        {
-          IdEncrypted: d.DocumentId,
-          Name: d.Name,
-          Extension: d.Extension,
-          Url: d.Href,
-          CreatedDate: d.DateStamp,
-          CreatedByUser: `${d.CreatedByUserFirstName} ${d.CreateByUserLastName}`,
-        }
-      ]);
+    const documents = this.violationService.getDocuments(this.state.violation);
+    this.documentService.setDocuments(documents);
 
     this.props.navigation.navigate(PageNames.Documents, {
       pageName: PageNames.Violation,
       referenceId: this.state.id,
-      activityId: this.state.violation.Activities[0].ActivityIdEncrypted,
-      documents: documents
+      activityId: this.state.violation.Activities[0].ActivityIdEncrypted
     });
   }
 

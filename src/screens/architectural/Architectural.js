@@ -4,9 +4,11 @@ import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { PageNames } from '../../config/AppConstants';
-import { ArcService } from '../../services/ArcService';
 import guid from '../../utils/guid';
 import _ from 'lodash';
+import { CommentService } from '../../services/CommentService';
+import { ArcService } from '../../services/ArcService';
+import { DocumentService } from '../../services/DocumentService';
 
 export class Architectural extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -23,6 +25,8 @@ export class Architectural extends React.Component {
     const associationIdEncrypted = this.props.navigation.getParam('associationIdEncrypted', '');
 
     this.arcService = new ArcService();
+    this.commentService = new CommentService();
+    this.documentService = new DocumentService();
 
     this.state = {
       projectIdEncrypted: projectIdEncrypted,
@@ -41,7 +45,7 @@ export class Architectural extends React.Component {
         if (response != null) {
           const data = response.GetProjectDetailsResult;
           const items = this.generateData(data);
-          this.setState({ items: items });
+          this.setState({ items: items });       
         }
       })
       .catch(error => {
@@ -51,11 +55,15 @@ export class Architectural extends React.Component {
 
   generateData(data) {
     let items = [];
-    const documents = this.getDocuments(data.Documents);
-    const comments = this.getComments(_.filter(data.ProjectHistory, {'MakePublic': true}));
 
+    const documents = this.mapToDocuments(data.Documents);
+    this.documentService.setDocuments(documents);
+
+    const comments = this.mapToComments(_.filter(data.ProjectHistory, {'MakePublic': true}));
+    this.commentService.setComments(comments);
+ 
     this.setState({ 
-      documents: documents, 
+      documents: documents,
       comments: comments 
     });
 
@@ -83,7 +91,7 @@ export class Architectural extends React.Component {
     return items;
   }
 
-  getDocuments(documents){
+  mapToDocuments(documents){
     return  _.flatMap(documents,
       (d) => [
         {
@@ -92,12 +100,12 @@ export class Architectural extends React.Component {
           Extension: d.PhysicalName.split('.')[1],
           Url: `/${d.PartialPath.split('\\').join('/')}${d.PhysicalName}`,
           CreatedDate: d.DateStamp,
-          CreatedByUser: `System`,
+          CreatedByUser: `N/A`,
         }
       ]);
   }
 
-  getComments(comments){
+  mapToComments(comments){
     return _.flatMap(comments,
       (n) => [
         {
@@ -110,20 +118,10 @@ export class Architectural extends React.Component {
   }
 
   navigateToScreen(screen) {
-    let params = {};
-    if(screen == PageNames.Documents){
-      params = {
-        pageName: PageNames.Architectural,
-        referenceId: this.state.projectIdEncrypted,
-        documents: this.state.documents
-      };
-    } else {     
-      params = {
-        pageName: PageNames.Architectural,
-        referenceId: this.state.projectIdEncrypted,
-        comments: this.state.comments
-      };
-    }
+    const params = {
+      pageName: PageNames.Architectural,
+      referenceId: this.state.projectIdEncrypted
+    };
     
     this.props.navigation.navigate(screen, params);
   }

@@ -9,6 +9,7 @@ import { DbStorageKey } from '../../services/storageKey';
 import { ViolationService } from '../../services/ViolationService';
 import { ArcService } from '../../services/ArcService';
 import { WorkOrderService } from '../../services/WorkOrderService';
+import { CommentService } from '../../services/CommentService';
 
 const moment = require('moment');
 
@@ -24,13 +25,15 @@ export class Comments extends React.Component {
   constructor(props) {
     super(props);
     const pageName = this.props.navigation.getParam('pageName', '');
-    const referenceId = this.props.navigation.getParam('referenceId', '');
-    const comments = this.props.navigation.getParam('comments', []);
+    const referenceId = this.props.navigation.getParam('referenceId', '');    
 
     this.arcService = new ArcService();
     this.violationService = new ViolationService();
     this.workOrderService = new WorkOrderService();
+    this.commentService = new CommentService();
 
+    const comments = this.commentService.getComments();
+    
     this.state = {
       referenceId: referenceId,
       comments: comments,
@@ -38,7 +41,7 @@ export class Comments extends React.Component {
       comment: ''
     };
   }
-
+  
   onSaveButtonPressed = async () => {
     if(this.state.comment.trim() == ''){
       Alert.alert('Please enter comment');

@@ -49,6 +49,8 @@ export class AccountSummary extends React.Component {
           this.setState({ transactionData: transactionData });
           this.setState({ callHistoryData: callHistoryData });
           this.setState({ showLoading: false });
+        } else {
+          this.setState({ showLoading: false });
         }
       })
       .catch(error => {

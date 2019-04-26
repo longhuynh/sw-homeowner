@@ -11,6 +11,7 @@ import { ViolationService } from '../../services/ViolationService';
 import { ArcService } from '../../services/ArcService';
 import { WorkOrderService } from '../../services/WorkOrderService';
 import { DbStorageKey } from '../../services/storageKey';
+import { DocumentService } from '../../services/DocumentService';
 
 const moment = require('moment');
 
@@ -23,12 +24,16 @@ export class Documents extends React.Component {
     super(props);
     const pageName = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');
-    const activityId = this.props.navigation.getParam('activityId', '');
-    const documents = this.props.navigation.getParam('documents', []);
+    const activityId = this.props.navigation.getParam('activityId', ''); 
+
+    console.log(documents);
 
     this.arcService = new ArcService();
     this.violationService = new ViolationService();
     this.workOrderService = new WorkOrderService();
+    this.documentService = new DocumentService();
+
+    const documents = this.documentService.getDocuments();
 
     this.state = {
       referenceId: referenceId,
@@ -163,7 +168,7 @@ export class Documents extends React.Component {
       });
   }
 
-  async saveArcDocument(formData, projectIdEncrypted) {
+  async saveArcDocument(formData, userIdEncrypted, projectIdEncrypted) {
     await this.arcService.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted)
       .then(response => {
         console.log(JSON.stringify(response));

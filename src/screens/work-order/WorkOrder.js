@@ -6,6 +6,9 @@ import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
 import { WorkOrderService } from '../../services/WorkOrderService';
+import _ from 'lodash';
+import { CommentService } from '../../services/CommentService';
+import { DocumentService } from '../../services/DocumentService';
 
 export class WorkOrder extends React.Component {
   static navigationOptions = ({ navigation }) => {
@@ -15,40 +18,69 @@ export class WorkOrder extends React.Component {
       headerTitle: WorkOrder.renderNavigationTitle(name)
     });
   };
+  
   constructor(props) {
     super(props);
     const workOrder = this.props.navigation.getParam('workOrder', {});
-
     this.workOrderService = new WorkOrderService();
+    this.commentService = new CommentService();
+    this.documentService = new DocumentService();
 
-    console.log(workOrder)
+    console.log(workOrder);
 
     this.state = {
       id: workOrder.IdEncrypted || '',
-      workOrder: workOrder
+      workOrder: workOrder,
+      comments: [],
+      documents: []
     }
   }
 
   async componentDidMount() {
+    await this.getComments();
+    await this.getDocuments();    
+  }
+
+  async getDocuments() {
     await this.workOrderService.getDocuments(this.state.id)
-      .then(response => {    
+      .then(response => {
         console.log(response);
-        // if (response != null) {
-        //   const items = response.GetUnitWorkordersResult;
-        //   this.setState({ items: items });
-        // }
+        if (response != null) {
+          const documents = _.flatMap(response.GetWorkOrderDocumentsResult, (d) => [
+            {
+              IdEncrypted: d.DocumentId,
+              Name: d.Name,
+              Extension: d.Extension,
+              Url: d.Url.replace('..', ''),
+              CreatedDate: d.CreatedDate,
+              CreatedByUser: d.CreatedByUser,
+            }
+          ]);
+          this.documentService.setDocuments(documents);
+          this.setState({ documents: documents });
+        }
       })
       .catch(error => {
         console.log(error);
       });
+  }
 
+  async getComments() {
     await this.workOrderService.getComments(this.state.id)
-      .then(response => {    
+      .then(response => {
         console.log(response);
-        // if (response != null) {
-        //   const items = response.GetUnitWorkordersResult;
-        //   this.setState({ items: items });
-        // }
+        if (response != null) {
+          const comments = _.flatMap(response.GetWorkOrderCommentsResult, (c) => [
+            {
+              IdEncrypted: c.IdEncrypted,
+              CreatedDate: c.CreatedDate,
+              CreatedByUser: c.CreatedByUser,
+              Text: c.Notes
+            }
+          ]);
+          this.commentService.setComments(comments);
+          this.setState({ comments: comments });
+        }
       })
       .catch(error => {
         console.log(error);

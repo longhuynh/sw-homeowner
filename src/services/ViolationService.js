@@ -1,5 +1,5 @@
 import { HttpService } from "./config";
-
+import _ from 'lodash';
 
 export class ViolationService {
   constructor() {
@@ -18,6 +18,30 @@ export class ViolationService {
     };
 
     return HttpService.post(url, data);
+  }
+  
+  getComments(violation) {
+    return _.flatMap(violation.Activities[0].Notes, (n) => [
+      {
+        IdEncrypted: n.ActivityNotesCreatedByUserIdEnc,
+        CreatedDate: n.CreatedDate,
+        CreatedByUser: `${n.CreatedByUserFirstName} ${n.CreateByUserLastName}`,
+        Text: n.Text
+      }
+    ]);
+  }
+  
+  getDocuments(violation) {
+    return _.flatMap(violation.Activities[0].Documents, (d) => [
+      {
+        IdEncrypted: d.DocumentId,
+        Name: d.Name,
+        Extension: d.Extension,
+        Url: d.Href,
+        CreatedDate: d.DateStamp,
+        CreatedByUser: `${d.CreatedByUserFirstName} ${d.CreateByUserLastName}`,
+      }
+    ]);
   }
 
   async saveComment(activityIdEnc, note, userIdEnc) {
