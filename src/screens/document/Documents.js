@@ -6,12 +6,14 @@ import { Badge } from 'react-native-elements';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { ImagePicker, Permissions, ImageManipulator } from 'expo';
 import { PageNames } from '../../config/AppConstants';
+import guid from '../../utils/guid';
 import { HttpService } from '../../services/config';
 import { ViolationService } from '../../services/ViolationService';
 import { ArcService } from '../../services/ArcService';
 import { WorkOrderService } from '../../services/WorkOrderService';
 import { DbStorageKey } from '../../services/storageKey';
 import { DocumentService } from '../../services/DocumentService';
+import { CurrentUser } from '../../services/LoginService';
 
 const moment = require('moment');
 
@@ -43,74 +45,6 @@ export class Documents extends React.Component {
     };
   }
 
-  // bindData = async () => {
-  //   if (this.state.referenceId.trim() == '') {
-  //     return;
-  //   }
-
-  //   const pageName = this.state.pageName;
-
-  //   switch (pageName) {
-  //     case PageNames.Violation:
-  //       await this.getViolationDocuments();
-  //       break;
-  //     case PageNames.Architectural:
-  //       await this.getArcDocuments();
-  //       break;
-  //     case PageNames.WorkOrder:
-  //       await this.getWoDocuments();
-  //       break;
-  //     default:
-  //       break;
-  //   }
-  // };
-
-  // async getViolationDocuments() {
-  //   const idEncrypted = this.state.referenceId;
-
-  //   await this.violationService.getDocuments(idEncrypted)
-  //     .then(response => {
-  //       this.generateData(response);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
-
-  // async getArcDocuments() {
-  //   const idEncrypted = this.state.referenceId;
-  //   console.log(idEncrypted);
-  //   await this.arcService.getDocuments(idEncrypted)
-  //     .then(response => {
-  //       console.log(response);
-  //       this.generateData(response);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
-
-  // async getWoDocuments() {
-  //   const idEncrypted = this.state.referenceId;
-
-  //   await this.workOrderService.getDocuments(idEncrypted)
-  //     .then(response => {
-  //       this.generateData(response);
-  //     })
-  //     .catch(error => {
-  //       console.log(error);
-  //     });
-  // }
-
-  // generateData(response) {
-  //   if (response != null) {
-  //     const dataValue = Object.values(response);
-  //     const documents = JSON.parse(dataValue);
-
-  //     this.setState({ documents: documents });
-  //   }
-  // }
-
   async uploadImageAsync(pickerResult) {
     let uri = pickerResult.uri;
     const uriParts = uri.split('.');
@@ -132,62 +66,90 @@ export class Documents extends React.Component {
     }
 
     let formData = new FormData();
+    const fileNameWoExtension = `Doc_${moment().format('YYYYDDMMHHmmss')}`;
+
     formData.append('photo', {
       uri,
-      name: `Doc_${moment().format('YYYYDDMMHHmmss')}.${fileType}`,
+      name: `${fileNameWoExtension}.${fileType}`,
       type: `image/${fileType}`,
     });
 
     const pageName = this.state.pageName;
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
     const unit = JSON.parse(unitData);
+    let uploadUrl = "";
 
     switch (pageName) {
       case PageNames.Violation:
-        await this.saveViolationDocument(formData, unit.AssociationIdEncrypted, unit.UserIdEncrypted, this.state.activityId);
+        uploadUrl = await this.saveViolationDocument(formData, unit.AssociationIdEncrypted, 
+              unit.UserIdEncrypted, this.state.activityId);
         break;
       case PageNames.Architectural:
-        await this.saveArcDocument(formData, unit.UserIdEncrypted, this.state.referenceId);
+        uploadUrl = await this.saveArcDocument(formData, unit.UserIdEncrypted, this.state.referenceId);
         break;
       case PageNames.WorkOrder:
-        await this.saveWoDocument(formData, unit.UserIdEncrypted, this.state.referenceId);
+        uploadUrl = await this.saveWoDocument(formData, unit.UserIdEncrypted, this.state.referenceId);
         break;
       default:
         break;
     }
+
+    if(uploadUrl != ""){
+      let documents = this.state.documents;
+      documents.splice(0, 0, {
+        IdEncrypted: guid(15),
+        Name: fileNameWoExtension,
+        Extension: fileType,
+        Url: uploadUrl,
+        CreatedDate: new Date(),
+        CreatedByUser: `${CurrentUser.FirstName} ${CurrentUser.LastName}`
+      });
+
+      this.setState({documents: documents});
+      this.documentService.setDocuments(documents);
+    }
   }
 
   async saveViolationDocument(formData, associationIdEncrypted, userIdEncrypted, activityId) {
+    let uploadUrl = "";
+
     await this.violationService.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId)
       .then(response => {
-        console.log(JSON.stringify(response));
-        //this.bindData();
+        uploadUrl = response._bodyText;
       })
       .catch(error => {
         console.log(error);
       });
+
+    return uploadUrl;
   }
 
   async saveArcDocument(formData, userIdEncrypted, projectIdEncrypted) {
+    let uploadUrl = "";
+
     await this.arcService.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted)
       .then(response => {
-        console.log(JSON.stringify(response));
-        //this.bindData();
+        uploadUrl = response._bodyText;
       })
       .catch(error => {
         console.log(error);
       });
+    
+    return uploadUrl;
   }
 
   async saveWoDocument(formData, userIdEncrypted, workOrderIdEncypted) {
+    let uploadUrl = "";
+
     await this.workOrderService.uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted)
       .then(response => {
-        console.log(JSON.stringify(response));
-        //this.bindData();
+        uploadUrl = response._bodyText;
       })
       .catch(error => {
         console.log(error);
       });
+    
+    return uploadUrl;
   }
 
   onViewFile(item) {
@@ -198,8 +160,7 @@ export class Documents extends React.Component {
   maybeRenderUploadingOverlay = () => {
     if (this.state.uploading) {
       return (
-        <View
-          style={[StyleSheet.absoluteFill, styles.maybeRenderUploading]}>
+        <View style={[StyleSheet.absoluteFill, styles.maybeRenderUploading]}>
           <ActivityIndicator color="#fff" size="large" />
         </View>
       );

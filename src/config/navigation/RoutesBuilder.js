@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation';
 import { withSwTheme } from 'sw-react-native-ui';
 import { NavBar } from '../../components/index';
 import transition from './Transitions';
-import { MainRoutes,  MenuRoutes} from './Routes';
+import { MainRoutes } from './Routes';
 
 const main = {};
 const flatRoutes = {};

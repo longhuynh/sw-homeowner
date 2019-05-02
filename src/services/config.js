@@ -56,7 +56,7 @@ class BaseConfig {
         body: formData,
       });
 
-      return response.ok;
+      return response.ok ? await response : null;
     }
     catch (error) {
       console.log(error);

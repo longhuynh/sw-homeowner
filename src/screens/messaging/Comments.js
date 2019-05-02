@@ -10,6 +10,8 @@ import { ViolationService } from '../../services/ViolationService';
 import { ArcService } from '../../services/ArcService';
 import { WorkOrderService } from '../../services/WorkOrderService';
 import { CommentService } from '../../services/CommentService';
+import guid from '../../utils/guid';
+import { CurrentUser } from '../../services/LoginService';
 
 const moment = require('moment');
 
@@ -41,7 +43,7 @@ export class Comments extends React.Component {
       comment: ''
     };
   }
-  
+
   onSaveButtonPressed = async () => {
     if(this.state.comment.trim() == ''){
       Alert.alert('Please enter comment');
@@ -69,6 +71,17 @@ export class Comments extends React.Component {
     }
 
     if(savedComment != null){
+      let comments = this.state.comments;
+      comments.splice(0, 0, {
+        IdEncrypted: guid(15),
+        CreatedDate: moment(new Date()).format('MM/DD/YYYY'),
+        CreatedByUser: `${CurrentUser.FirstName} ${CurrentUser.LastName}`,
+        Text: this.state.comment
+      });
+
+      this.setState({comments: comments});
+      this.commentService.setComments(comments);
+      
       this.props.navigation.navigate(pageName, {refresh: true});
     }   
   };

@@ -48,7 +48,7 @@ export class WorkOrder extends React.Component {
         if (response != null) {
           const documents = _.flatMap(response.GetWorkOrderDocumentsResult, (d) => [
             {
-              IdEncrypted: d.DocumentId,
+              IdEncrypted: d.IdEncrypted,
               Name: d.Name,
               Extension: d.Extension,
               Url: d.Url.replace('..', ''),

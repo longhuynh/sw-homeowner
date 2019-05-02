@@ -1,11 +1,11 @@
-export class CommentService {
-  _comments = [];
+const comments = [];
 
-  setComments(comments){
-    _comments = comments;
+export class CommentService {
+  setComments(list){
+    Object.assign(comments, list);
   }
 
   getComments(){
-    return _comments;
+    return comments;
   }
 }

@@ -1,15 +1,11 @@
-import { HttpService } from "./config";
+const documents = [];
 
 export class DocumentService {
-  _documents = [];
-
-  setDocuments(documents){
-    _documents = documents;
+  setDocuments(list){
+    Object.assign(documents, list);
   }
 
   getDocuments(){
-    return _documents;
+    return documents;
   }
 }
-
-export const CurrentDocuments = [];
