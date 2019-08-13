@@ -9,6 +9,7 @@ import { PageNames } from '../../config/AppConstants';
 import { DashboardService } from '../../services/DashboardService';
 import { DbStorageKey } from '../../services/storageKey';
 import _ from 'lodash';
+import { HttpService } from '../../services/config';
 
 export class Dashboard extends React.Component {
   static propTypes = {
@@ -78,6 +79,7 @@ export class Dashboard extends React.Component {
   }
 
   async bindData() {
+    console.log(HttpService.baseUrl);
     const unit = this.state.unit;
     await this.dashboardService.getDashboard(unit.IdEncrypted, unit.AssociationIdEncrypted)
       .then(response => {

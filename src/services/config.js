@@ -18,6 +18,22 @@ class BaseConfig {
     'Authorization': 'SwClassic eyJ1SWQiOiJVMVRaLU1oZFN3ekFGWDgwNUdvIiwibUlkIjoiSjJmQW1JRk91ZWtIQkEifQ=='
   };
 
+  switchToEnvironment (name) {
+    switch(name){
+      case 'Dev': 
+        this.baseUrl = 'https://office.offline.smartwebs.net';
+        break;
+      case 'Demo':      
+        this.baseUrl = 'https://demo.office.smartwebs.net';
+        break;
+      case 'Prod':      
+        this.baseUrl = 'https://resident.office.smartwebs.net';
+        break;
+      default:
+        break;
+    }
+  }
+
   async post(url, data){
     try {   
       const response = await fetch(url, {

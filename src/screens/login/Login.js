@@ -8,6 +8,8 @@ import { PageNames } from '../../config/AppConstants';
 import { LoginService, CurrentUser } from '../../services/LoginService';
 import { OwnerService } from '../../services/OwnerService';
 import { DbStorageKey, AppStorageKey } from '../../services/storageKey';
+import {ToastAndroid} from 'react-native';
+import { HttpService } from '../../services/config';
 
 const { width, height } = Dimensions.get('window');
 
@@ -32,6 +34,7 @@ export class Login extends React.Component {
       password: 'sc989',
       loginFailed: false,
       showLoading: false,
+      hideTestFeature: true,
     };
   }
 
@@ -40,36 +43,42 @@ export class Login extends React.Component {
   }
 
   async submitLoginCredentials() {
+    console.log(HttpService.baseUrl);
+    if(this.state.username == 'SHOWDEMO' && this.state.password == 'DEMO654'){
+      this.setState({
+        hideTestFeature: false,
+        username: '',
+        password: ''
+      });
+    }
+    else {
+      await this.login();
+    }   
+  }
+
+  async login() {
     await this.loginService.login(this.state.username, this.state.password)
       .then(async (response) => {
         this.setState({ showLoading: true });
-
         if (response != null) {
           this.setState({ loginFailed: false });
           console.log(CurrentUser);
-
           const unitOwners = this.ownerService.populateUnitOwners(response);
-
           await AsyncStorage.setItem(DbStorageKey.UnitOwners, JSON.stringify(unitOwners));
           await AsyncStorage.setItem(AppStorageKey.IsLogin, 'true');
-
           let navigationParams = {};
-
-          if(unitOwners.length > 0){
+          if (unitOwners.length > 0) {
             const unit = unitOwners[0];
             await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
-  
             const ownerFullName = `${unit.OwnerFirstName || ''} ${unit.OwnerLastName || ''}`;
-
             navigationParams = {
               unit: unit,
               unitIdEncrypted: unit.IdEncrypted,
               ownerFullName: ownerFullName,
               address: unit.UnitAddress,
               numberOfUnit: unitOwners.length
-            };  
-          }    
-
+            };
+          }
           this.setState({ showLoading: false });
           this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
         }
@@ -80,13 +89,64 @@ export class Login extends React.Component {
       .catch((error) => {
         console.log(error);
       });
-
     this.setState({ showLoading: false });
   }
 
   getImageBackgroundSource = () => (
     require('../../assets/images/wallpaper_4.jpg')
   );
+
+  onDevButtonPressed(){
+    HttpService.switchToEnvironment('Dev');
+  }
+
+  onDemoButtonPressed(){
+    HttpService.switchToEnvironment('Demo');
+  }
+
+  onProdButtonPressed(){
+    HttpService.switchToEnvironment('Prod');
+  }
+
+  renderEnvironment = () => {
+    return (
+      <View style={styles.root}>
+        {
+          this.state.hideTestFeature ? (
+            <View/>
+          ) : (
+            <View style={styles.environmentButtons}>      
+            <Button
+              title='Dev'
+              clear
+              activeOpacity={0.5}
+              titleStyle={{ color: 'white', fontSize: 15 }}
+              containerStyle={{ marginTop: -10 }}
+              onPress={this.onDevButtonPressed}
+            />
+             <Button
+              title='Demo'
+              clear
+              activeOpacity={0.5}
+              titleStyle={{ color: 'white', fontSize: 15 }}
+              containerStyle={{ marginTop: -10 }}
+              onPress={this.onDemoButtonPressed}
+            />
+             <Button
+              title='Prod'
+              clear
+              activeOpacity={0.5}
+              titleStyle={{ color: 'white', fontSize: 15 }}
+              containerStyle={{ marginTop: -10 }}
+              onPress={this.onProdButtonPressed}
+            />
+          </View>
+            )
+        }
+      </View>
+    );
+  }
+
 
   render = () => {
     const { username, password, showLoading } = this.state;
@@ -107,6 +167,9 @@ export class Login extends React.Component {
                   <Text style={styles.welcomeText}>YOUR HOME</Text>
                 </View>
               </View>
+              
+              <View>{this.renderEnvironment()}</View>              
+
               <View style={styles.loginInput}>
                 <Input
                   leftIcon={
@@ -177,8 +240,8 @@ export class Login extends React.Component {
                 containerStyle={{ marginVertical: 10 }}
                 titleStyle={{ fontWeight: 'bold', color: 'white' }}
               />
-              <View style={styles.footerView}>
-                {/* <Text style={{ color: 'grey' }}>New here?</Text>
+              {/* <View style={styles.footerView}>
+                <Text style={{ color: 'grey' }}>New here?</Text>
                 <Button
                   title='Create an Account'
                   clear
@@ -186,14 +249,14 @@ export class Login extends React.Component {
                   titleStyle={{ color: 'white', fontSize: 15 }}
                   containerStyle={{ marginTop: -10 }}
                   onPress={() => console.log('Account created')}
-                /> */}
-              </View>
+                />
+              </View> */}             
             </View>
           </ImageBackground>
         </View>
       </SwAvoidKeyboard>
     );
-  }
+  }  
 }
 
 const styles = SwStyleSheet.create(theme => ({
@@ -209,6 +272,10 @@ const styles = SwStyleSheet.create(theme => ({
   },
   content: {
     justifyContent: 'space-between',
+  },
+  environmentButtons: {
+    flexDirection: 'row',
+    justifyContent: 'center',
   },
   login: {
     marginVertical: 20,

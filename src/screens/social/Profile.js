@@ -74,13 +74,13 @@ export class Profile extends React.Component {
         <View style={styles.headerRow}>
           <View style={styles.buttons}>
             <SwButton style={styles.circleButton} swType='icon circle' onPress={this.onEditButtonPressed} >
-            <FontAwesome5 name='edit' size={22} style={styles.icon} />
+              <FontAwesome5 name='edit' size={22} style={styles.icon} />
             </SwButton>
           </View>
           <Avatar img={require('../../data/img/avatars/no-avatar.png')} swType='big' />
           <View style={styles.buttons}>
             <SwButton style={styles.circleButton} swType='icon circle' onPress={this.onChangeThemeButtonPressed}>
-            <FontAwesome5 name='users-cog' size={22} style={styles.icon} />
+              <FontAwesome5 name='layer-group' size={22} style={styles.icon} />
             </SwButton>
           </View>
         </View>
