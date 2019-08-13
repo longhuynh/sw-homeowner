@@ -95,6 +95,15 @@ export class Dashboard extends React.Component {
 
   generateData(data) {
     let items = [];
+
+    items.push({
+      name: 'Messages - WIP',
+      screen: 'ChatList',
+      value: '2',
+      icon: 'comment-dots',
+      background: 'rgb(105, 179, 58)'
+    });
+
     items.push({
       name: 'Balance',
       screen: 'AccountSummary',
@@ -102,6 +111,7 @@ export class Dashboard extends React.Component {
       icon: 'dollar-sign',
       background: 'rgb(134, 19, 136)'
     });
+    
     items.push({
       name: 'Arc/Arb',
       screen: 'Architecturals',
@@ -109,6 +119,7 @@ export class Dashboard extends React.Component {
       icon: 'hammer',
       background: 'rgb(59, 157, 214)'
     });
+    
     items.push({
       name: 'Work Orders',
       screen: 'WorkOrders',
@@ -116,6 +127,7 @@ export class Dashboard extends React.Component {
       icon: 'wrench',
       background: 'rgb(255, 127, 29)'
     });
+    
     items.push({
       name: 'Violations',
       screen: 'Violations',

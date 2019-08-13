@@ -1,9 +1,11 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet, Alert, AsyncStorage } from 'react-native';
 import { SwText, SwTextInput, SwButton, SwTheme, SwStyleSheet } from 'sw-react-native-ui';
+import { Tooltip } from 'react-native-elements';
 import { Avatar, GradientButton } from '../../components/index';
 import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
 import { DbStorageKey } from '../../services/storageKey';
+import { PageNames } from '../../config/AppConstants';
 
 export class Profile extends React.Component {
   static navigationOptions = {
@@ -25,11 +27,10 @@ export class Profile extends React.Component {
   async componentWillMount(){   
     const selectedUnit = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);   
     const unit = JSON.parse(selectedUnit);
-    this.updateState(unit);    
+    this.fillProfileInfo(unit);    
   }
 
-  updateState(unit){
-    console.log("Profile updateState");
+  fillProfileInfo(unit){
     this.setState({
       firstName: unit.OwnerFirstName,
       lastName: unit.OwnerLastName,
@@ -41,11 +42,11 @@ export class Profile extends React.Component {
   
 
   onEditButtonPressed = () => {
-    this.props.navigation.navigate('ProfileSettings');
+    this.props.navigation.navigate(PageNames.ProfileSettings);
   };
 
   onChangeThemeButtonPressed = () => {
-    this.props.navigation.navigate('Themes');
+    this.props.navigation.navigate(PageNames.Dashboard);
   };
 
   onLogoutButtonPressed = () => {
@@ -55,11 +56,11 @@ export class Profile extends React.Component {
       [
         {
           text: 'OK', 
-          onPress: () => this.props.navigation.navigate('Login')
+          onPress: () => this.props.navigation.navigate(PageNames.Login)
         },
         {
           text: 'Cancel',
-          onPress: () => console.log('Cancel Pressed'),
+          onPress: () => console.log('Cancel pressed'),
           style: 'cancel',
         },
       ],
@@ -80,7 +81,7 @@ export class Profile extends React.Component {
           <Avatar img={require('../../data/img/avatars/no-avatar.png')} swType='big' />
           <View style={styles.buttons}>
             <SwButton style={styles.circleButton} swType='icon circle' onPress={this.onChangeThemeButtonPressed}>
-              <FontAwesome5 name='layer-group' size={22} style={styles.icon} />
+              <FontAwesome5 name='align-justify' size={22} style={styles.icon} />
             </SwButton>
           </View>
         </View>

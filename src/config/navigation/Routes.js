@@ -188,6 +188,12 @@ export const MainRoutes = [
         screen: Screens.Comments,
         children: [],
       },
+      {
+        id: 'ChatList',
+        title: 'Chat List',
+        screen: Screens.Messages,
+        children: [],
+      },
     ],
   },
   {
@@ -252,7 +258,7 @@ export const MenuRoutes =  [
   {
     id: PageNames.Dashboard,
     title: 'Dashboard',
-    icon: 'layer-group',
+    icon: 'align-justify',
     screen: Screens.Dashboard,
     children: [],
   },
