@@ -3,7 +3,7 @@
     "name": "Smartwebs Homeowner",
     "slug": "sw-homeowner",
     "githubUrl": "https://github.com/longhuynh/sw-homeowner",
-    "sdkVersion": "31.0.0",
+    "sdkVersion": "34.0.0",
     "icon": "./icon.png",
     "orientation": "portrait",
     "loading": {

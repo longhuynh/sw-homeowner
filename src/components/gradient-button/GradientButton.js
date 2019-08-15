@@ -1,10 +1,6 @@
 import React from 'react';
-import { LinearGradient } from 'expo';
-import {
-  SwButton,
-  SwText,
-  SwComponent,
-} from 'sw-react-native-ui';
+import { LinearGradient } from 'expo-linear-gradient';
+import { SwButton, SwText, SwComponent } from 'sw-react-native-ui';
 
 export class GradientButton extends SwComponent {
   componentName = 'GradientButton';

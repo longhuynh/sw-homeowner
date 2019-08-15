@@ -3,7 +3,7 @@ import React from 'react';
 import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Clipboard, Image, Share, Text, AsyncStorage } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge } from 'react-native-elements';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { ImagePicker, Permissions, ImageManipulator } from 'expo';
 import { PageNames } from '../../config/AppConstants';
 import guid from '../../utils/guid';

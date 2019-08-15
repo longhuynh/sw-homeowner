@@ -2,7 +2,7 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { PageNames } from '../../config/AppConstants';
 import guid from '../../utils/guid';
 import _ from 'lodash';

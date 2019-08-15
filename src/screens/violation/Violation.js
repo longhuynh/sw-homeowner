@@ -2,7 +2,7 @@
 import React from 'react';
 import { View } from 'react-native';
 import { SwText, SwStyleSheet, SwButton } from 'sw-react-native-ui';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { PageNames } from '../../config/AppConstants';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';

@@ -1,7 +1,7 @@
 import React from 'react';
 import { View, ScrollView, TouchableOpacity, AsyncStorage, RefreshControl } from 'react-native';
 import { SwText, SwStyleSheet } from 'sw-react-native-ui';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { Avatar } from '../../components/avatar/Avatar';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';

@@ -1,7 +1,9 @@
 import React from 'react';
 import { View, Image } from 'react-native';
-import { AppLoading, Asset, Font } from 'expo';
-import { createDrawerNavigator, createStackNavigator } from 'react-navigation';
+import { AppLoading, registerRootComponent  } from 'expo';
+import * as Font from 'expo-font';
+import { Asset } from 'expo-asset';
+import { createAppContainer, createDrawerNavigator, createStackNavigator } from 'react-navigation';
 import { FontAwesome, Ionicons } from '@expo/vector-icons';
 
 import { withSwTheme } from 'sw-react-native-ui';
@@ -14,7 +16,7 @@ import { data } from './data/DataProvider';
 bootstrap();
 data.populateData();
 
-const SwHomeOwnerApp = createStackNavigator({
+const RootStack = createStackNavigator({
   First: {
     screen: Screens.SplashScreen,
   },
@@ -34,6 +36,8 @@ const SwHomeOwnerApp = createStackNavigator({
 }, {
   headerMode: 'none',
 });
+
+const SwHomeOwnerApp = createAppContainer(RootStack);
 
 function cacheImages(images) {
   return images.map(image => {
@@ -118,4 +122,4 @@ export default class App extends React.Component {
   render = () => (this.state.isLoaded ? this.renderApp() : this.renderLoading());
 }
 
-Expo.registerRootComponent(App);
+registerRootComponent(App);

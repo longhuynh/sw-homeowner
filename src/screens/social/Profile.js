@@ -3,7 +3,7 @@ import { ScrollView, View, StyleSheet, Alert, AsyncStorage } from 'react-native'
 import { SwText, SwTextInput, SwButton, SwTheme, SwStyleSheet } from 'sw-react-native-ui';
 import { Tooltip } from 'react-native-elements';
 import { Avatar, GradientButton } from '../../components/index';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
 

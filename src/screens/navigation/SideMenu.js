@@ -1,7 +1,7 @@
 import React from 'react';
 import { TouchableHighlight, View, ScrollView, Platform, StyleSheet} from 'react-native';
 import { SwStyleSheet, SwText, SwTheme} from 'sw-react-native-ui';
-import FontAwesome5 from 'react-native-vector-icons/FontAwesome5';
+import { FontAwesome5 } from '@expo/vector-icons';
 import { Avatar} from '../../components/index';
 import { MenuRoutes } from '../../config/navigation/Routes';
 import { FontAwesome } from '../../assets/icons';
