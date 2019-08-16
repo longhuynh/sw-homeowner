@@ -17,6 +17,8 @@
     "expo-asset": "6.0.0",
     "expo-font": "6.0.1",
     "expo-linear-gradient": "^6.0.0",
+    "expo-image-manipulator": "6.0.0",
+    "expo-image-picker": "6.0.0",
     "hoist-non-react-statics": "3.2.1",
     "lodash": "4.17.15",
     "moment": "2.24.0",

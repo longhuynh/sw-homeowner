@@ -1,10 +1,10 @@
 {
-  "packagerPort": 19004,
-  "packagerPid": 18952,
+  "packagerPort": 19001,
+  "packagerPid": 7972,
   "expoServerNgrokUrl": "https://wj-t9h.longhuynh.sw-homeowner.exp.direct",
   "packagerNgrokUrl": "https://packager.wj-t9h.longhuynh.sw-homeowner.exp.direct",
-  "ngrokPid": 22300,
-  "devToolsPort": 19003,
+  "ngrokPid": 22480,
+  "devToolsPort": 19002,
   "expoServerPort": 19000,
   "webpackServerPort": null
 }

@@ -4,7 +4,9 @@ import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Clipbo
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { ImagePicker, Permissions, ImageManipulator } from 'expo';
+import * as ImagePicker from 'expo-image-picker';
+import * as ImageManipulator from 'expo-image-manipulator';
+import * as Permissions from 'expo-permissions';
 import { PageNames } from '../../config/AppConstants';
 import guid from '../../utils/guid';
 import { HttpService } from '../../services/config';
