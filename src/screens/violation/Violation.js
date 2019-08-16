@@ -1,7 +1,7 @@
 
 import React from 'react';
 import { View } from 'react-native';
-import { SwText, SwStyleSheet, SwButton } from 'sw-react-native-ui';
+import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { PageNames } from '../../config/AppConstants';
 import NavigationType from '../../config/navigation/NavigationType';
@@ -77,7 +77,7 @@ export class Violation extends React.Component {
 
   render = () => (
     <View style={styles.screen} >
-      <View style={styles.container}>
+      <SwCard style={styles.container}>
         <View style={styles.section}>
           <View style={styles.heading}>
             <SwText swType='primary header4'>Category</SwText>
@@ -123,7 +123,7 @@ export class Violation extends React.Component {
             </View>
           </View>
         </View>
-      </View>
+      </SwCard>
     </View>
   )
 }

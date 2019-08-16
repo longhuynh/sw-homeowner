@@ -13,10 +13,9 @@ export class ViolationService {
       ownerIdEncrypted: ownerIdEncrypted,
       unitIdEncrypted: unitIdEncrypted, 
       unitUniqueIdEncrypted: unitIdEncrypted,
-      violationAreaFilter: {},
-      viewHistory: false
+      violationAreaFilter: {}
     };
-
+        
     return HttpService.post(url, data);
   }
   
@@ -49,6 +48,8 @@ export class ViolationService {
     const data = { 
       activityIdEnc: activityIdEnc,
       note: note,
+      isPublic: true,
+      isResidentNote: true,
       userIdEnc: userIdEnc
     };
 

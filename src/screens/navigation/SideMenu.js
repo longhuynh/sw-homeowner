@@ -3,10 +3,43 @@ import { TouchableHighlight, View, ScrollView, Platform, StyleSheet} from 'react
 import { SwStyleSheet, SwText, SwTheme} from 'sw-react-native-ui';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Avatar} from '../../components/index';
-import { MenuRoutes } from '../../config/navigation/Routes';
 import { FontAwesome } from '../../assets/icons';
 import NavigationType from '../../config/navigation/NavigationType';
 import { CurrentUser } from '../../services/LoginService';
+import { PageNames } from '../../config/AppConstants';
+
+const MenuRoutes =  [
+  {
+    id: PageNames.Dashboard,
+    title: 'Dashboard',
+    icon: 'align-justify',
+  },
+  {
+    id: 'AccountMenu',
+    title: 'Account',
+    icon: 'dollar-sign'
+  },
+  {
+    id: 'ArchitecturalMenu',
+    title: 'Architecturals',
+    icon: 'hammer'
+  },
+  {
+    id: 'WorkOrderMenu',
+    title: 'Work Orders',
+    icon: 'wrench'
+  },
+  {
+    id: 'ViolationMenu',
+    title: 'Violation',
+    icon: 'exclamation-triangle'
+  },
+  {
+    id: PageNames.Settings,
+    title: 'Settings',
+    icon: 'cog'
+  },
+];
 
 export class SideMenu extends React.Component {
   static propTypes = {

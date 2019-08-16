@@ -130,7 +130,7 @@ export const MainRoutes = [
   {
     id: 'SocialMenu',
     title: 'Social',
-    screen: Screens.SocialMenu,
+    screen: Screens.Profile,
     children: [
       {
         id: PageNames.Profile,
@@ -168,7 +168,7 @@ export const MainRoutes = [
   {
     id: 'MessagingMenu',
     title: 'Messaging',
-    screen: Screens.MessagingMenu,
+    screen: Screens.Messages,
     children: [
       {
         id: 'Chat',
@@ -192,32 +192,6 @@ export const MainRoutes = [
         id: 'ChatList',
         title: 'Chat List',
         screen: Screens.Messages,
-        children: [],
-      },
-    ],
-  },
-  {
-    id: 'NavigationMenu',
-    title: 'Navigation',
-    screen: Screens.NavigationMenu,
-    children: [
-      {
-        id: 'GridV1',
-        title: 'Grid Menu V1',
-        screen: Screens.GridV1,
-        children: [],
-      },
-      {
-        id: 'GridV2',
-        title: 'Grid Menu V2',
-        screen: Screens.GridV2,
-        children: [],
-      },
-      {
-        id: 'Side',
-        title: 'Side Menu',
-        action: 'DrawerOpen',
-        screen: Screens.SideMenu,
         children: [],
       },
     ],
@@ -250,51 +224,6 @@ export const MainRoutes = [
     id: 'Cards',
     title: 'Cards',
     screen: Screens.Cards,
-    children: [],
-  },
-];
-
-export const MenuRoutes =  [
-  {
-    id: PageNames.Dashboard,
-    title: 'Dashboard',
-    icon: 'align-justify',
-    screen: Screens.Dashboard,
-    children: [],
-  },
-  {
-    id: 'AccountMenu',
-    title: 'Account',
-    icon: 'dollar-sign',
-    screen: Screens.AccountSummary,
-    children: [],
-  },
-  {
-    id: 'ArchitecturalMenu',
-    title: 'Architecturals',
-    icon: 'hammer',
-    screen: Screens.Architectural,
-    children: [],
-  },
-  {
-    id: 'WorkOrderMenu',
-    title: 'Work Orders',
-    icon: 'wrench',
-    screen: Screens.WorkOrders,
-    children: [],
-  },
-  {
-    id: 'ViolationMenu',
-    title: 'Violation',
-    icon: 'exclamation-triangle',
-    screen: Screens.Violations,
-    children: [],
-  },
-  {
-    id: PageNames.Settings,
-    title: 'Settings',
-    icon: 'cog',
-    screen: Screens.Settings,
     children: [],
   },
 ];

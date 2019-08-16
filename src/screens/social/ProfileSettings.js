@@ -167,7 +167,7 @@ export class ProfileSettings extends React.Component {
           </View>
         </View>
 
-        {/* <View style={styles.section}>
+        <View style={styles.section}>
           <View style={[styles.row, styles.heading]}>
             <SwText swType='primary header6'>UNIT INFO</SwText>
           </View>
@@ -249,7 +249,7 @@ export class ProfileSettings extends React.Component {
               onChangeText={this.onMailingZipCodeInputChanged}
             />
           </View>
-        </View> */}
+        </View>
         
         <GradientButton swType='large' style={styles.button} text='SAVE' onPress={this.onSaveButtonPressed} />
       </SwAvoidKeyboard>
