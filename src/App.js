@@ -17,9 +17,9 @@ bootstrap();
 data.populateData();
 
 const RootStack = createStackNavigator({
-  First: {
-    screen: Screens.SplashScreen,
-  },
+  // First: {
+  //   screen: Screens.SplashScreen,
+  // },
   Home: {
     screen: createDrawerNavigator(
       {
@@ -96,10 +96,7 @@ export default class App extends React.Component {
       require('./assets/images/bg_screen2.jpg'),
       require('./assets/images/bg_screen3.jpg'),
       require('./assets/images/bg_screen4.jpg'),
-      require('./assets/images/wallpaper_1.jpg'),
-      require('./assets/images/wallpaper_2.jpg'),
-      require('./assets/images/wallpaper_3.jpg'),
-      require('./assets/images/wallpaper_4.jpg')
+      require('./assets/images/wallpaper.jpg')
     ]);
 
     const fontAssets = cacheFonts([FontAwesome.font, Ionicons.font]);

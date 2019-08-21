@@ -52,7 +52,7 @@ export class WorkOrders extends React.Component {
   }
 
   navigateToWorkOrder(workOrder){
-    this.props.navigation.navigate(PageNames.WorkOrder, { workOrder: workOrder});
+    //this.props.navigation.navigate(PageNames.WorkOrder, { workOrder: workOrder});
   }
 
   refreshData() {

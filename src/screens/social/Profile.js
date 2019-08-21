@@ -1,7 +1,6 @@
 import React from 'react';
 import { ScrollView, View, StyleSheet, Alert, AsyncStorage } from 'react-native';
 import { SwText, SwTextInput, SwButton, SwTheme, SwStyleSheet } from 'sw-react-native-ui';
-import { Tooltip } from 'react-native-elements';
 import { Avatar, GradientButton } from '../../components/index';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { DbStorageKey } from '../../services/storageKey';
@@ -38,8 +37,7 @@ export class Profile extends React.Component {
       phone: unit.CellPhone,
       homePhone: unit.HomePhone
     });
-  }
-  
+  }  
 
   onEditButtonPressed = () => {
     this.props.navigation.navigate(PageNames.ProfileSettings);

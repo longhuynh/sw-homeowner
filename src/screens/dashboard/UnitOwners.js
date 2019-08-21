@@ -1,13 +1,11 @@
 import React from 'react';
-import { FlatList, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { FlatList, View, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
 import _ from 'lodash';
 import { SwStyleSheet, SwText, SwTextInput } from 'sw-react-native-ui';
 import { FontAwesome } from '../../assets/icons';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Icon } from 'react-native-elements';
-import { CurrentUnitOwners } from '../../services/OwnerService';
 import { PageNames } from '../../config/AppConstants';
-
 
 export class UnitOwners extends React.Component {
   static propTypes = {
@@ -15,35 +13,35 @@ export class UnitOwners extends React.Component {
   };
 
   static navigationOptions = {
-    title: 'Change Owner Units',
+    title: 'Change Unit',
   };
 
   constructor(props) {
     super(props);    
 
-    const unitOwners = Object.values(CurrentUnitOwners);
+    const units = this.props.navigation.getParam('units', {});
+    const ownerFullName = this.props.navigation.getParam('ownerFullName', {});
 
     this.state = {
-        original: unitOwners,
-        filtered: unitOwners
+      ownerFullName: ownerFullName,
+      original: units,
+      filtered: units
     }  
   } 
 
-  
   async componentWillMount() {
 
   }
 
-  extractItemKey = (item) => `${item.IdEncrypted}`;
+  extractItemKey = (item) => `${item.UnitIdEncrypted}`;
 
   onInputChanged = (event) => {
     const pattern = new RegExp(event.nativeEvent.text, 'i');
     const units = _.filter(this.state.original, unit => {
       const filterResult = {
-        firstName: unit.OwnerFirstName.search(pattern),
-        lastName: unit.OwnerLastName.search(pattern),
+        address: unit.UnitAddress.search(pattern),
       };
-      return filterResult.firstName !== -1 || filterResult.lastName !== -1 ? unit : undefined;
+      return filterResult.address !== -1 ? unit : undefined;
     });
 
     this.setState({
@@ -53,13 +51,11 @@ export class UnitOwners extends React.Component {
   };
 
   onItemPressed = (unit) => {
-    const ownerFullName = `${unit.OwnerFirstName || ''} ${unit.OwnerLastName || ''}`;
-
     const navigationParams = {
-      unitIdEncrypted: unit.IdEncrypted,
-      ownerFullName: ownerFullName,
+      unitIdEncrypted: unit.UnitIdEncrypted,
+      ownerFullName: this.state.ownerFullName,
       address: unit.UnitAddress,
-      numberOfUnit: this.state.original.length
+      units: this.state.original
     };
 
     this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
@@ -93,11 +89,8 @@ export class UnitOwners extends React.Component {
           <Icon name='home' size={40} type='font-awesome' iconStyle={styles.icon} />
           <View style={styles.content}>
             <View style={styles.contentHeader}>
-              <SwText swType='header5'>{`${item.OwnerFirstName} ${item.OwnerLastName}`}</SwText>
+              <SwText swType='header5'>{item.UnitAddress}</SwText>
             </View>
-            <SwText numberOfLines={2} swType='primary3 mediumLine'>
-              {item.UnitAddress}
-            </SwText>
           </View>
         </View>
       </TouchableOpacity>
@@ -133,18 +126,18 @@ const styles = SwStyleSheet.create(theme => ({
   container: {
     paddingLeft: 19,
     paddingRight: 16,
-    paddingBottom: 12,
+    paddingBottom: 10,
     paddingTop: 7,
     flexDirection: 'row',
   },
   content: {
     marginLeft: 16,
+    marginTop: 16,
     flex: 1,
   },
   contentHeader: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
+    alignItems: 'center',
   },
   separator: {
     height: StyleSheet.hairlineWidth,

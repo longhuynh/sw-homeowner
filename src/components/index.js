@@ -12,3 +12,4 @@ export * from './NavBar';
 export * from './PaginationIndicator';
 export * from './PasswordTextInput';
 export * from './CardInput';
+export * from './CornerLabel';

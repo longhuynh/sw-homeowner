@@ -1,11 +1,10 @@
 {
   "expo": {
-    "name": "Smartwebs Homeowner",
+    "name": "Smartwebs Resident",
     "slug": "sw-homeowner",
-    "githubUrl": "https://github.com/longhuynh/sw-homeowner",
     "sdkVersion": "34.0.0",
     "icon": "./icon.png",
-    "orientation": "portrait",
+    "orientation": "portrait",   
     "loading": {
       "icon": "./icon.png"
     },
@@ -14,14 +13,18 @@
     },
     "ios": {
       "bundleIdentifier": "com.smartwebs.homeowner",
-      "buildNumber": "0.3.0",
-      "supportsTablet": true
+      "buildNumber": "1.0.0",
+      "supportsTablet": true,
+      "infoPlist": {
+        "NSCameraUsageDescription": "Allow this app uses the camera to take picture."
+      }
     },
     "android": {
       "package": "com.smartwebs.homeowner",
-      "versionCode": 22
+      "versionCode": 22,
+      "permissions" : ["CAMERA"]
     },
-    "version": "0.3.0",
+    "version": "1.0.0",
     "description": ""
   }
 }

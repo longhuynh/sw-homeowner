@@ -15,6 +15,11 @@ const MenuRoutes =  [
     icon: 'align-justify',
   },
   {
+    id: PageNames.Messages,
+    title: 'Recent Messages',
+    icon: 'comment-dots',
+  }, 
+  {
     id: 'AccountMenu',
     title: 'Account',
     icon: 'dollar-sign'

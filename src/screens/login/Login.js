@@ -5,11 +5,10 @@ import { Input, Button } from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
 import { View, Text, Keyboard, ImageBackground, Dimensions, AsyncStorage } from 'react-native';
 import { PageNames } from '../../config/AppConstants';
-import { LoginService, CurrentUser } from '../../services/LoginService';
-import { OwnerService } from '../../services/OwnerService';
+import { LoginService } from '../../services/LoginService';
 import { DbStorageKey, AppStorageKey } from '../../services/storageKey';
-import {ToastAndroid} from 'react-native';
 import { HttpService } from '../../services/config';
+import { UnitService } from '../../services/UnitService';
 
 const { width, height } = Dimensions.get('window');
 
@@ -25,16 +24,17 @@ export class Login extends React.Component {
 
   constructor(props) {
     super(props);
-    
+
     this.loginService = new LoginService();
-    this.ownerService = new OwnerService();
+    this.unitService = new UnitService();
 
     this.state = {
-      username: 'smartwebssc',
-      password: 'sc989',
+      username: 'TravisTesterton',
+      password: '123456',
       loginFailed: false,
       showLoading: false,
       hideTestFeature: true,
+      units: 0
     };
   }
 
@@ -44,7 +44,7 @@ export class Login extends React.Component {
 
   async submitLoginCredentials() {
     console.log(HttpService.baseUrl);
-    if(this.state.username == 'SHOWDEMO' && this.state.password == 'DEMO654'){
+    if (this.state.username == 'SHOWDEMO' && this.state.password == 'DEMO654') {
       this.setState({
         hideTestFeature: false,
         username: '',
@@ -53,32 +53,49 @@ export class Login extends React.Component {
     }
     else {
       await this.login();
-    }   
+    }
+  }
+
+  async loadOwnerUnits(userIdEncrypted) {
+    await this.unitService.getUnitsByUser(userIdEncrypted)
+      .then(async (response) => {       
+        const units = response.GetUnitsByUserResult;
+        await AsyncStorage.setItem(DbStorageKey.Units, JSON.stringify(units));
+
+        this.setState({units: units});
+      });
   }
 
   async login() {
     await this.loginService.login(this.state.username, this.state.password)
       .then(async (response) => {
+        console.log(response);
+
         this.setState({ showLoading: true });
         if (response != null) {
           this.setState({ loginFailed: false });
-          console.log(CurrentUser);
-          const unitOwners = this.ownerService.populateUnitOwners(response);
-          await AsyncStorage.setItem(DbStorageKey.UnitOwners, JSON.stringify(unitOwners));
+
           await AsyncStorage.setItem(AppStorageKey.IsLogin, 'true');
+          await this.loadOwnerUnits(response.GetUserResult.UserIdEncrypted);
+         
+          const user = response.GetUserResult;
+
           let navigationParams = {};
-          if (unitOwners.length > 0) {
-            const unit = unitOwners[0];
+
+          if (this.state.units.length > 0) {
+            const unit = this.state.units[0];
             await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
-            const ownerFullName = `${unit.OwnerFirstName || ''} ${unit.OwnerLastName || ''}`;
+
+            const ownerFullName = `${user.FirstName || ''} ${user.LastName || ''}`;
             navigationParams = {
               unit: unit,
               unitIdEncrypted: unit.IdEncrypted,
               ownerFullName: ownerFullName,
               address: unit.UnitAddress,
-              numberOfUnit: unitOwners.length
+              units: this.state.units
             };
           }
+
           this.setState({ showLoading: false });
           this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
         }
@@ -89,22 +106,23 @@ export class Login extends React.Component {
       .catch((error) => {
         console.log(error);
       });
+
     this.setState({ showLoading: false });
   }
 
   getImageBackgroundSource = () => (
-    require('../../assets/images/wallpaper_4.jpg')
+    require('../../assets/images/wallpaper.jpg')
   );
 
-  onDevButtonPressed(){
+  onDevButtonPressed() {
     HttpService.switchToEnvironment('Dev');
   }
 
-  onDemoButtonPressed(){
+  onDemoButtonPressed() {
     HttpService.switchToEnvironment('Demo');
   }
 
-  onProdButtonPressed(){
+  onProdButtonPressed() {
     HttpService.switchToEnvironment('Prod');
   }
 
@@ -113,40 +131,53 @@ export class Login extends React.Component {
       <View style={styles.root}>
         {
           this.state.hideTestFeature ? (
-            <View/>
+            <View />
           ) : (
-            <View style={styles.environmentButtons}>      
-            <Button
-              title='Dev'
-              clear
-              activeOpacity={0.5}
-              titleStyle={{ color: 'white', fontSize: 15 }}
-              containerStyle={{ marginTop: -10 }}
-              onPress={this.onDevButtonPressed}
-            />
-             <Button
-              title='Demo'
-              clear
-              activeOpacity={0.5}
-              titleStyle={{ color: 'white', fontSize: 15 }}
-              containerStyle={{ marginTop: -10 }}
-              onPress={this.onDemoButtonPressed}
-            />
-             <Button
-              title='Prod'
-              clear
-              activeOpacity={0.5}
-              titleStyle={{ color: 'white', fontSize: 15 }}
-              containerStyle={{ marginTop: -10 }}
-              onPress={this.onProdButtonPressed}
-            />
-          </View>
+              <View style={styles.environmentButtons}>
+                <Button
+                  title='Dev'
+                  clear
+                  activeOpacity={0.5}
+                  titleStyle={{ color: 'white', fontSize: 15 }}
+                  containerStyle={{ marginTop: -10 }}
+                  onPress={this.onDevButtonPressed}
+                />
+                <Button
+                  title='Demo'
+                  clear
+                  activeOpacity={0.5}
+                  titleStyle={{ color: 'white', fontSize: 15 }}
+                  containerStyle={{ marginTop: -10 }}
+                  onPress={this.onDemoButtonPressed}
+                />
+                <Button
+                  title='Prod'
+                  clear
+                  activeOpacity={0.5}
+                  titleStyle={{ color: 'white', fontSize: 15 }}
+                  containerStyle={{ marginTop: -10 }}
+                  onPress={this.onProdButtonPressed}
+                />
+              </View>
             )
         }
       </View>
     );
   }
 
+  renderError() {
+    return (
+      <View style={styles.root}>
+        {
+          this.state.loginFailed ? (
+            <Text style={{ color: 'red' }}>Username or password incorrect.</Text>
+          ) : (
+              <View />
+            )
+        }
+      </View>
+    );
+  }
 
   render = () => {
     const { username, password, showLoading } = this.state;
@@ -167,20 +198,14 @@ export class Login extends React.Component {
                   <Text style={styles.welcomeText}>YOUR HOME</Text>
                 </View>
               </View>
-              
-              <View>{this.renderEnvironment()}</View>              
+
+              <View>{this.renderEnvironment()}</View>
 
               <View style={styles.loginInput}>
                 <Input
-                  leftIcon={
-                    <FontAwesome
-                      name='user-o'
-                      color='rgba(171, 189, 219, 1)'
-                      size={25}
-                    />
-                  }
+                  leftIcon={<FontAwesome name='user-o' color='rgba(171, 189, 219, 1)' size={25} />}
                   containerStyle={{ marginVertical: 10 }}
-                  onChangeText={username => this.setState({ username })}
+                  onChangeText={username => this.setState({ username: username, loginFailed: false })}
                   value={username}
                   inputStyle={{ marginLeft: 10, color: 'white' }}
                   keyboardAppearance='light'
@@ -191,23 +216,15 @@ export class Login extends React.Component {
                   keyboardType='default'
                   returnKeyType='next'
                   ref={input => (this.usernameInput = input)}
-                  onSubmitEditing={() => {
-                    this.passwordInput.focus();
-                  }}
+                  onSubmitEditing={() => { this.passwordInput.focus(); }}
                   blurOnSubmit={false}
                   placeholderTextColor='white'
                   errorStyle={{ textAlign: 'center', fontSize: 12 }}
                 />
                 <Input
-                  leftIcon={
-                    <FontAwesome
-                      name='lock'
-                      color='rgba(171, 189, 219, 1)'
-                      size={25}
-                    />
-                  }
+                  leftIcon={<FontAwesome name='lock' color='rgba(171, 189, 219, 1)' size={25} />}
                   containerStyle={{ marginVertical: 10 }}
-                  onChangeText={password => this.setState({ password })}
+                  onChangeText={password => this.setState({ password: password, loginFailed: false })}
                   value={password}
                   inputStyle={{ marginLeft: 10, color: 'white' }}
                   secureTextEntry={true}
@@ -240,23 +257,15 @@ export class Login extends React.Component {
                 containerStyle={{ marginVertical: 10 }}
                 titleStyle={{ fontWeight: 'bold', color: 'white' }}
               />
-              {/* <View style={styles.footerView}>
-                <Text style={{ color: 'grey' }}>New here?</Text>
-                <Button
-                  title='Create an Account'
-                  clear
-                  activeOpacity={0.5}
-                  titleStyle={{ color: 'white', fontSize: 15 }}
-                  containerStyle={{ marginTop: -10 }}
-                  onPress={() => console.log('Account created')}
-                />
-              </View> */}             
+              <View style={styles.footerView}>
+                {this.renderError()}
+              </View>
             </View>
           </ImageBackground>
         </View>
       </SwAvoidKeyboard>
     );
-  }  
+  }
 }
 
 const styles = SwStyleSheet.create(theme => ({

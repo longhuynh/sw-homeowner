@@ -135,12 +135,8 @@ export class AccountSummary extends React.Component {
             </View>
           </View>
 
-          <GradientButton
-            swType='small'
-            style={styles.payButton}
-            text='PAY'
-            onPress={this.onPayButtonPressed}
-          />
+          {/* <GradientButton swType='small' style={styles.payButton} text='PAY' onPress={this.onPayButtonPressed} /> */}
+
           {
             this.state.showLoading ? (
               <ActivityIndicator size="large" color="#00ff00" />
@@ -172,8 +168,8 @@ const styles = SwStyleSheet.create(theme => ({
   },
   container: {
     flex: 1,
-    marginHorizontal: 17,
-    marginVertical: 17,
+    marginHorizontal: 15,
+    marginVertical: 15,
     backgroundColor: theme.colors.screen.base,
   },
   tabContainer: {

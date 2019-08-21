@@ -1,33 +1,35 @@
 class BaseConfig {
-  authenticationUrl = 'https://api-sworg.offline.smartwebs.net';
-  baseUrl = 'https://office.offline.smartwebs.net';
+  baseUrl = 'https://resident.demo.smartwebs.net';
+  commonApiUrl = `${this.baseUrl}/SWWebservice/Services/Complex/CommonService.svc`;
   residentApiUrl = `${this.baseUrl}/SWWebService/Services/ResidentPortal/ResidentialPortalService.svc`;
   unitApiUrl = `${this.baseUrl}/SWWebservice/Services/UnitsArea/UnitsAreaService.svc`;
   violationApiUrl = `${this.baseUrl}/SWWebservice/Services/ViolationArea/ViolationAreaService.svc`;
   arcApiUrl = `${this.baseUrl}/SWWebservice/Services/ArcArea/ArcAreaService.svc`;
 
+  authorizationKey = 'SwClassic eyJ1SWQiOiJVMVRaLU1oZFN3ekFGWDgwNUdvIiwibUlkIjoiSjJmQW1JRk91ZWtIQkEifQ==';
+
   headers = {
     'Accept': 'application/x-jsonr+json, application/json, text/plain',
     'Content-Type': 'application/json;charset=UTF-8',
-    'Authorization': 'SwClassic eyJ1SWQiOiJVMVRaLU1oZFN3ekFGWDgwNUdvIiwibUlkIjoiSjJmQW1JRk91ZWtIQkEifQ=='
+    'Authorization': this.authorizationKey
   };
 
   uploadHeaders = {
     'Accept': 'application/x-jsonr+json, application/json, text/plain',
     'Content-Type': 'multipart/form-data',
-    'Authorization': 'SwClassic eyJ1SWQiOiJVMVRaLU1oZFN3ekFGWDgwNUdvIiwibUlkIjoiSjJmQW1JRk91ZWtIQkEifQ=='
+    'Authorization': this.authorizationKey
   };
 
   switchToEnvironment (name) {
     switch(name){
       case 'Dev': 
-        this.baseUrl = 'https://office.offline.smartwebs.net';
+        this.baseUrl = 'https://office.demo.smartwebs.net';
         break;
       case 'Demo':      
-        this.baseUrl = 'https://demo.office.smartwebs.net';
+        this.baseUrl = 'https://resident.demo.smartwebs.net';
         break;
       case 'Prod':      
-        this.baseUrl = 'https://resident.office.smartwebs.net';
+        this.baseUrl = 'https://resident.smartwebs.net';
         break;
       default:
         break;

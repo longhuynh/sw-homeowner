@@ -1,11 +1,11 @@
 import React from 'react';
-import { FlatList, View, StyleSheet, TouchableOpacity} from 'react-native';
-import _ from 'lodash';
-import { SwStyleSheet,  SwText,  SwTextInput} from 'sw-react-native-ui';
+import { FlatList, View, StyleSheet, TouchableOpacity } from 'react-native';
+import { SwStyleSheet, SwCard, SwText, SwTextInput } from 'sw-react-native-ui';
 import { Avatar } from '../../components/index';
 import { FontAwesome } from '../../assets/icons';
 import { data } from '../../data/DataProvider';
 import NavigationType from '../../config/navigation/NavigationType';
+import _ from 'lodash';
 
 const moment = require('moment');
 
@@ -14,7 +14,7 @@ export class Messages extends React.Component {
     navigation: NavigationType.isRequired,
   };
   static navigationOptions = {
-    title: 'Messages - WIP',
+    title: 'Messages',
   };
 
   state = {
@@ -51,74 +51,65 @@ export class Messages extends React.Component {
     <SwText swType='awesome'>{FontAwesome.search}</SwText>
   );
 
-  renderHeader = () => (
-    <View style={styles.searchContainer}>
-      <SwTextInput
-        autoCapitalize='none'
-        autoCorrect={false}
-        onChange={this.onInputChanged}
-        label={this.renderInputLabel()}
-        swType='row'
-        placeholder='Search'
-      />
-    </View>
-  );
-
   renderItem = ({ item }) => {
     const last = item.messages[item.messages.length - 1];
     return (
-      <TouchableOpacity>
-        <View style={styles.container}>
-          <Avatar swType='circle' style={styles.avatar} img={item.withUser.photo} />
-          <View style={styles.content}>
-            <View style={styles.contentHeader}>
-              <SwText swType='header5'>{`${item.withUser.firstName} ${item.withUser.lastName}`}</SwText>
-              <SwText swType='secondary4 hintColor'>
-                {moment().add(last.time, 'seconds').format('LT')}
-              </SwText>
-            </View>
-            <SwText numberOfLines={2} swType='primary3 mediumLine' style={{ paddingTop: 5 }}>
-              {last.text}
+      <View style={styles.itemContainer}>
+        {/* <Avatar swType='circle' style={styles.avatar} img={item.withUser.photo} /> */}
+        <View style={styles.content}>
+          <View style={styles.contentHeader}>
+            <SwText swType='header5'>{`${item.withUser.firstName} ${item.withUser.lastName}`}</SwText>
+            <SwText swType='secondary4 hintColor'>
+              {moment().add(last.time, 'seconds').format('LT')}
             </SwText>
           </View>
+          <SwText numberOfLines={2} swType='primary3 mediumLine' style={{ paddingTop: 5 }}>
+            {last.text}
+          </SwText>
         </View>
-      </TouchableOpacity>
+      </View>
     );
   };
 
   render = () => (
-    <FlatList
-      style={styles.root}
-      data={this.state.data.filtered}
-      extraData={this.state}
-      ListHeaderComponent={this.renderHeader}
-      ItemSeparatorComponent={this.renderSeparator}
-      keyExtractor={this.extractItemKey}
-      renderItem={this.renderItem}
-    />
+    <View style={styles.screen} >
+      <SwCard style={styles.container}>
+        <FlatList
+          style={styles.root}
+          data={this.state.data.filtered}
+          extraData={this.state}
+          ItemSeparatorComponent={this.renderSeparator}
+          keyExtractor={this.extractItemKey}
+          renderItem={this.renderItem}
+        />
+      </SwCard>
+    </View>
   );
 }
 
 const styles = SwStyleSheet.create(theme => ({
+  screen: {
+    flex: 1,
+    marginVertical: 20,
+    backgroundColor: theme.colors.screen.scroll,
+    marginHorizontal: 20,
+  },
+  container: {
+    flex: 1,
+    borderRadius: 3,
+    paddingHorizontal: 15,
+    borderColor: theme.colors.border.card,
+    backgroundColor: theme.colors.screen.base,
+  },
   root: {
     backgroundColor: theme.colors.screen.base,
   },
-  searchContainer: {
-    backgroundColor: theme.colors.screen.bold,
-    paddingHorizontal: 16,
-    paddingVertical: 10,
-    height: 60,
-    alignItems: 'center',
-  },
-  container: {
-    paddingLeft: 19,
-    paddingRight: 16,
-    paddingBottom: 12,
-    paddingTop: 7,
+  itemContainer: {
+    paddingBottom: 10,
+    paddingTop: 10,
     flexDirection: 'row',
   },
   content: {
-    marginLeft: 16,
     flex: 1,
   },
   contentHeader: {

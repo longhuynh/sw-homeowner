@@ -189,8 +189,8 @@ export const MainRoutes = [
         children: [],
       },
       {
-        id: 'ChatList',
-        title: 'Chat List',
+        id: PageNames.Messages,
+        title: 'Messages',
         screen: Screens.Messages,
         children: [],
       },
