@@ -39,13 +39,14 @@ export class AccountSummary extends React.Component {
   async bindData() {
     const unit = this.state.unit;
 
-    await this.accountService.getAccountSummary(unit.IdEncrypted, unit.AssociationIdEncrypted )
+    await this.accountService.getAccountSummary(unit.UnitIdEncrypted, unit.AssociationIdEncrypted )
       .then(response => {
-        if (response != null) {
+        console.log(response);        
+        if (response != null) {         
           const r = response.GetAccountSummaryResult;
           const { transactionData, callHistoryData } = this.generateData(r);        
 
-          this.setState({ balance: r.Balance.toString() });
+          this.setState({ balance: r.Balance.toString() || '$0.00' });
           this.setState({ transactionData: transactionData });
           this.setState({ callHistoryData: callHistoryData });
           this.setState({ showLoading: false });

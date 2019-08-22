@@ -37,7 +37,7 @@ export class Architecturals extends React.Component {
 
   async bindData() {
 
-    await this.arcService.getAll(this.state.unit.AssociationIdEncrypted, this.state.unit.IdEncrypted)
+    await this.arcService.getAll(this.state.unit.AssociationIdEncrypted, this.state.unit.UnitIdEncrypted)
       .then(response => {        
         console.log(response);
         if (response != null) {

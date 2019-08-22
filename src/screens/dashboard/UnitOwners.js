@@ -1,11 +1,13 @@
 import React from 'react';
 import { FlatList, View, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
-import _ from 'lodash';
 import { SwStyleSheet, SwText, SwTextInput } from 'sw-react-native-ui';
 import { FontAwesome } from '../../assets/icons';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Icon } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
+import { UnitService } from '../../services/UnitService';
+import _ from 'lodash';
+import { DbStorageKey } from '../../services/storageKey';
 
 export class UnitOwners extends React.Component {
   static propTypes = {
@@ -20,10 +22,10 @@ export class UnitOwners extends React.Component {
     super(props);    
 
     const units = this.props.navigation.getParam('units', {});
-    const ownerFullName = this.props.navigation.getParam('ownerFullName', {});
+
+    this.unitService = new UnitService();
 
     this.state = {
-      ownerFullName: ownerFullName,
       original: units,
       filtered: units
     }  
@@ -50,15 +52,30 @@ export class UnitOwners extends React.Component {
     });
   };
 
-  onItemPressed = (unit) => {
-    const navigationParams = {
-      unitIdEncrypted: unit.UnitIdEncrypted,
-      ownerFullName: this.state.ownerFullName,
-      address: unit.UnitAddress,
-      units: this.state.original
-    };
+  async loadOwnerUnitDetails(unit) {
+    await this.unitService.getOwnerUnitDetails(unit.UnitIdEncrypted)
+      .then(async (response) => {       
+       
+        const profile = response.GetOwnerUnitDetailsResult;      
+        console.log(profile);  
+        await AsyncStorage.setItem(DbStorageKey.OwnerUnitProfile, JSON.stringify(profile));     
 
-    this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
+        const ownerFullName =  `${profile.Owner.OwnerFirstName || ''} ${profile.Owner.OwnerLastName || ''}`;
+
+        const navigationParams = {
+          unitIdEncrypted: unit.UnitIdEncrypted,
+          ownerFullName: ownerFullName,
+          address: unit.UnitAddress,
+          units: this.state.original
+        };
+       
+        this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
+      });
+  }
+
+  onItemPressed = async (unit) => {
+    await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
+    await this.loadOwnerUnitDetails(unit);
   };
 
   renderSeparator = () => (

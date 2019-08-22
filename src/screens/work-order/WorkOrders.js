@@ -5,6 +5,7 @@ import { Badge, Icon } from 'react-native-elements';
 import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
 import { WorkOrderService } from '../../services/WorkOrderService';
+import { CornerLabel } from '../../components/index';
 
 const moment = require('moment');
 
@@ -38,7 +39,7 @@ export class WorkOrders extends React.Component {
   async bindData() {
     const unit = this.state.unit;
 
-    await this.workOrderService.getAll(unit.AssociationIdEncrypted, unit.IdEncrypted)
+    await this.workOrderService.getAll(unit.AssociationIdEncrypted, unit.UnitIdEncrypted)
       .then(response => {    
         console.log(response);
         if (response != null) {
@@ -73,9 +74,9 @@ export class WorkOrders extends React.Component {
   }
 
   renderStatItem = (item) => (
-    <TouchableOpacity key={item.IdEncrypted}
-      onPress={() => this.props.navigation.navigate('WorkOrder', { workOrder: item })}>
-      <SwCard style={styles.itemContainer}>
+    // <TouchableOpacity key={item.IdEncrypted}
+    //   onPress={() => this.props.navigation.navigate('WorkOrder', { workOrder: item })}>
+      <SwCard style={styles.itemContainer} key={item.WoNumber}>
         {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15 }}
           badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
           containerStyle={{ position: 'absolute', top: -10, right: -10, }} /> */}
@@ -84,12 +85,12 @@ export class WorkOrders extends React.Component {
           <View style={styles.detail}>
             <SwText swType='secondary2'>{item.WoStatusTypeName }</SwText>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.CreatedDate)).format('MM/DD/YYYY')}</SwText>
+            <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.CreatedDate)).format('MM/DD/YYYY h:mm A')}</SwText>
             </View>
           </View>
         </View>
       </SwCard>
-    </TouchableOpacity>
+    // </TouchableOpacity>
   );
 
   refreshControl() {
@@ -124,7 +125,7 @@ const styles = SwStyleSheet.create(theme => ({
     borderRadius: 3,
     paddingHorizontal: 15,
     paddingVertical: 15,
-    marginBottom: 20,
+    marginBottom: 20
   },
   content: {
     flex: 1,

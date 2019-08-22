@@ -3,6 +3,9 @@ import { ScrollView, View, StyleSheet, AsyncStorage} from 'react-native';
 import { SwText, SwTextInput, SwAvoidKeyboard, SwTheme, SwStyleSheet} from 'sw-react-native-ui';
 import { Avatar, GradientButton} from '../../components/index';
 import { DbStorageKey } from '../../services/storageKey';
+import { UnitService } from '../../services/UnitService';
+import { CurrentUser } from '../../services/LoginService';
+import { PageNames } from '../../config/AppConstants';
 
 export class ProfileSettings extends React.Component {
   static navigationOptions = {
@@ -12,7 +15,10 @@ export class ProfileSettings extends React.Component {
   constructor(props) {
     super(props);
 
+    this.unitService = new UnitService();
+
     this.state = {
+      profile: {},
       firstName: '',
       lastName: '',
       email: '',
@@ -21,88 +27,119 @@ export class ProfileSettings extends React.Component {
       mailingAddress: '',
       mailingCity: '',
       mailingState:'',
-      mailingZipCode: '', 
+      mailingZip: '', 
       unitAddress: '',
       unitCity: '',
       unitState:'',
-      unitZipCode: '', 
+      unitZip: '', 
     };
   }
 
+  profile = {};
+
   async componentWillMount(){   
-    const selectedUnit = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);   
-    const unit = JSON.parse(selectedUnit);
-    this.updateState(unit);    
+    const profileData = await AsyncStorage.getItem(DbStorageKey.OwnerUnitProfile);   
+    const profile = JSON.parse(profileData);
+    this.profile = profile;
+    this.updateState(profile);    
   }
 
-  updateState(unit){
+  updateState(profile){
     this.setState({
-      firstName: unit.OwnerFirstName,
-      lastName: unit.OwnerLastName,
-      email: unit.OwnerEmail,
-      phone: unit.CellPhone,
-      homePhone: unit.HomePhone,
-      mailingAddress: unit.MailingAddress,
-      mailingCity: unit.MailingCity,
-      mailingState: unit.MailingState,
-      mailingZipCode: unit.MailingZip,
-      unitAddress: unit.UnitAddress,
-      unitCity: unit.UnitCity,
-      unitState: unit.UnitState,
-      unitZipCode: unit.UnitZip
+      firstName: profile.Owner.OwnerFirstName,
+      lastName: profile.Owner.OwnerLastName,
+      email: profile.Owner.OwnerEmail,
+      phone: profile.Owner.CellPhone1,
+      homePhone: profile.Owner.NightPhone,
+      mailingAddress: profile.Owner.MailingAddress,
+      mailingCity: profile.Owner.MailingCity,
+      mailingState: profile.Owner.MailingState,
+      mailingZip: profile.Owner.MailingZip,
+      unitAddress: profile.Unit.UnitAddress,
+      unitCity: profile.Unit.UnitCity,
+      unitState: profile.Unit.UnitState,
+      unitZip: profile.Unit.UnitZip
     });
   }
 
   onFirstNameInputChanged = (text) => {
     this.setState({ firstName: text });
+    this.profile.Owner.OwnerFirstName = text;
   };
 
   onLastNameInputChanged = (text) => {
     this.setState({ lastName: text });
+    this.profile.Owner.OwnerLastName = text;
   };
 
   onEmailInputChanged = (text) => {
     this.setState({ email: text });
+    this.profile.Owner.OwnerEmail = text;
   };
 
   onPhoneInputChanged = (text) => {
     this.setState({ phone: text });
+    this.profile.Owner.CellPhone1 = text;
+  };
+
+  onHomePhoneInputChanged = (text) => {
+    this.setState({ homePhone: text });
+    this.profile.Owner.NightPhone = text;
   };
 
   onMailingAddressInputChanged = (text) => {
     this.setState({ mailingAddress: text });
+    this.profile.Owner.MailingAddress = text;
   };
 
   onMailingCityInputChanged = (text) => {
     this.setState({ mailingCity: text });
+    this.profile.Owner.MailingCity = text;
   };
 
   onMailingStateInputChanged = (text) => {
     this.setState({ mailingState: text });
+    this.profile.Owner.MailingState = text;
   };
 
-  onMailingZipCodeInputChanged = (text) => {
-    this.setState({ mailingZipCode: text });
+  onMailingZipInputChanged = (text) => {
+    this.setState({ mailingZip: text });
+    this.profile.Owner.MailingZip = text;
   };
 
   onUnitAddressInputChanged = (text) => {
     this.setState({ unitAddress: text });
+    this.profile.Unit.UnitAddress = text;
   };
 
   onUnitCityInputChanged = (text) => {
     this.setState({ unitCity: text });
+    this.profile.Unit.unitCity = text;
   };
 
   onUnitStateInputChanged = (text) => {
     this.setState({ unitState: text });
+    this.profile.Unit.UnitState = text;
   };
 
-  onUnitZipCodeInputChanged = (text) => {
-    this.setState({ unitZipCode: text });
+  onUnitZipInputChanged = (text) => {
+    this.setState({ unitZip: text });
+    this.profile.Unit.UnitZip = text;
   };
 
-  onSaveButtonPressed = () => {
-    console.log('onSaveButtonPressed');   
+  onSaveButtonPressed = async () => {  
+    await this.unitService.saveOwnerUnit(this.profile.Owner.AssociationIdEncrypted, 
+                CurrentUser.ManagementIdEncrypted, CurrentUser.UserIdEncrypted, 
+                this.profile.Owner, this.profile.Unit)
+      .then(async (response) => {
+        if(response != null){
+          await AsyncStorage.setItem(DbStorageKey.OwnerUnitProfile, JSON.stringify(response.SaveOwnerUnitResult));
+          this.props.navigation.navigate(PageNames.Profile);
+        }       
+      })
+      .catch(error => {
+
+      });
   };
 
   render = () => (
@@ -160,8 +197,8 @@ export class ProfileSettings extends React.Component {
               label='Home Phone'
               returnKeyType='next'
               keyboardType='phone-pad'
-              value=''
-              onChangeText={this.onPhoneInputChanged}
+              value={this.state.homePhone}
+              onChangeText={this.onHomePhoneInputChanged}
               swType='right clear'
             />
           </View>
@@ -175,36 +212,36 @@ export class ProfileSettings extends React.Component {
             <SwTextInput
               label='Address'
               returnKeyType='next'
-              value={this.state.mailingAddress}
+              value={this.state.unitAddress}
               swType='right clear'
-              onChangeText={this.onMailingAddressInputChanged}
+              onChangeText={this.onUnitAddressInputChanged}
             />
           </View>
           <View style={styles.row}>
             <SwTextInput
               label='City'
               returnKeyType='next'
-              value={this.state.mailingCity}
+              value={this.state.unitCity}
               swType='right clear'
-              onChangeText={this.onMailingCityInputChanged}
+              onChangeText={this.onUnitCityInputChanged}
             />
           </View>
           <View style={styles.row}>
             <SwTextInput
               label='State'
               returnKeyType='next'
-              value={this.state.mailingState}
+              value={this.state.unitState}
               swType='right clear'
-              onChangeText={this.onMailingStateInputChanged}
+              onChangeText={this.onUnitStateInputChanged}
             />
           </View>
           <View style={styles.row}>
             <SwTextInput
               label='Zip Code'
               returnKeyType='next'
-              value={this.state.mailingZipCode}              
+              value={this.state.unitZip}              
               swType='right clear'
-              onChangeText={this.onMailingZipCodeInputChanged}
+              onChangeText={this.onUnitZipInputChanged}
             />
           </View>
         </View>
@@ -244,9 +281,9 @@ export class ProfileSettings extends React.Component {
             <SwTextInput
               label='Zip Code'
               returnKeyType='next'
-              value={this.state.mailingZipCode}              
+              value={this.state.mailingZip}              
               swType='right clear'
-              onChangeText={this.onMailingZipCodeInputChanged}
+              onChangeText={this.onMailingZipInputChanged}
             />
           </View>
         </View>

@@ -6,18 +6,27 @@ export class ViolationService {
     console.log("ViolationService constructor");
   }
 
-  async getAll(associationIdEnc, ownerIdEncrypted, unitIdEncrypted) {
-    const url = `${HttpService.violationApiUrl}/GetViolationItems`;
+  async getAll(associationIdEncrypted, unitIdEncrypted) {
+    const url = `${HttpService.unitApiUrl}/GetUnitViolations`;
     const data = { 
-      associationIdEnc: associationIdEnc,
-      ownerIdEncrypted: ownerIdEncrypted,
-      unitIdEncrypted: unitIdEncrypted, 
-      unitUniqueIdEncrypted: unitIdEncrypted,
-      violationAreaFilter: {}
+      associationIdEncrypted: associationIdEncrypted,
+      unitIdEncrypted: unitIdEncrypted
     };
         
     return HttpService.post(url, data);
   }
+
+  async getViolationItemById(associationIdEncrypted, violationIdEncrypted) {
+    const url = `${HttpService.violationApiUrl}/GetViolationItemById`;
+    const data = { 
+      associationIdEncrypted: associationIdEncrypted,
+      violationIdEncrypted: violationIdEncrypted
+    };
+        
+    return HttpService.post(url, data);
+  }
+
+  
   
   getComments(violation) {
     return _.flatMap(violation.Activities[0].Notes, (n) => [

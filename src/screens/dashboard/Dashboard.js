@@ -1,14 +1,14 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, AsyncStorage, RefreshControl } from 'react-native';
+import { View, ScrollView, TouchableOpacity, AsyncStorage, RefreshControl, ActivityIndicator } from 'react-native';
 import { SwText, SwStyleSheet } from 'sw-react-native-ui';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Avatar } from '../../components/avatar/Avatar';
-import { CornerLabel } from '../../components/CornerLabel';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
 import { DbStorageKey } from '../../services/storageKey';
 import { UnitService } from '../../services/UnitService';
+import { CurrentUser } from '../../services/LoginService';
 import _ from 'lodash';
 
 export class Dashboard extends React.Component {
@@ -20,8 +20,6 @@ export class Dashboard extends React.Component {
     let ownerFullName = navigation.state.params ? navigation.state.params.ownerFullName : undefined;
     let address = navigation.state.params ? navigation.state.params.address : undefined;
     let units = navigation.state.params ? navigation.state.params.units : [];
-
-    console.log(units);
 
     return ({
       headerTitle: Dashboard.renderNavigationTitle(navigation, ownerFullName, address, units),
@@ -37,9 +35,11 @@ export class Dashboard extends React.Component {
 
     this.state = {
       accountData: {},
-      selectedUnit: unit,
       unit: unit,
       refreshing: false,
+      showLoading: true,
+      messageCount: 0,
+      messages: [],
       items: []
     };
 
@@ -57,18 +57,14 @@ export class Dashboard extends React.Component {
     const unitJson = await AsyncStorage.getItem(DbStorageKey.Units);
 
     if (unitData == null)
-      return false;   
+      return false;
 
     if (unit.UnitIdEncrypted != unitIdEncrypted) {
       const units = JSON.parse(unitJson);
       unit = _.find(units, { UnitIdEncrypted: unitIdEncrypted });
 
-      this.setState({ unit: unit });      
-      await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
-      this.setState({selectedUnit: unit});
-
+      this.setState({ unit: unit });
       this.shouldUpdate = true;
-
       this.bindData();
     }
 
@@ -79,16 +75,41 @@ export class Dashboard extends React.Component {
     this.shouldUpdate = false;
   }
 
-  async componentDidMount() {  }
+  async componentDidMount() { }
 
   async bindData() {
     console.log("bindData");
     const unit = this.state.unit;
+
+    console.log(this.state.unit);
+
+    await this.loadMessages();
+
     await this.unitService.getUnitCounter(unit.AssociationIdEncrypted, unit.UnitIdEncrypted)
       .then(response => {
         if (response != null) {
           const items = this.generateData(response.GetUnitCountersResult);
           this.setState({ items: items });
+
+          this.setState({ showLoading: false });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({ showLoading: false });
+      });
+  }
+
+  async loadMessages() {
+    const unit = this.state.unit;
+
+    await this.unitService.getResidentIncomingNotes(unit.UnitIdEncrypted, CurrentUser.UserIdEncrypted)
+      .then(response => {
+        if (response != null) {
+          const messages = response.GetResidentIncomingNotesResult;
+          this.setState({ messages: messages });
+          const messageCount = messages.ProjectNotes.length + messages.ServiceNotes.length + messages.ViolationNotes.length;
+          this.setState({ messageCount: messageCount });
         }
       })
       .catch(error => {
@@ -102,7 +123,7 @@ export class Dashboard extends React.Component {
     items.push({
       name: 'Recent Messages',
       screen: 'Messages',
-      value: '2',
+      value: this.state.messageCount,
       icon: 'comment-dots',
       background: 'rgb(47, 130, 74)'
     });
@@ -114,7 +135,7 @@ export class Dashboard extends React.Component {
       icon: 'dollar-sign',
       background: 'rgb(134, 19, 136)'
     });
-    
+
     items.push({
       name: 'Arc/Arb',
       screen: 'Architecturals',
@@ -122,7 +143,7 @@ export class Dashboard extends React.Component {
       icon: 'hammer',
       background: 'rgb(59, 157, 214)'
     });
-    
+
     items.push({
       name: 'Work Orders',
       screen: 'WorkOrders',
@@ -130,7 +151,7 @@ export class Dashboard extends React.Component {
       icon: 'wrench',
       background: 'rgb(255, 127, 29)'
     });
-    
+
     items.push({
       name: 'Violations',
       screen: 'Violations',
@@ -142,17 +163,26 @@ export class Dashboard extends React.Component {
   }
 
   navigateToScreen(screen) {
-    this.props.navigation.navigate(screen, { unit: this.state.unit });
+    let params =  { unit: this.state.unit };
+    switch(screen){
+      case 'Messages':
+        params = { unit: this.state.unit, messages: this.state.messages };
+        break;
+      default:
+        break;
+    }   
+
+    this.props.navigation.navigate(screen, params);
   }
 
   refreshData() {
     this.setState({ refreshing: true });
-    this.bindData(this.state.query);
+    this.bindData();
     this.setState({ refreshing: false });
   }
 
-  static onNavigationTitlePressed = (navigation, units, ownerFullName) => {
-    navigation.navigate(PageNames.UnitOwners, { units: units, ownerFullName: ownerFullName });
+  static onNavigationTitlePressed = (navigation, units) => {
+    navigation.navigate(PageNames.UnitOwners, { units: units});
   };
 
   static onNavigationAvatarPressed = (navigation) => {
@@ -165,7 +195,7 @@ export class Dashboard extends React.Component {
       return <View />;
 
     return (
-      <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation, units, ownerFullName)}>
+      <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation, units)}>
         <View style={styles.header}>
           <SwText swType='header4 center'>{ownerFullName}</SwText>
           <SwText swType='secondary2 secondaryColor center'>{address}</SwText>
@@ -190,7 +220,7 @@ export class Dashboard extends React.Component {
           <SwText swType='header3' style={styles.name}>{item.name}</SwText>
           <SwText swType='secondary1' style={styles.value}>{item.value}</SwText>
         </View>
-        <FontAwesome5 name={item.icon} size={50} style={styles.icon} />     
+        <FontAwesome5 name={item.icon} size={50} style={styles.icon} />
       </View>
     </TouchableOpacity>
   );
@@ -204,12 +234,16 @@ export class Dashboard extends React.Component {
   }
 
   render = () => {
+    if (this.state.showLoading)
+      return (<ActivityIndicator size="large" color="#00ff00" marginVertical={100} />);
+
     return (
       <ScrollView style={styles.screen} refreshControl={this.refreshControl()}>
         <View style={styles.container}>
           {this.state.items.map(this.renderStatItem)}
         </View>
       </ScrollView>
+
     );
   }
 }

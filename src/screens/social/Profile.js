@@ -13,7 +13,9 @@ export class Profile extends React.Component {
 
   constructor(props) {
     super(props);
+
     console.log("Profile constructor");
+
     this.state = {
       firstName: '',
       lastName: '',
@@ -24,18 +26,19 @@ export class Profile extends React.Component {
   }
 
   async componentWillMount(){   
-    const selectedUnit = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);   
-    const unit = JSON.parse(selectedUnit);
-    this.fillProfileInfo(unit);    
+    const profileData = await AsyncStorage.getItem(DbStorageKey.OwnerUnitProfile);   
+    const profile = JSON.parse(profileData);
+    console.log(profile);
+    this.fillProfileInfo(profile);    
   }
 
-  fillProfileInfo(unit){
+  fillProfileInfo(profile){
     this.setState({
-      firstName: unit.OwnerFirstName,
-      lastName: unit.OwnerLastName,
-      email: unit.OwnerEmail,
-      phone: unit.CellPhone,
-      homePhone: unit.HomePhone
+      firstName: profile.Owner.OwnerFirstName,
+      lastName: profile.Owner.OwnerLastName,
+      email: profile.Owner.OwnerEmail,
+      phone: profile.Owner.CellPhone1,
+      homePhone: profile.Owner.NightPhone
     });
   }  
 

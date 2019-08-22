@@ -1,10 +1,10 @@
 import React from 'react';
 import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
-import { Badge, Icon } from 'react-native-elements';
 import { ViolationService } from '../../services/ViolationService';
 import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
+import { CornerLabel } from '../../components/index';
 import _ from 'lodash';
 
 const moment = require('moment');
@@ -40,10 +40,11 @@ export class Violations extends React.Component {
   async bindData() {
     const unit = this.state.unit;
 
-    await this.violationService.getAll(unit.AssociationIdEncrypted, unit.OwnerIdEncrypted, unit.IdEncrypted)
+    await this.violationService.getAll(unit.AssociationIdEncrypted, unit.UnitIdEncrypted)
       .then(response => {
         if (response != null) {
-          const items = response.GetViolationItemsResult;
+
+          const items = response.GetUnitViolationsResult;
           this.setState({ items: items });
           console.log(items);
           this.setState({ showLoading: false });
@@ -51,14 +52,15 @@ export class Violations extends React.Component {
       })
       .catch(error => {
         console.log(error);
+        this.setState({ showLoading: false });
       });
   }
 
-  navigateToViolation(item) {
-    const violation = _.find(this.state.items, { ViolationItemIdEncrypted: item.ViolationItemIdEncrypted });
+  navigateToViolation(item) {   
     this.props.navigation.navigate(PageNames.Violation, {
-      name: `${item.CategoryName} - ${item.SubCategoryName}`,
-      violation: violation
+      name: item.ViolationType,
+      associationIdEncrypted: this.state.unit.AssociationIdEncrypted,
+      violationIdEncrypted: item.ViolationItemIdEncrypted
     });
   }
 
@@ -83,18 +85,22 @@ export class Violations extends React.Component {
     <TouchableOpacity key={item.ViolationItemIdEncrypted}
       onPress={() => this.navigateToViolation(item)}>
       <SwCard style={styles.itemContainer}>
-        {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15 }} 
-              badgeStyle={{width: 30, height:30, borderRadius: 300 }} 
-              containerStyle={{ position: 'absolute', top: -10, right: -10,  }}/> */}
         <View style={styles.content}>
-          <SwText swType='header2' numberOfLines={1}>{`${item.CategoryName} - ${item.SubCategoryName}`}</SwText>
+          <SwText swType='header2' numberOfLines={1}>{item.ViolationType}</SwText>
           <View style={styles.detail}>
-            <SwText swType='secondary2'>{item.Activities[0].StatusTypeName}</SwText>
+            <SwText swType='secondary2'>{item.Stage}</SwText>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.Activities[0].CreatedDate)).format('MM/DD/YYYY')}</SwText>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.ActivityCreatedDate)).format('MM/DD/YYYY')}</SwText>
             </View>
           </View>
         </View>
+        <CornerLabel
+          cornerRadius={60}
+          alignment={'right'}
+          style={{ backgroundColor: 'red', height: 24, }}
+          textStyle={{ color: '#fff', fontSize: 12, }}>
+          {item.OpenClosed}
+        </CornerLabel>
       </SwCard>
     </TouchableOpacity>
   );
@@ -144,6 +150,7 @@ const styles = SwStyleSheet.create(theme => ({
     paddingHorizontal: 15,
     paddingVertical: 15,
     marginBottom: 20,
+    overflow: 'hidden'
   },
   content: {
     flex: 1,

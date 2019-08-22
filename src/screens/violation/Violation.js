@@ -11,6 +11,7 @@ import { ViolationService } from '../../services/ViolationService';
 import { CommentService } from '../../services/CommentService';
 import { DocumentService } from '../../services/DocumentService';
 
+
 export class Violation extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
@@ -26,7 +27,8 @@ export class Violation extends React.Component {
 
   constructor(props) {
     super(props);
-    const violation = this.props.navigation.getParam('violation', {});
+    const associationIdEncrypted = this.props.navigation.getParam('associationIdEncrypted', {});
+    const violationIdEncrypted = this.props.navigation.getParam('violationIdEncrypted', {});
 
     this.violationService = new ViolationService();
     this.commentService = new CommentService();
@@ -34,9 +36,23 @@ export class Violation extends React.Component {
 
     this.state = {
       refresh: false,
-      id: violation.ViolationItemIdEncrypted,
-      violation: violation
+      associationIdEncrypted: associationIdEncrypted,
+      violationIdEncrypted: violationIdEncrypted,
+      violation: {}
     };
+  }
+
+  async componentWillMount(){   
+    await this.violationService.getViolationItemById(this.state.associationIdEncrypted,
+        this.state.violationIdEncrypted)
+      .then(async (respone) => {
+        const violation = respone.GetViolationItemByIdResult;
+        console.log(violation);
+        this.setState({violation: violation});
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   onMapsButtonPressed() {
@@ -49,7 +65,7 @@ export class Violation extends React.Component {
 
     this.props.navigation.navigate('Comments', {
       pageName: PageNames.Violation,
-      referenceId: this.state.violation.Activities[0].ActivityIdEncrypted
+      referenceId:' this.state.violation.Activities[0].ActivityIdEncrypted'
     });
   }
 
@@ -60,7 +76,7 @@ export class Violation extends React.Component {
     this.props.navigation.navigate(PageNames.Documents, {
       pageName: PageNames.Violation,
       referenceId: this.state.id,
-      activityId: this.state.violation.Activities[0].ActivityIdEncrypted
+      activityId: 'this.state.violation.Activities[0].ActivityIdEncrypted'
     });
   }
 
@@ -94,15 +110,15 @@ export class Violation extends React.Component {
           <View style={styles.heading}>
             <SwText swType='primary header4'>Stage</SwText>
             <SwButton style={styles.stageButton} swType='icon circle'>
-              <SwText swType='moon large primary'>{this.state.violation.Activities[0].StageCode}</SwText>
+              <SwText swType='moon large primary'>{this.state.violation.StageCode}</SwText>
             </SwButton>
           </View>
-          <View style={styles.heading}>
+          {/* <View style={styles.heading}>
             <SwText swType='primary header4'>Call to Action</SwText>
             <SwText numberOfLines={10} swType='secondary2 header5'>
-              {this.state.violation.Activities[0].CallToAction}
+              {'this.state.violation.Activities[0].CallToAction'}
             </SwText>
-          </View>
+          </View> */}
         </View>
 
         <View style={styles.bottom}>

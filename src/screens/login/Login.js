@@ -34,7 +34,8 @@ export class Login extends React.Component {
       loginFailed: false,
       showLoading: false,
       hideTestFeature: true,
-      units: 0
+      units: [],
+      ownerFullName: ''
     };
   }
 
@@ -62,11 +63,39 @@ export class Login extends React.Component {
         const units = response.GetUnitsByUserResult;
         await AsyncStorage.setItem(DbStorageKey.Units, JSON.stringify(units));
 
+        if(units.length > 0){
+          this.loadOwnerUnitDetails(units[0]);
+        }else{
+          alert("No unit to manage")
+        }
+
         this.setState({units: units});
       });
   }
 
+  async loadOwnerUnitDetails(unit) {
+    await this.unitService.getOwnerUnitDetails(unit.UnitIdEncrypted)
+      .then(async (response) => {       
+        const profile = response.GetOwnerUnitDetailsResult;        
+        await AsyncStorage.setItem(DbStorageKey.OwnerUnitProfile, JSON.stringify(profile));
+        await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
+
+        const ownerFullName =  `${profile.Owner.OwnerFirstName || ''} ${profile.Owner.OwnerLastName || ''}`;
+        const navigationParams = {
+          unit: unit,
+          unitIdEncrypted: unit.UnitIdEncrypted,
+          ownerFullName: ownerFullName,
+          address: unit.UnitAddress,
+          units: this.state.units
+        };
+
+        this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
+      });
+  }
+
   async login() {
+    await AsyncStorage.clear();
+    
     await this.loginService.login(this.state.username, this.state.password)
       .then(async (response) => {
         console.log(response);
@@ -76,28 +105,9 @@ export class Login extends React.Component {
           this.setState({ loginFailed: false });
 
           await AsyncStorage.setItem(AppStorageKey.IsLogin, 'true');
-          await this.loadOwnerUnits(response.GetUserResult.UserIdEncrypted);
-         
-          const user = response.GetUserResult;
-
-          let navigationParams = {};
-
-          if (this.state.units.length > 0) {
-            const unit = this.state.units[0];
-            await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
-
-            const ownerFullName = `${user.FirstName || ''} ${user.LastName || ''}`;
-            navigationParams = {
-              unit: unit,
-              unitIdEncrypted: unit.IdEncrypted,
-              ownerFullName: ownerFullName,
-              address: unit.UnitAddress,
-              units: this.state.units
-            };
-          }
-
-          this.setState({ showLoading: false });
-          this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
+          await this.loadOwnerUnits(response.UserIdEncrypted).then(r => {
+            this.setState({ showLoading: false });
+          });  
         }
         else {
           this.setState({ loginFailed: true });

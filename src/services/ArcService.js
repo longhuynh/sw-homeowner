@@ -19,6 +19,7 @@ export class ArcService {
     const url = `${HttpService.arcApiUrl}/GetProjectDetails`;
     const data = { 
       associationIdEncrypted: associationIdEncrypted,
+      onlyPublic: true,
       projectIdEncrypted: projectIdEncrypted
     };
 

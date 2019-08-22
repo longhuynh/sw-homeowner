@@ -1,124 +1,180 @@
 import React from 'react';
-import { FlatList, View, StyleSheet, TouchableOpacity } from 'react-native';
-import { SwStyleSheet, SwCard, SwText, SwTextInput } from 'sw-react-native-ui';
-import { Avatar } from '../../components/index';
-import { FontAwesome } from '../../assets/icons';
-import { data } from '../../data/DataProvider';
+import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
+import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
+import { CornerLabel } from '../../components/index';
 import NavigationType from '../../config/navigation/NavigationType';
 import _ from 'lodash';
-
+import { CurrentUser } from '../../services/LoginService';
+import { UnitService } from '../../services/UnitService';
 const moment = require('moment');
 
 export class Messages extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
+
   static navigationOptions = {
     title: 'Messages',
   };
 
-  state = {
-    data: {
-      original: data.getChatList(),
-      filtered: data.getChatList(),
-    },
-  };
+  constructor(props) {
+    super(props);   
+    const unit = this.props.navigation.getParam('unit', {});
+    const data = this.props.navigation.getParam('messages', {});
+    const messages = this.bindData(data);
 
-  extractItemKey = (item) => `${item.withUser.id}`;
+    this.unitService = new UnitService();
 
-  onInputChanged = (event) => {
-    const pattern = new RegExp(event.nativeEvent.text, 'i');
-    const chats = _.filter(this.state.data.original, chat => {
-      const filterResult = {
-        firstName: chat.withUser.firstName.search(pattern),
-        lastName: chat.withUser.lastName.search(pattern),
-      };
-      return filterResult.firstName !== -1 || filterResult.lastName !== -1 ? chat : undefined;
+    this.state = {
+      refreshing: false,
+      items: messages,
+      unit: unit
+    };
+  }
+
+  async componentWillMount() {
+  }
+
+  bindData(data) {
+    
+    let messages = [];
+
+    const projectNotes = data.ProjectNotes || [];
+
+    projectNotes.forEach(t => {
+      messages.push({
+        Id: t.ProjectIdEncrypted + t.CreatedByUserIdEncrypted,
+        Title: t.Title,
+        Notes: t.Notes,
+        CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
+        Color: '#3498db',
+        CornerLabel: 'Arc'
+      });
     });
-    this.setState({
-      data: {
-        original: this.state.data.original,
-        filtered: chats,
-      },
+
+    const serviceNotes = data.ServiceNotes || [];
+    
+    serviceNotes.forEach(t => {
+      messages.push({
+        Id: t.ServiceNotesIdEncrypted + t.ServiceNotesTypeEidEncrypted,
+        Title: t.Title,
+        Notes: t.Notes,
+        CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
+        Color: '#D3AC2B',
+        CornerLabel: 'General'
+      });
     });
-  };
 
-  renderSeparator = () => (
-    <View style={styles.separator} />
-  );
+    const violationNotes = data.ViolationNotes || [];
+    
+    violationNotes.forEach(t => {
+      messages.push({
+        Id: t.NoteIdEncrypted + t.ActivityIdEncrypted,
+        Title: t.Title,
+        Notes: t.Notes,
+        CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
+        Color: '#6AB33A',
+        CornerLabel: 'Violations'
+      });
+    });
 
-  renderInputLabel = () => (
-    <SwText swType='awesome'>{FontAwesome.search}</SwText>
-  );
+    messages = _.reverse(_.sortBy(messages, 'CreatedDate'));
 
-  renderItem = ({ item }) => {
-    const last = item.messages[item.messages.length - 1];
-    return (
-      <View style={styles.itemContainer}>
-        {/* <Avatar swType='circle' style={styles.avatar} img={item.withUser.photo} /> */}
-        <View style={styles.content}>
-          <View style={styles.contentHeader}>
-            <SwText swType='header5'>{`${item.withUser.firstName} ${item.withUser.lastName}`}</SwText>
-            <SwText swType='secondary4 hintColor'>
-              {moment().add(last.time, 'seconds').format('LT')}
-            </SwText>
+    return messages;
+  }
+
+  async refreshData() {
+    this.setState({ refreshing: true });
+
+    const unit = this.state.unit;
+
+    await this.unitService.getResidentIncomingNotes(unit.UnitIdEncrypted, CurrentUser.UserIdEncrypted)
+      .then(response => {
+        if (response != null) {
+          const messages = response.GetResidentIncomingNotesResult;
+          this.bindData(messages);
+
+          this.setState({ refreshing: false });
+        }
+      })
+      .catch(error => {
+        console.log(error);
+        this.setState({ refreshing: false });
+      });
+  }
+
+  renderItem = (item) => (
+    <SwCard style={styles.itemContainer} key={item.Id}>
+      <View style={styles.content}>
+        <SwText swType='header2' numberOfLines={1}>{item.Title}</SwText>
+        <SwText swType='secondary2' numberOfLines={3}>{item.Notes}</SwText>
+        <View style={styles.detail}>
+          <SwText swType='secondary2'>{item.CreatedDate}</SwText>
+          <View style={styles.right}>
+
           </View>
-          <SwText numberOfLines={2} swType='primary3 mediumLine' style={{ paddingTop: 5 }}>
-            {last.text}
-          </SwText>
         </View>
       </View>
-    );
-  };
-
-  render = () => (
-    <View style={styles.screen} >
-      <SwCard style={styles.container}>
-        <FlatList
-          style={styles.root}
-          data={this.state.data.filtered}
-          extraData={this.state}
-          ItemSeparatorComponent={this.renderSeparator}
-          keyExtractor={this.extractItemKey}
-          renderItem={this.renderItem}
-        />
-      </SwCard>
-    </View>
+      <CornerLabel
+        cornerRadius={70}
+        alignment={'right'}
+        style={{ backgroundColor: item.Color, height: 24, }}
+        textStyle={{ color: '#fff', fontSize: 12, }}>
+        {item.CornerLabel}
+      </CornerLabel>
+    </SwCard>
   );
+
+  refreshControl() {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={() => this.refreshData()} />
+    )
+  }
+
+  render = () => {
+    return (
+      <View style={styles.root}>
+        <ScrollView style={styles.screen} refreshControl={this.refreshControl()}>
+          <View style={styles.container} >
+            {this.state.items.map(this.renderItem)}
+          </View>
+        </ScrollView>
+      </View>
+    );
+  }
 }
 
 const styles = SwStyleSheet.create(theme => ({
-  screen: {
+  root: {
     flex: 1,
-    marginVertical: 20,
+    backgroundColor: theme.colors.screen.base,
+  },
+  screen: {
     backgroundColor: theme.colors.screen.scroll,
-    marginHorizontal: 20,
   },
   container: {
-    flex: 1,
-    borderRadius: 3,
-    paddingHorizontal: 15,
-    borderColor: theme.colors.border.card,
-    backgroundColor: theme.colors.screen.base,
-  },
-  root: {
-    backgroundColor: theme.colors.screen.base,
+    justifyContent: 'space-between',
+    marginVertical: 20,
+    marginHorizontal: 20,
   },
   itemContainer: {
-    paddingBottom: 10,
-    paddingTop: 10,
-    flexDirection: 'row',
+    borderRadius: 3,
+    paddingHorizontal: 15,
+    paddingVertical: 15,
+    marginBottom: 20,
+    overflow: 'hidden'
   },
   content: {
     flex: 1,
+    alignItems: 'stretch'
   },
-  contentHeader: {
+  detail: {
     flexDirection: 'row',
-    justifyContent: 'space-between',
-    marginBottom: 6,
+    marginTop: 15,
   },
-  separator: {
-    height: StyleSheet.hairlineWidth,
-    backgroundColor: theme.colors.border.base,
+  right: {
+    flex: 1
   },
 }));

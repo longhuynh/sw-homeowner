@@ -11,10 +11,11 @@ export class LoginService {
     const url = `${HttpService.commonApiUrl}/GetUser`;
     const data = { userName: username, userPass: password };
 
-    const user = await HttpService.post(url, data);
-    Object.assign(User, user || {});
+    const result = await HttpService.post(url, data);
+    const userResult = result.GetUserResult;
+    Object.assign(User, userResult || {});
     
-    return user;
+    return userResult;
   }
 }
 

@@ -12,7 +12,6 @@ export class UnitService {
     const data = { 
       associationIdEncrypted: associationIdEncrypted,
       unitIdEncrypted: unitIdEncrypted
-      //includeBalance: true
     };
          
     return HttpService.post(url, data);
@@ -26,7 +25,7 @@ export class UnitService {
       unitIdEncrypted: unitIdEncrypted,
       userIdEncrypted: userIdEncrypted
     };
-         
+
     return HttpService.post(url, data);
   }
 
@@ -37,5 +36,29 @@ export class UnitService {
     };
          
     return HttpService.post(url, data);
-  }    
+  }
+
+  async getOwnerUnitDetails(unitIdEncrypted) {
+    const url = `${HttpService.unitApiUrl}/GetOwnerUnitDetails`;
+    const data = {
+      unitIdEncrypted: unitIdEncrypted
+    };
+         
+    return HttpService.post(url, data);
+  }
+
+  async saveOwnerUnit(associationIdEncrypted, managementIdEncrypted, userIdEncrypted, owner, unit) {
+    const url = `${HttpService.unitApiUrl}/SaveOwnerUnit`;
+    const data = {
+      clientKey: {
+        AssociationIdEncrypted: associationIdEncrypted,
+        ManagementIdEncrypted: managementIdEncrypted,
+        UserIdEncrypted: userIdEncrypted
+      },
+      owner: owner,
+      unit: unit
+    };
+         
+    return HttpService.post(url, data);
+  }  
 }
