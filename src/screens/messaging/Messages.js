@@ -4,6 +4,7 @@ import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { CornerLabel } from '../../components/index';
 import NavigationType from '../../config/navigation/NavigationType';
 import _ from 'lodash';
+import guid from '../../utils/guid';
 import { CurrentUser } from '../../services/LoginService';
 import { UnitService } from '../../services/UnitService';
 const moment = require('moment');
@@ -43,7 +44,7 @@ export class Messages extends React.Component {
 
     projectNotes.forEach(t => {
       messages.push({
-        Id: t.ProjectIdEncrypted + t.CreatedByUserIdEncrypted,
+        Id: guid(),
         Title: t.Title,
         Notes: t.Notes,
         CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
@@ -56,7 +57,7 @@ export class Messages extends React.Component {
     
     serviceNotes.forEach(t => {
       messages.push({
-        Id: t.ServiceNotesIdEncrypted + t.ServiceNotesTypeEidEncrypted,
+        Id: guid(),
         Title: t.Title,
         Notes: t.Notes,
         CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
@@ -69,7 +70,7 @@ export class Messages extends React.Component {
     
     violationNotes.forEach(t => {
       messages.push({
-        Id: t.NoteIdEncrypted + t.ActivityIdEncrypted,
+        Id:  guid(),
         Title: t.Title,
         Notes: t.Notes,
         CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
@@ -106,7 +107,7 @@ export class Messages extends React.Component {
   renderItem = (item) => (
     <SwCard style={styles.itemContainer} key={item.Id}>
       <View style={styles.content}>
-        <SwText swType='header2' numberOfLines={1}>{item.Title}</SwText>
+        <SwText swType='header4' numberOfLines={1}>{item.Title}</SwText>
         <SwText swType='secondary2' numberOfLines={3}>{item.Notes}</SwText>
         <View style={styles.detail}>
           <SwText swType='secondary2'>{item.CreatedDate}</SwText>

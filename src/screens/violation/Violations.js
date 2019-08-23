@@ -86,7 +86,7 @@ export class Violations extends React.Component {
       onPress={() => this.navigateToViolation(item)}>
       <SwCard style={styles.itemContainer}>
         <View style={styles.content}>
-          <SwText swType='header2' numberOfLines={1}>{item.ViolationType}</SwText>
+          <SwText swType='header4' numberOfLines={1}>{item.ViolationType}</SwText>
           <View style={styles.detail}>
             <SwText swType='secondary2'>{item.Stage}</SwText>
             <View style={styles.date}>
@@ -95,7 +95,7 @@ export class Violations extends React.Component {
           </View>
         </View>
         <CornerLabel
-          cornerRadius={60}
+          cornerRadius={54}
           alignment={'right'}
           style={{ backgroundColor: 'red', height: 24, }}
           textStyle={{ color: '#fff', fontSize: 12, }}>

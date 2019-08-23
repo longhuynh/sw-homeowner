@@ -32,6 +32,7 @@ export class Architectural extends React.Component {
       projectIdEncrypted: projectIdEncrypted,
       associationIdEncrypted: associationIdEncrypted,
       items: [],
+      projectHistories: [],
       comments: [],
       documents: []
     };
@@ -39,13 +40,32 @@ export class Architectural extends React.Component {
     this.bindData();
   }
 
+  shouldUpdate = false;
+
+  async shouldComponentUpdate(nextProps) {
+    let refresh = nextProps.navigation.state.params.refresh;
+    
+    if (refresh != undefined && refresh && !this.shouldUpdate) {
+      await this.bindData();
+      this.shouldUpdate = true;
+      console.log("Refresh ...");
+    }
+
+    return this.shouldUpdate;
+  }
+
+
+  async componentWillMount(){   
+    await this.bindData();
+  }
+
   async bindData() {   
-    await this.arcService.getArc(this.state.associationIdEncrypted, this.state.projectIdEncrypted)
+    await this.arcService.getProjectDetails(this.state.associationIdEncrypted, this.state.projectIdEncrypted)
       .then(response => {  
         if (response != null) {
           const data = response.GetProjectDetailsResult;
           const items = this.generateData(data);
-          this.setState({ items: items });       
+          this.setState({ items: items, projectHistories: data.ProjectHistory });       
         }
       })
       .catch(error => {
@@ -118,12 +138,17 @@ export class Architectural extends React.Component {
   }
 
   navigateToScreen(screen) {
-    const params = {
-      pageName: PageNames.Architectural,
-      referenceId: this.state.projectIdEncrypted
-    };
-    
-    this.props.navigation.navigate(screen, params);
+    if(screen == 'ArchitecturalStatus'){
+      const projectHistories = _.reverse(_.sortBy(this.state.projectHistories, 'LastUpdatedDate'));
+      this.props.navigation.navigate(screen, {projectHistories: projectHistories});
+    }else{
+      const params = {
+        pageName: PageNames.Architectural,
+        referenceId: this.state.projectIdEncrypted
+      };
+      
+      this.props.navigation.navigate(screen, params);
+    }
   }
 
   static renderNavigationTitle = (name) => {

@@ -12,7 +12,7 @@ const MenuRoutes =  [
   {
     id: PageNames.Dashboard,
     title: 'Dashboard',
-    icon: 'align-justify',
+    icon: 'tachometer-alt',
   },
   {
     id: PageNames.Messages,

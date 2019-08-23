@@ -10,8 +10,8 @@ export class UnitService {
   async getUnitCounter(associationIdEncrypted, unitIdEncrypted) {
     const url = `${HttpService.unitApiUrl}/GetUnitCounters`;
     const data = { 
-      associationIdEncrypted: associationIdEncrypted,
-      unitIdEncrypted: unitIdEncrypted
+      unitIdEncrypted: unitIdEncrypted,
+      associationIdEncrypted: associationIdEncrypted
     };
          
     return HttpService.post(url, data);

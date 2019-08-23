@@ -38,21 +38,44 @@ export class Violation extends React.Component {
       refresh: false,
       associationIdEncrypted: associationIdEncrypted,
       violationIdEncrypted: violationIdEncrypted,
-      violation: {}
+      violation: {},
+      activity: {}
     };
   }
 
+  shouldUpdate = false;
+
+  async shouldComponentUpdate(nextProps) {
+    let refresh = nextProps.navigation.state.params.refresh;
+
+    console.log(refresh + " " + this.shouldUpdate);
+
+    if (refresh != undefined && refresh && !this.shouldUpdate) {
+      await this.bindData();
+      this.shouldUpdate = true;
+      console.log("Refresh ...");
+    }
+
+    return this.shouldUpdate;
+  }
+
+
   async componentWillMount(){   
+    await this.bindData();
+  }
+
+  async bindData(){
     await this.violationService.getViolationItemById(this.state.associationIdEncrypted,
-        this.state.violationIdEncrypted)
-      .then(async (respone) => {
-        const violation = respone.GetViolationItemByIdResult;
-        console.log(violation);
-        this.setState({violation: violation});
-      })
-      .catch(error => {
-        console.log(error);
-      });
+      this.state.violationIdEncrypted)
+    .then(async (respone) => {
+      const violation = respone.GetViolationItemByIdResult;
+      
+      this.setState({violation: violation});
+      this.setState({activity: violation.Activities[0]});    
+    })
+    .catch(error => {
+      console.log(error);
+    });
   }
 
   onMapsButtonPressed() {
@@ -65,7 +88,7 @@ export class Violation extends React.Component {
 
     this.props.navigation.navigate('Comments', {
       pageName: PageNames.Violation,
-      referenceId:' this.state.violation.Activities[0].ActivityIdEncrypted'
+      referenceId: this.state.activity.ActivityIdEncrypted
     });
   }
 
@@ -76,7 +99,7 @@ export class Violation extends React.Component {
     this.props.navigation.navigate(PageNames.Documents, {
       pageName: PageNames.Violation,
       referenceId: this.state.id,
-      activityId: 'this.state.violation.Activities[0].ActivityIdEncrypted'
+      activityId: this.state.activity.ActivityIdEncrypted
     });
   }
 
@@ -110,13 +133,13 @@ export class Violation extends React.Component {
           <View style={styles.heading}>
             <SwText swType='primary header4'>Stage</SwText>
             <SwButton style={styles.stageButton} swType='icon circle'>
-              <SwText swType='moon large primary'>{this.state.violation.StageCode}</SwText>
+              <SwText swType='moon large primary'>{this.state.activity.StageCode}</SwText>
             </SwButton>
           </View>
           {/* <View style={styles.heading}>
             <SwText swType='primary header4'>Call to Action</SwText>
             <SwText numberOfLines={10} swType='secondary2 header5'>
-              {'this.state.violation.Activities[0].CallToAction'}
+              {'this.state.activity.CallToAction'}
             </SwText>
           </View> */}
         </View>

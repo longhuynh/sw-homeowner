@@ -22,7 +22,7 @@ export class AccountSummary extends React.Component {
     const unit = this.props.navigation.getParam('unit', {});
 
     this.state = {
-      balance: '',
+      balance: '$0.00',
       showLoading: true,
       unit: unit,
       transactionColumns: ['Date', 'Amount', 'Type', 'Description'],
@@ -46,7 +46,7 @@ export class AccountSummary extends React.Component {
           const r = response.GetAccountSummaryResult;
           const { transactionData, callHistoryData } = this.generateData(r);        
 
-          this.setState({ balance: r.Balance.toString() || '$0.00' });
+          this.setState({ balance: r.Balance.toString() });
           this.setState({ transactionData: transactionData });
           this.setState({ callHistoryData: callHistoryData });
           this.setState({ showLoading: false });

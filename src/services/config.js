@@ -1,5 +1,5 @@
 class BaseConfig {
-  baseUrl = 'https://resident.demo.smartwebs.net';
+  baseUrl = 'https://office.demo.smartwebs.net';
   commonApiUrl = `${this.baseUrl}/SWWebservice/Services/Complex/CommonService.svc`;
   residentApiUrl = `${this.baseUrl}/SWWebService/Services/ResidentPortal/ResidentialPortalService.svc`;
   unitApiUrl = `${this.baseUrl}/SWWebservice/Services/UnitsArea/UnitsAreaService.svc`;

@@ -61,7 +61,10 @@ export class Dashboard extends React.Component {
 
     if (unit.UnitIdEncrypted != unitIdEncrypted) {
       const units = JSON.parse(unitJson);
-      unit = _.find(units, { UnitIdEncrypted: unitIdEncrypted });
+      unit = _.find(units, { UnitIdEncrypted: unitIdEncrypted });  
+      await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
+
+      console.log("Unit was changed " + unit.UnitAddress);
 
       this.setState({ unit: unit });
       this.shouldUpdate = true;
@@ -78,15 +81,14 @@ export class Dashboard extends React.Component {
   async componentDidMount() { }
 
   async bindData() {
-    console.log("bindData");
     const unit = this.state.unit;
-
     console.log(this.state.unit);
 
     await this.loadMessages();
 
     await this.unitService.getUnitCounter(unit.AssociationIdEncrypted, unit.UnitIdEncrypted)
       .then(response => {
+        console.log(response);
         if (response != null) {
           const items = this.generateData(response.GetUnitCountersResult);
           this.setState({ items: items });

@@ -15,7 +15,7 @@ export class ArcService {
     return HttpService.post(url, data);
   }
 
-  async getArc(associationIdEncrypted, projectIdEncrypted) {    
+  async getProjectDetails(associationIdEncrypted, projectIdEncrypted) {    
     const url = `${HttpService.arcApiUrl}/GetProjectDetails`;
     const data = { 
       associationIdEncrypted: associationIdEncrypted,

@@ -3,7 +3,6 @@ import { FlatList, View, StyleSheet, AsyncStorage, Alert } from 'react-native';
 import { SwStyleSheet, SwText, SwTextInput, SwCard } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
-import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
 import { DbStorageKey } from '../../services/storageKey';
 import { ViolationService } from '../../services/ViolationService';
@@ -58,22 +57,24 @@ export class Comments extends React.Component {
 
     switch (pageName) {
       case PageNames.Violation:      
-        savedComment = await this.saveViolationComment(unit.UserIdEncrypted);
+        savedComment = await this.saveViolationComment(CurrentUser.UserIdEncrypted);
         break;
       case PageNames.Architectural:
-        savedComment = await this.saveArcComment(unit.UserIdEncrypted, unit.AssociationIdEncrypted);
+        savedComment = await this.saveArcComment(CurrentUser.UserIdEncrypted, unit.AssociationIdEncrypted);
         break;
       case PageNames.WorkOrder:
-        savedComment = await this.saveWoComment(unit.UserIdEncrypted);
+        savedComment = await this.saveWoComment(CurrentUser.UserIdEncrypted);
         break;
       default:
         break;
     }
 
+    console.log(savedComment);
+
     if(savedComment != null){
       let comments = this.state.comments;
       comments.splice(0, 0, {
-        IdEncrypted: guid(15),
+        IdEncrypted: guid(),
         CreatedDate: moment(new Date()).format('MM/DD/YYYY'),
         CreatedByUser: `${CurrentUser.FirstName} ${CurrentUser.LastName}`,
         Text: this.state.comment
@@ -106,18 +107,18 @@ export class Comments extends React.Component {
     let savedComment = null;
 
     const projectHistoryDto = {
-      Approvers: [],
       AssociationIdEncrypted: associationIdEncrypted,
       MakePublic: true,
       ProjectIdEncrypted: this.state.referenceId,
-      SendToApprovers: true,
+      SendToApprovers: false,
       SendToOffice: true,
       Text: this.state.comment,
       UserIdEncrypted: userIdEncrypted
     };
-    
+
     await this.arcService.saveComment(projectHistoryDto)
       .then(response => {
+        console.log(response);
         if(response != null){
           savedComment = response;
         }         
@@ -145,7 +146,7 @@ export class Comments extends React.Component {
       return savedComment;
   }
 
-  extractItemKey = (item) => `${item.IdEncrypted}`;
+  extractItemKey = (item) => guid();
 
   onCommentInputChanged = (text) => {
     this.setState({ comment: text });

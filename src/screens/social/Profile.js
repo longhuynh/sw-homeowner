@@ -82,7 +82,7 @@ export class Profile extends React.Component {
           <Avatar img={require('../../data/img/avatars/no-avatar.png')} swType='big' />
           <View style={styles.buttons}>
             <SwButton style={styles.circleButton} swType='icon circle' onPress={this.onChangeThemeButtonPressed}>
-              <FontAwesome5 name='align-justify' size={22} style={styles.icon} />
+              <FontAwesome5 name='tachometer-alt' size={22} style={styles.icon} />
             </SwButton>
           </View>
         </View>

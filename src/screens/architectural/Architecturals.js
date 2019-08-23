@@ -84,7 +84,7 @@ export class Architecturals extends React.Component {
           badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
           containerStyle={{ position: 'absolute', top: -10, right: -10, }} /> */}
         <View style={styles.content}>
-          <SwText numberOfLines={1} swType='header2'>{`${item.ProjectTitle}`}</SwText>
+          <SwText numberOfLines={1} swType='header4'>{`${item.ProjectTitle}`}</SwText>
           <View style={styles.detail}>
             <SwText swType='secondary2'>{item.ProjectStatus}</SwText>
             <View style={styles.date}>

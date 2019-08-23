@@ -55,6 +55,8 @@ export class Documents extends React.Component {
     const maxWidth = 1024;
     const maxHeight = 1024;
 
+    console.log(fileType);
+
     if (pickerResult.width > maxWidth || pickerResult.height > maxHeight) {
       const ratio = maxWidth / pickerResult.width;
 
@@ -74,7 +76,7 @@ export class Documents extends React.Component {
       uri,
       name: `${fileNameWoExtension}.${fileType}`,
       type: `image/${fileType}`,
-    });
+    }); 
 
     const pageName = this.state.pageName;
     const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
@@ -83,14 +85,13 @@ export class Documents extends React.Component {
 
     switch (pageName) {
       case PageNames.Violation:
-        uploadUrl = await this.saveViolationDocument(formData, unit.AssociationIdEncrypted, 
-              unit.UserIdEncrypted, this.state.activityId);
+        uploadUrl = await this.saveViolationDocument(formData, unit.AssociationIdEncrypted, CurrentUser.UserIdEncrypted, this.state.activityId);
         break;
       case PageNames.Architectural:
-        uploadUrl = await this.saveArcDocument(formData, unit.UserIdEncrypted, this.state.referenceId);
+        uploadUrl = await this.saveArcDocument(formData, CurrentUser.UserIdEncrypted, this.state.referenceId);
         break;
       case PageNames.WorkOrder:
-        uploadUrl = await this.saveWoDocument(formData, unit.UserIdEncrypted, this.state.referenceId);
+        uploadUrl = await this.saveWoDocument(formData, CurrentUser.UserIdEncrypted, this.state.referenceId);
         break;
       default:
         break;

@@ -81,7 +81,7 @@ export class WorkOrders extends React.Component {
           badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
           containerStyle={{ position: 'absolute', top: -10, right: -10, }} /> */}
         <View style={styles.content}>
-          <SwText swType='header2'>{item.Name}</SwText>
+          <SwText swType='header4'>{item.Name}</SwText>
           <View style={styles.detail}>
             <SwText swType='secondary2'>{item.WoStatusTypeName }</SwText>
             <View style={styles.date}>

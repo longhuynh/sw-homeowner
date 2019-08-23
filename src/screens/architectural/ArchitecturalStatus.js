@@ -1,43 +1,32 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
-import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
-import Icon from 'react-native-vector-icons/FontAwesome';
+import { View, ScrollView } from 'react-native';
+import { SwText, SwStyleSheet, SwCard } from 'sw-react-native-ui';
+const moment = require('moment');
 
 export class ArchitecturalStatus extends React.Component {
   static navigationOptions = {
-    title: 'Status',
+    title: 'Status History',
   };
 
-  state = {
-    data: {
-      items: [
-        {
-          id: 1,
-          name: 'In Review',
-          createdDate: '02/11/2018'
-        },
-        {
-          id: 2,
-          name: 'Approved',
-          createdDate: '02/11/2018'
-        },
-        {
-          id: 3,
-          name: 'Declined',
-          createdDate: '02/11/2018'
-        },     
-      ],
-    },
-  };
+  constructor(props) {
+    super(props);
+    const projectHistories = this.props.navigation.getParam('projectHistories', '');
+
+    console.log(projectHistories);
+
+    this.state = {
+      items: projectHistories,
+    };
+  }
 
   renderStatItem = (item) => (
-    <View key={item.id}>
+    <View key={item.LastUpdatedDate}>
        <SwCard style={styles.card} >
         <View style={styles.content}>
-          <SwText swType='header2'>{`${item.name}`}</SwText>
+          <SwText swType='header2'>{`${item.Status}`}</SwText>
           <View style={styles.detail}>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{item.createdDate}</SwText>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.LastUpdatedDate)).format('MM/DD/YY HH:mm A')}</SwText>
             </View>
           </View>
         </View>
@@ -49,7 +38,7 @@ export class ArchitecturalStatus extends React.Component {
     return (
       <ScrollView style={styles.screen}>
         <View style={styles.items} >
-          {this.state.data.items.map(this.renderStatItem)}
+          {this.state.items.map(this.renderStatItem)}
         </View>
       </ScrollView>
     );

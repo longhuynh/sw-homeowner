@@ -73,8 +73,7 @@ export class UnitOwners extends React.Component {
       });
   }
 
-  onItemPressed = async (unit) => {
-    await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
+  onItemPressed = async (unit) => {    
     await this.loadOwnerUnitDetails(unit);
   };
 
