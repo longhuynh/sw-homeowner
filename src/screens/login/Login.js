@@ -29,8 +29,8 @@ export class Login extends React.Component {
     this.unitService = new UnitService();
 
     this.state = {
-      username: 'TravisTesterton',
-      password: '123456',
+      username: '',
+      password: '',
       loginFailed: false,
       showLoading: false,
       hideTestFeature: true,

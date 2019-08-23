@@ -30,8 +30,6 @@ export class Documents extends React.Component {
     const referenceId = this.props.navigation.getParam('referenceId', '');
     const activityId = this.props.navigation.getParam('activityId', ''); 
 
-    console.log(documents);
-
     this.arcService = new ArcService();
     this.violationService = new ViolationService();
     this.workOrderService = new WorkOrderService();
@@ -50,12 +48,14 @@ export class Documents extends React.Component {
   async uploadImageAsync(pickerResult) {
     let uri = pickerResult.uri;
     const uriParts = uri.split('.');
-    const fileType = uriParts[uriParts.length - 1];
+    let fileType = uriParts[uriParts.length - 1];
 
     const maxWidth = 1024;
     const maxHeight = 1024;
 
-    console.log(fileType);
+    //TODO: Check on server.
+    if(fileType == 'jpg')
+      fileType = 'jpeg';
 
     if (pickerResult.width > maxWidth || pickerResult.height > maxHeight) {
       const ratio = maxWidth / pickerResult.width;
@@ -97,7 +97,7 @@ export class Documents extends React.Component {
         break;
     }
 
-    if(uploadUrl != ""){
+    if(uploadUrl != ''){
       let documents = this.state.documents;
       documents.splice(0, 0, {
         IdEncrypted: guid(15),
@@ -118,6 +118,7 @@ export class Documents extends React.Component {
 
     await this.violationService.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId)
       .then(response => {
+        console.log(response)
         uploadUrl = response._bodyText;
       })
       .catch(error => {
@@ -248,7 +249,7 @@ export class Documents extends React.Component {
     }
   };
 
-  extractItemKey = (item) => `${item.IdEncrypted}`;
+  extractItemKey = (item) => guid();
 
   renderSeparator = () => (
     <View style={styles.separator} />

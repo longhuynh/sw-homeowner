@@ -94,6 +94,7 @@ export class Violation extends React.Component {
 
   onDocumentsButtonPressed() {
     const documents = this.violationService.getDocuments(this.state.violation);
+    console.log(documents);
     this.documentService.setDocuments(documents);
 
     this.props.navigation.navigate(PageNames.Documents, {

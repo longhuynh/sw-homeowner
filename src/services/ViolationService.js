@@ -40,14 +40,15 @@ export class ViolationService {
   }
   
   getDocuments(violation) {
-    return _.flatMap(violation.Activities[0].Documents, (d) => [
+    const activity = violation.Activities[0];
+    return _.flatMap(activity.Documents, (d) => [
       {
         IdEncrypted: d.DocumentId,
         Name: d.Name,
         Extension: d.Extension,
         Url: d.Href,
         CreatedDate: d.DateStamp,
-        CreatedByUser: `${d.CreatedByUserFirstName} ${d.CreateByUserLastName}`,
+        CreatedByUser: activity.CreatedByUserFirstName,
       }
     ]);
   }
