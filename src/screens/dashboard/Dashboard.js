@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, TouchableOpacity, AsyncStorage, RefreshControl, ActivityIndicator } from 'react-native';
+import { View, ScrollView, TouchableOpacity, RefreshControl, ActivityIndicator } from 'react-native';
 import { SwText, SwStyleSheet } from 'sw-react-native-ui';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { Avatar } from '../../components/avatar/Avatar';
@@ -10,6 +10,7 @@ import { DbStorageKey } from '../../services/storageKey';
 import { UnitService } from '../../services/UnitService';
 import { CurrentUser } from '../../services/LoginService';
 import _ from 'lodash';
+import { StorageService } from '../../services/StorageService';
 
 export class Dashboard extends React.Component {
   static propTypes = {
@@ -32,6 +33,7 @@ export class Dashboard extends React.Component {
     const unit = this.props.navigation.getParam('unit', {});
 
     this.unitService = new UnitService();
+    this.storageService = new StorageService();
 
     this.state = {
       accountData: {},
@@ -49,20 +51,16 @@ export class Dashboard extends React.Component {
   shouldUpdate = false;
 
   async shouldComponentUpdate(nextProps) {
-    const unitIdEncrypted = nextProps.navigation.state.params.unitIdEncrypted;
+    const unitIdEncrypted = nextProps.navigation.state.params.unitIdEncrypted;    
+    let unit = this.storageService.getSelectedUnit();    
 
-    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
-    let unit = JSON.parse(unitData);
-
-    const unitJson = await AsyncStorage.getItem(DbStorageKey.Units);
-
-    if (unitData == null)
+    if (unit == null)
       return false;
 
     if (unit.UnitIdEncrypted != unitIdEncrypted) {
-      const units = JSON.parse(unitJson);
+      const units = this.storageService.getUnits();
       unit = _.find(units, { UnitIdEncrypted: unitIdEncrypted });  
-      await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
+      this.storageService.setSelectedUnit(unit);
 
       console.log("Unit was changed " + unit.UnitAddress);
 

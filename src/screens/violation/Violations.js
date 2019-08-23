@@ -1,11 +1,12 @@
 import React from 'react';
-import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
+import { View, ScrollView, RefreshControl, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { ViolationService } from '../../services/ViolationService';
 import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
 import { CornerLabel } from '../../components/index';
 import _ from 'lodash';
+import { StorageService } from '../../services/StorageService';
 
 const moment = require('moment');
 
@@ -20,6 +21,7 @@ export class Violations extends React.Component {
     super(props);
 
     this.violationService = new ViolationService();
+    this.storageService = new StorageService();
 
     this.state = {
       showLoading: true,
@@ -30,8 +32,7 @@ export class Violations extends React.Component {
   }
 
   async componentWillMount() {
-    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
-    const unit = JSON.parse(unitData);
+    const unit = this.storageService.getSelectedUnit();
     this.setState({ unit: unit });
 
     await this.bindData();

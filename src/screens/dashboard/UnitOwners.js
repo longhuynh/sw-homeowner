@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, View, StyleSheet, TouchableOpacity, AsyncStorage } from 'react-native';
+import { FlatList, View, StyleSheet, TouchableOpacity } from 'react-native';
 import { SwStyleSheet, SwText, SwTextInput } from 'sw-react-native-ui';
 import { FontAwesome } from '../../assets/icons';
 import NavigationType from '../../config/navigation/NavigationType';
@@ -7,7 +7,7 @@ import { Icon } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
 import { UnitService } from '../../services/UnitService';
 import _ from 'lodash';
-import { DbStorageKey } from '../../services/storageKey';
+import { StorageService } from '../../services/StorageService';
 
 export class UnitOwners extends React.Component {
   static propTypes = {
@@ -24,6 +24,7 @@ export class UnitOwners extends React.Component {
     const units = this.props.navigation.getParam('units', {});
 
     this.unitService = new UnitService();
+    this.storageService = new StorageService();
 
     this.state = {
       original: units,
@@ -58,7 +59,8 @@ export class UnitOwners extends React.Component {
        
         const profile = response.GetOwnerUnitDetailsResult;      
         console.log(profile);  
-        await AsyncStorage.setItem(DbStorageKey.OwnerUnitProfile, JSON.stringify(profile));     
+
+        this.storageService.setOwnerUnitProfile(profile); 
 
         const ownerFullName =  `${profile.Owner.OwnerFirstName || ''} ${profile.Owner.OwnerLastName || ''}`;
 

@@ -1,11 +1,8 @@
 import React from 'react';
-import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage } from 'react-native';
+import { View, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
-import { Badge, Icon } from 'react-native-elements';
-import { DbStorageKey } from '../../services/storageKey';
-import { PageNames } from '../../config/AppConstants';
 import { WorkOrderService } from '../../services/WorkOrderService';
-import { CornerLabel } from '../../components/index';
+import { StorageService } from '../../services/StorageService';
 
 const moment = require('moment');
 
@@ -20,6 +17,7 @@ export class WorkOrders extends React.Component {
     super(props);
 
     this.workOrderService = new WorkOrderService();
+    this.storageService = new StorageService();
 
     this.state = {
       refreshing: false,
@@ -29,8 +27,7 @@ export class WorkOrders extends React.Component {
   }
 
   async componentWillMount() {
-    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
-    const unit = JSON.parse(unitData);
+    const unit =  this.storageService.getSelectedUnit();
     this.setState({unit: unit});  
 
     await this.bindData();

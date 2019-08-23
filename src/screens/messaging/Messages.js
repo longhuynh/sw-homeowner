@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, RefreshControl, TouchableOpacity, AsyncStorage, ActivityIndicator } from 'react-native';
+import { View, ScrollView, RefreshControl } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { CornerLabel } from '../../components/index';
 import NavigationType from '../../config/navigation/NavigationType';

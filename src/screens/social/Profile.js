@@ -1,10 +1,11 @@
 import React from 'react';
-import { ScrollView, View, StyleSheet, Alert, AsyncStorage } from 'react-native';
-import { SwText, SwTextInput, SwButton, SwTheme, SwStyleSheet } from 'sw-react-native-ui';
+import { ScrollView, View, StyleSheet, Alert } from 'react-native';
+import { SwText, SwTextInput, SwButton, SwStyleSheet } from 'sw-react-native-ui';
 import { Avatar, GradientButton } from '../../components/index';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
+import { StorageService } from '../../services/StorageService';
 
 export class Profile extends React.Component {
   static navigationOptions = {
@@ -16,6 +17,8 @@ export class Profile extends React.Component {
 
     console.log("Profile constructor");
 
+    this.storageService = new StorageService();
+
     this.state = {
       firstName: '',
       lastName: '',
@@ -26,8 +29,7 @@ export class Profile extends React.Component {
   }
 
   async componentWillMount(){   
-    const profileData = await AsyncStorage.getItem(DbStorageKey.OwnerUnitProfile);   
-    const profile = JSON.parse(profileData);
+    const profile = this.storageService.getOwnerUnitProfile();
     console.log(profile);
     this.fillProfileInfo(profile);    
   }

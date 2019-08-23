@@ -3,12 +3,12 @@ import { SwAvoidKeyboard, SwStyleSheet } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Input, Button } from 'react-native-elements';
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
-import { View, Text, Keyboard, ImageBackground, Dimensions, AsyncStorage } from 'react-native';
+import { View, Text, Keyboard, ImageBackground, Dimensions } from 'react-native';
 import { PageNames } from '../../config/AppConstants';
 import { LoginService } from '../../services/LoginService';
-import { DbStorageKey, AppStorageKey } from '../../services/storageKey';
 import { HttpService } from '../../services/config';
 import { UnitService } from '../../services/UnitService';
+import { StorageService } from '../../services/StorageService';
 
 const { width, height } = Dimensions.get('window');
 
@@ -27,6 +27,7 @@ export class Login extends React.Component {
 
     this.loginService = new LoginService();
     this.unitService = new UnitService();
+    this.storageService = new StorageService();
 
     this.state = {
       username: '',
@@ -61,7 +62,7 @@ export class Login extends React.Component {
     await this.unitService.getUnitsByUser(userIdEncrypted)
       .then(async (response) => {       
         const units = response.GetUnitsByUserResult;
-        await AsyncStorage.setItem(DbStorageKey.Units, JSON.stringify(units));
+        this.storageService.setUnits(units);
 
         if(units.length > 0){
           this.loadOwnerUnitDetails(units[0]);
@@ -77,8 +78,8 @@ export class Login extends React.Component {
     await this.unitService.getOwnerUnitDetails(unit.UnitIdEncrypted)
       .then(async (response) => {       
         const profile = response.GetOwnerUnitDetailsResult;        
-        await AsyncStorage.setItem(DbStorageKey.OwnerUnitProfile, JSON.stringify(profile));
-        await AsyncStorage.setItem(DbStorageKey.SelectedUnit, JSON.stringify(unit));
+        this.storageService.setOwnerUnitProfile(profile);
+        this.storageService.setSelectedUnit(unit);
 
         const ownerFullName =  `${profile.Owner.OwnerFirstName || ''} ${profile.Owner.OwnerLastName || ''}`;
         const navigationParams = {
@@ -94,8 +95,6 @@ export class Login extends React.Component {
   }
 
   async login() {
-    await AsyncStorage.clear();
-    
     await this.loginService.login(this.state.username, this.state.password)
       .then(async (response) => {
         console.log(response);
@@ -104,7 +103,6 @@ export class Login extends React.Component {
         if (response != null) {
           this.setState({ loginFailed: false });
 
-          await AsyncStorage.setItem(AppStorageKey.IsLogin, 'true');
           await this.loadOwnerUnits(response.UserIdEncrypted).then(r => {
             this.setState({ showLoading: false });
           });  

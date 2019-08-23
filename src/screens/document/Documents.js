@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Clipboard, Image, Share, Text, AsyncStorage } from 'react-native';
+import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Clipboard, Image, Share, Text } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -16,6 +16,7 @@ import { WorkOrderService } from '../../services/WorkOrderService';
 import { DbStorageKey } from '../../services/storageKey';
 import { DocumentService } from '../../services/DocumentService';
 import { CurrentUser } from '../../services/LoginService';
+import { StorageService } from '../../services/StorageService';
 
 const moment = require('moment');
 
@@ -34,6 +35,7 @@ export class Documents extends React.Component {
     this.violationService = new ViolationService();
     this.workOrderService = new WorkOrderService();
     this.documentService = new DocumentService();
+    this.storageService = new StorageService();
 
     const documents = this.documentService.getDocuments();
 
@@ -78,9 +80,8 @@ export class Documents extends React.Component {
       type: `image/${fileType}`,
     }); 
 
-    const pageName = this.state.pageName;
-    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
-    const unit = JSON.parse(unitData);
+    const pageName = this.state.pageName;   
+    const unit = this.storageService.getSelectedUnit();
     let uploadUrl = "";
 
     switch (pageName) {

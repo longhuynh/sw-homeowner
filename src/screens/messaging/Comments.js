@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, View, StyleSheet, AsyncStorage, Alert } from 'react-native';
+import { FlatList, View, StyleSheet, Alert } from 'react-native';
 import { SwStyleSheet, SwText, SwTextInput, SwCard } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
@@ -11,6 +11,7 @@ import { WorkOrderService } from '../../services/WorkOrderService';
 import { CommentService } from '../../services/CommentService';
 import guid from '../../utils/guid';
 import { CurrentUser } from '../../services/LoginService';
+import { StorageService } from '../../services/StorageService';
 
 const moment = require('moment');
 
@@ -25,13 +26,14 @@ export class Comments extends React.Component {
   
   constructor(props) {
     super(props);
-    const pageName = this.props.navigation.getParam('pageName', '');
+    const pageNamStorageServicee = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');    
 
     this.arcService = new ArcService();
     this.violationService = new ViolationService();
     this.workOrderService = new WorkOrderService();
     this.commentService = new CommentService();
+    this.storageService = new StorageService();
 
     const comments = this.commentService.getComments();
     
@@ -50,8 +52,7 @@ export class Comments extends React.Component {
     }    
       
     const pageName = this.state.pageName;
-    const unitData = await AsyncStorage.getItem(DbStorageKey.SelectedUnit);
-    const unit = JSON.parse(unitData);
+    const unit = this.storageService.getSelectedUnit();
    
     let savedComment = null;
 
