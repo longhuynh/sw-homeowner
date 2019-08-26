@@ -15,11 +15,6 @@ const MenuRoutes =  [
     icon: 'tachometer-alt',
   },
   {
-    id: PageNames.Messages,
-    title: 'Recent Messages',
-    icon: 'comment-dots',
-  }, 
-  {
     id: 'AccountMenu',
     title: 'Account',
     icon: 'dollar-sign'

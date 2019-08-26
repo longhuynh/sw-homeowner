@@ -24,13 +24,12 @@ export class Login extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.loginService = new LoginService();
     this.unitService = new UnitService();
 
     this.state = {
-      username: '',
-      password: '',
+      username: 'TravisTesterton',
+      password: '123456',
       loginFailed: false,
       showLoading: false,
       hideTestFeature: true,
@@ -104,7 +103,7 @@ export class Login extends React.Component {
         console.log(response);
 
         this.setState({ showLoading: true });
-        if (response != null) {
+        if (response != null && response.UserNameEncrypted != null) {
           this.setState({ loginFailed: false });
 
           await this.loadOwnerUnits(response.UserIdEncrypted).then(r => {
@@ -182,7 +181,7 @@ export class Login extends React.Component {
       <View style={styles.root}>
         {
           this.state.loginFailed ? (
-            <Text style={{ color: 'red' }}>Username or password incorrect.</Text>
+            <Text style={{ color: 'red', fontWeight: '600' }}>Username or password incorrect.</Text>
           ) : (
               <View />
             )
