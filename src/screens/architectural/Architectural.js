@@ -75,13 +75,12 @@ export class Architectural extends React.Component {
 
   generateData(data) {
     let items = [];
-
-    const documents = this.mapToDocuments(data.Documents);
+    const documents = this.arcService.mapToDocuments(data);
     this.documentService.setDocuments(documents);
 
-    const comments = this.mapToComments(_.filter(data.ProjectHistory, {'MakePublic': true}));
+    const comments = this.arcService.mapToComments(data);
     this.commentService.setComments(comments);
- 
+
     this.setState({ 
       documents: documents,
       comments: comments 
@@ -109,32 +108,6 @@ export class Architectural extends React.Component {
     });
 
     return items;
-  }
-
-  mapToDocuments(documents){
-    return  _.flatMap(documents,
-      (d) => [
-        {
-          IdEncrypted: d.DocumentIdEncrypted,
-          Name: d.Name,
-          Extension: d.PhysicalName.split('.')[1],
-          Url: `/${d.PartialPath.split('\\').join('/')}${d.PhysicalName}`,
-          CreatedDate: d.DateStamp,
-          CreatedByUser: `N/A`,
-        }
-      ]);
-  }
-
-  mapToComments(comments){
-    return _.flatMap(comments,
-      (n) => [
-        {
-          IdEncrypted: guid(15),
-          CreatedDate: n.LastUpdatedDate,
-          CreatedByUser: `${n.FirstName} ${n.LastName}`,
-          Text: n.Notes
-        }
-      ]);
   }
 
   navigateToScreen(screen) {

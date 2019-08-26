@@ -13,7 +13,6 @@ import { HttpService } from '../../services/config';
 import { ViolationService } from '../../services/ViolationService';
 import { ArcService } from '../../services/ArcService';
 import { WorkOrderService } from '../../services/WorkOrderService';
-import { DbStorageKey } from '../../services/storageKey';
 import { DocumentService } from '../../services/DocumentService';
 import { CurrentUser } from '../../services/LoginService';
 import { StorageService } from '../../services/StorageService';
@@ -29,17 +28,17 @@ export class Documents extends React.Component {
     super(props);
     const pageName = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');
-    const activityId = this.props.navigation.getParam('activityId', ''); 
+    const activityId = this.props.navigation.getParam('activityId', '');
 
     this.arcService = new ArcService();
     this.violationService = new ViolationService();
     this.workOrderService = new WorkOrderService();
     this.documentService = new DocumentService();
-    this.storageService = new StorageService();
 
     const documents = this.documentService.getDocuments();
 
     this.state = {
+      showLoading: false,
       referenceId: referenceId,
       activityId: activityId,
       documents: documents,
@@ -48,6 +47,8 @@ export class Documents extends React.Component {
   }
 
   async uploadImageAsync(pickerResult) {
+    this.setState({ showLoading: true });
+
     let uri = pickerResult.uri;
     const uriParts = uri.split('.');
     let fileType = uriParts[uriParts.length - 1];
@@ -56,7 +57,7 @@ export class Documents extends React.Component {
     const maxHeight = 1024;
 
     //TODO: Check on server.
-    if(fileType == 'jpg')
+    if (fileType == 'jpg')
       fileType = 'jpeg';
 
     if (pickerResult.width > maxWidth || pickerResult.height > maxHeight) {
@@ -78,11 +79,11 @@ export class Documents extends React.Component {
       uri,
       name: `${fileNameWoExtension}.${fileType}`,
       type: `image/${fileType}`,
-    }); 
+    });
 
-    const pageName = this.state.pageName;   
-    const unit = this.storageService.getSelectedUnit();
-    let uploadUrl = "";
+    const pageName = this.state.pageName;
+    const unit = StorageService.unit;
+    let uploadUrl = false;
 
     switch (pageName) {
       case PageNames.Violation:
@@ -98,63 +99,86 @@ export class Documents extends React.Component {
         break;
     }
 
-    if(uploadUrl != ''){
+    if (uploadUrl) {
       let documents = this.state.documents;
-      documents.splice(0, 0, {
-        IdEncrypted: guid(15),
-        Name: fileNameWoExtension,
-        Extension: fileType,
-        Url: uploadUrl,
-        CreatedDate: new Date(),
-        CreatedByUser: `${CurrentUser.FirstName} ${CurrentUser.LastName}`
-      });
+      const id = this.state.referenceId;
 
-      this.setState({documents: documents});
-      this.documentService.setDocuments(documents);
+      switch (pageName) {
+        case PageNames.Violation:
+          await this.violationService.getViolationItemById(unit.AssociationIdEncrypted, id)
+            .then(async (respone) => {
+              const violation = respone.GetViolationItemByIdResult;
+              documents = this.violationService.getDocuments(violation);
+
+              this.setState({ documents: documents });
+              this.documentService.setDocuments(documents);
+            })
+            .catch(error => {
+              console.log(error);
+            });
+
+          break;
+        case PageNames.Architectural:
+          await this.arcService.getProjectDetails(unit.AssociationIdEncrypted, id)
+            .then(response => {
+              if (response != null) {
+                const data = response.GetProjectDetailsResult;
+                documents = this.arcService.mapToDocuments(data);
+
+                this.setState({ documents: documents });
+                this.documentService.setDocuments(documents);
+              }
+            })
+            .catch(error => {
+              console.log(error);
+            });
+
+          break;
+
+        case PageNames.WorkOrder:
+
+          break;
+        default:
+          break;
+      }
     }
+    this.setState({ showLoading: false });
   }
 
   async saveViolationDocument(formData, associationIdEncrypted, userIdEncrypted, activityId) {
-    let uploadUrl = "";
-
     await this.violationService.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId)
       .then(response => {
-        console.log(response)
-        uploadUrl = response._bodyText;
+        return response != null;
       })
       .catch(error => {
         console.log(error);
       });
 
-    return uploadUrl;
+    return false;
   }
 
   async saveArcDocument(formData, userIdEncrypted, projectIdEncrypted) {
-    let uploadUrl = "";
-
     await this.arcService.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted)
       .then(response => {
-        uploadUrl = response._bodyText;
+        return response != null;
       })
       .catch(error => {
         console.log(error);
       });
-    
-    return uploadUrl;
+
+    return false;
   }
 
   async saveWoDocument(formData, userIdEncrypted, workOrderIdEncypted) {
-    let uploadUrl = "";
-
     await this.workOrderService.uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted)
       .then(response => {
-        uploadUrl = response._bodyText;
+        return response != null;
       })
       .catch(error => {
         console.log(error);
       });
-    
-    return uploadUrl;
+
+    return false;
   }
 
   onViewFile(item) {
@@ -270,6 +294,7 @@ export class Documents extends React.Component {
   );
 
   render = () => (
+
     <View style={styles.screen} >
       <SwCard style={styles.container}>
         <Badge value={this.state.documents.length} status="success" textStyle={{ fontSize: 25 }}
@@ -286,16 +311,20 @@ export class Documents extends React.Component {
             </SwButton>
           </View>
         </View>
-
-        <FlatList
+        {this.state.showLoading ? (
+      <ActivityIndicator size="large" color="#00ff00" />
+        ) : (
+            <FlatList
           data={this.state.documents}
           extraData={this.state}
           ItemSeparatorComponent={this.renderSeparator}
           keyExtractor={this.extractItemKey}
           renderItem={this.renderItem}
         />
-      </SwCard>
+        )}
+          </SwCard>
     </View>
+
   )
 }
 

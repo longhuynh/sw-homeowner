@@ -3,7 +3,6 @@ import { ScrollView, View, StyleSheet, Alert } from 'react-native';
 import { SwText, SwTextInput, SwButton, SwStyleSheet } from 'sw-react-native-ui';
 import { Avatar, GradientButton } from '../../components/index';
 import { FontAwesome5 } from '@expo/vector-icons';
-import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
 import { StorageService } from '../../services/StorageService';
 
@@ -17,8 +16,6 @@ export class Profile extends React.Component {
 
     console.log("Profile constructor");
 
-    this.storageService = new StorageService();
-
     this.state = {
       firstName: '',
       lastName: '',
@@ -29,7 +26,7 @@ export class Profile extends React.Component {
   }
 
   async componentWillMount(){   
-    const profile = this.storageService.getOwnerUnitProfile();
+    const profile = StorageService.ownerUnitProfile;
     console.log(profile);
     this.fillProfileInfo(profile);    
   }

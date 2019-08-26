@@ -5,6 +5,7 @@ import { Table, Row, Rows } from 'react-native-table-component';
 import { GradientButton } from '../../components/index';
 import { PageNames } from '../../config/AppConstants';
 import { AccountService } from '../../services/AccountService';
+import { StorageService } from '../../services/StorageService';
 
 const screenHeight = Dimensions.get('window').height - 350;
 const moment = require('moment');
@@ -19,12 +20,9 @@ export class AccountSummary extends React.Component {
 
     this.accountService = new AccountService();
 
-    const unit = this.props.navigation.getParam('unit', {});
-
     this.state = {
       balance: '$0.00',
       showLoading: true,
-      unit: unit,
       transactionColumns: ['Date', 'Amount', 'Type', 'Description'],
       transactionData: [],
       callHistoryColumns: ['Date', 'Note'],
@@ -37,7 +35,7 @@ export class AccountSummary extends React.Component {
   }
 
   async bindData() {
-    const unit = this.state.unit;
+    const unit = StorageService.unit;
 
     await this.accountService.getAccountSummary(unit.UnitIdEncrypted, unit.AssociationIdEncrypted )
       .then(response => {

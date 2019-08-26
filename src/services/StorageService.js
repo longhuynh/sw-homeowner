@@ -1,29 +1,12 @@
-const ownerUnitProfile = {};
-const selectedUnit = {};
-const units = [];
 
-export class StorageService {
-  setOwnerUnitProfile(data){
-    Object.assign(ownerUnitProfile, data);
-  }
+class LocalStorage {
+  ownerUnitProfile = {};
+  selectedUnit = {};
+  units = [];
 
-  getOwnerUnitProfile(){
-    return ownerUnitProfile;
-  }
+  constructor(){
 
-  setSelectedUnit(data){
-    Object.assign(selectedUnit, data);
-  }
-
-  getSelectedUnit(){
-    return selectedUnit;
-  }
-
-  setUnits(data){
-    Object.assign(units, data);
-  }
-
-  getUnits(){
-    return units;
   }
 }
+
+export const StorageService = new LocalStorage();

@@ -20,25 +20,21 @@ export class Architecturals extends React.Component {
     super(props);
 
     this.arcService = new ArcService();
-    this.storageService = new StorageService();
 
     this.state = {
       refreshing: false,
       items: [],
-      unit: {}
+      unit: StorageService.unit
     };
   }
 
   async componentWillMount() {
-    const unit = this.storageService.getSelectedUnit();
-    this.setState({unit: unit});
-
     await this.bindData();
   }
 
   async bindData() {
-
-    await this.arcService.getAll(this.state.unit.AssociationIdEncrypted, this.state.unit.UnitIdEncrypted)
+    const unit = this.state.unit;
+    await this.arcService.getAll(unit.AssociationIdEncrypted, unit.UnitIdEncrypted)
       .then(response => {        
         console.log(response);
         if (response != null) {
@@ -136,7 +132,8 @@ const styles = SwStyleSheet.create(theme => ({
     alignItems: 'stretch'
   },
   detail: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop: 10
   },
   date: {
     flex: 1

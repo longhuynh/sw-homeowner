@@ -1,4 +1,6 @@
 import { HttpService } from "./config";
+import _ from 'lodash';
+import guid from "../utils/guid";
 
 export class ArcService {
   constructor() {
@@ -40,6 +42,32 @@ export class ArcService {
     const url = `${HttpService.baseUrl}/SWWebservice/Ashx/ResidentPortalFileHandler.ashx?${params}`;
 
     return HttpService.upload(url, formData);
+  }
+
+  mapToDocuments(data){
+    return  _.flatMap(data.Documents,
+      (d) => [
+        {
+          IdEncrypted: d.DocumentIdEncrypted,
+          Name: d.Name,
+          Extension: d.PhysicalName.split('.')[1],
+          Url: `/${d.PartialPath.split('\\').join('/')}${d.PhysicalName}`,
+          CreatedDate: d.DateStamp,
+          CreatedByUser: `N/A`,
+        }
+      ]);
+  }
+
+  mapToComments(data){
+    return _.flatMap(data.ProjectHistory,
+      (n) => [
+        {
+          IdEncrypted: guid(),
+          CreatedDate: n.LastUpdatedDate,
+          CreatedByUser: `${n.FirstName} ${n.LastName}`,
+          Text: n.Notes
+        }
+      ]);
   }
 
 }

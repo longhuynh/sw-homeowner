@@ -99,7 +99,7 @@ export class Violation extends React.Component {
 
     this.props.navigation.navigate(PageNames.Documents, {
       pageName: PageNames.Violation,
-      referenceId: this.state.id,
+      referenceId: this.state.violationIdEncrypted,
       activityId: this.state.activity.ActivityIdEncrypted
     });
   }

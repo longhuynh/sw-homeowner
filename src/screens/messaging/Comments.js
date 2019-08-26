@@ -4,7 +4,6 @@ import { SwStyleSheet, SwText, SwTextInput, SwCard } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
 import { PageNames } from '../../config/AppConstants';
-import { DbStorageKey } from '../../services/storageKey';
 import { ViolationService } from '../../services/ViolationService';
 import { ArcService } from '../../services/ArcService';
 import { WorkOrderService } from '../../services/WorkOrderService';
@@ -26,14 +25,13 @@ export class Comments extends React.Component {
   
   constructor(props) {
     super(props);
-    const pageNamStorageServicee = this.props.navigation.getParam('pageName', '');
+    const pageName = this.props.navigation.getParam('pageName', '');
     const referenceId = this.props.navigation.getParam('referenceId', '');    
 
     this.arcService = new ArcService();
     this.violationService = new ViolationService();
     this.workOrderService = new WorkOrderService();
     this.commentService = new CommentService();
-    this.storageService = new StorageService();
 
     const comments = this.commentService.getComments();
     
@@ -52,7 +50,7 @@ export class Comments extends React.Component {
     }    
       
     const pageName = this.state.pageName;
-    const unit = this.storageService.getSelectedUnit();
+    const unit = StorageService.unit;
    
     let savedComment = null;
 

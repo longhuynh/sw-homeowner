@@ -2,7 +2,6 @@ import React from 'react';
 import { View, ScrollView, RefreshControl, TouchableOpacity, ActivityIndicator } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { ViolationService } from '../../services/ViolationService';
-import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
 import { CornerLabel } from '../../components/index';
 import _ from 'lodash';
@@ -21,20 +20,16 @@ export class Violations extends React.Component {
     super(props);
 
     this.violationService = new ViolationService();
-    this.storageService = new StorageService();
 
     this.state = {
       showLoading: true,
       refreshing: false,
       items: [],
-      unit: {}
+      unit: StorageService.unit
     };
   }
 
   async componentWillMount() {
-    const unit = this.storageService.getSelectedUnit();
-    this.setState({ unit: unit });
-
     await this.bindData();
   }
 
@@ -158,7 +153,8 @@ const styles = SwStyleSheet.create(theme => ({
     alignItems: 'stretch'
   },
   detail: {
-    flexDirection: 'row'
+    flexDirection: 'row',
+    marginTop: 10
   },
   date: {
     flex: 1

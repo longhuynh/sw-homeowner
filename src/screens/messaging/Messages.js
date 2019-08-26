@@ -7,6 +7,7 @@ import _ from 'lodash';
 import guid from '../../utils/guid';
 import { CurrentUser } from '../../services/LoginService';
 import { UnitService } from '../../services/UnitService';
+import { StorageService } from '../../services/StorageService';
 const moment = require('moment');
 
 export class Messages extends React.Component {
@@ -20,7 +21,6 @@ export class Messages extends React.Component {
 
   constructor(props) {
     super(props);   
-    const unit = this.props.navigation.getParam('unit', {});
     const data = this.props.navigation.getParam('messages', {});
     const messages = this.bindData(data);
 
@@ -29,7 +29,7 @@ export class Messages extends React.Component {
     this.state = {
       refreshing: false,
       items: messages,
-      unit: unit
+      unit: StorageService.unit
     };
   }
 

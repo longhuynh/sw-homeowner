@@ -2,7 +2,6 @@ import React from 'react';
 import { ScrollView, View, StyleSheet} from 'react-native';
 import { SwText, SwTextInput, SwAvoidKeyboard, SwStyleSheet} from 'sw-react-native-ui';
 import { Avatar, GradientButton} from '../../components/index';
-import { DbStorageKey } from '../../services/storageKey';
 import { UnitService } from '../../services/UnitService';
 import { CurrentUser } from '../../services/LoginService';
 import { PageNames } from '../../config/AppConstants';
@@ -16,8 +15,7 @@ export class ProfileSettings extends React.Component {
   constructor(props) {
     super(props);
 
-    this.unitService = new UnitService(); 
-    this.storageService = new StorageService();
+    this.unitService = new UnitService();
 
     this.state = {
       profile: {},
@@ -40,7 +38,7 @@ export class ProfileSettings extends React.Component {
   profile = {};
 
   async componentWillMount(){   
-    const profile = this.storageService.getOwnerUnitProfile();
+    const profile = StorageService.ownerUnitProfile;
     this.profile = profile;
     this.updateState(profile);    
   }
@@ -134,7 +132,7 @@ export class ProfileSettings extends React.Component {
                 this.profile.Owner, this.profile.Unit)
       .then(async (response) => {
         if(response != null){
-          this.storageService.setOwnerUnitProfile(response.SaveOwnerUnitResult);
+          StorageService.ownerUnitProfile = response.SaveOwnerUnitResult;
           this.props.navigation.navigate(PageNames.Profile);
         }       
       })

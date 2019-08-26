@@ -6,7 +6,6 @@ import { Avatar } from '../../components/avatar/Avatar';
 import NavigationType from '../../config/navigation/NavigationType';
 import { Badge } from 'react-native-elements';
 import { PageNames } from '../../config/AppConstants';
-import { DbStorageKey } from '../../services/storageKey';
 import { UnitService } from '../../services/UnitService';
 import { CurrentUser } from '../../services/LoginService';
 import _ from 'lodash';
@@ -30,14 +29,10 @@ export class Dashboard extends React.Component {
 
   constructor(props) {
     super(props);
-    const unit = this.props.navigation.getParam('unit', {});
-
     this.unitService = new UnitService();
-    this.storageService = new StorageService();
 
     this.state = {
       accountData: {},
-      unit: unit,
       refreshing: false,
       showLoading: true,
       messageCount: 0,
@@ -52,20 +47,19 @@ export class Dashboard extends React.Component {
 
   async shouldComponentUpdate(nextProps) {
     const unitIdEncrypted = nextProps.navigation.state.params.unitIdEncrypted;    
-    let unit = this.storageService.getSelectedUnit();    
+    let unit = StorageService.unit;        
 
     if (unit == null)
       return false;
 
     if (unit.UnitIdEncrypted != unitIdEncrypted) {
-      const units = this.storageService.getUnits();
+      const units = StorageService.units;
       unit = _.find(units, { UnitIdEncrypted: unitIdEncrypted });  
-      this.storageService.setSelectedUnit(unit);
+      StorageService.unit = unit;
 
       console.log("Unit was changed " + unit.UnitAddress);
 
-      this.setState({ unit: unit });
-      this.shouldUpdate = true;
+      this.shouldUpdate = true;  
       this.bindData();
     }
 
@@ -79,8 +73,7 @@ export class Dashboard extends React.Component {
   async componentDidMount() { }
 
   async bindData() {
-    const unit = this.state.unit;
-    console.log(this.state.unit);
+    const unit = StorageService.unit;
 
     await this.loadMessages();
 
@@ -101,7 +94,7 @@ export class Dashboard extends React.Component {
   }
 
   async loadMessages() {
-    const unit = this.state.unit;
+    const unit = StorageService.unit;
 
     await this.unitService.getResidentIncomingNotes(unit.UnitIdEncrypted, CurrentUser.UserIdEncrypted)
       .then(response => {
@@ -163,10 +156,11 @@ export class Dashboard extends React.Component {
   }
 
   navigateToScreen(screen) {
-    let params =  { unit: this.state.unit };
+    let params =  { };
+
     switch(screen){
       case 'Messages':
-        params = { unit: this.state.unit, messages: this.state.messages };
+        params = { messages: this.state.messages };
         break;
       default:
         break;
@@ -278,6 +272,7 @@ const styles = SwStyleSheet.create(theme => ({
   },
   value: {
     color: 'white',
+    marginTop: 10
   },
   name: {
     color: 'white',

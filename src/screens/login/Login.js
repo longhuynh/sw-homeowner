@@ -27,7 +27,6 @@ export class Login extends React.Component {
 
     this.loginService = new LoginService();
     this.unitService = new UnitService();
-    this.storageService = new StorageService();
 
     this.state = {
       username: '',
@@ -46,6 +45,12 @@ export class Login extends React.Component {
 
   async submitLoginCredentials() {
     console.log(HttpService.baseUrl);
+
+    if(this.state.username == '' || this.state.password == ''){
+      alert('Please enter username and password.');
+      return;
+    }
+
     if (this.state.username == 'SHOWDEMO' && this.state.password == 'DEMO654') {
       this.setState({
         hideTestFeature: false,
@@ -62,7 +67,7 @@ export class Login extends React.Component {
     await this.unitService.getUnitsByUser(userIdEncrypted)
       .then(async (response) => {       
         const units = response.GetUnitsByUserResult;
-        this.storageService.setUnits(units);
+        StorageService.units = units;
 
         if(units.length > 0){
           this.loadOwnerUnitDetails(units[0]);
@@ -78,12 +83,11 @@ export class Login extends React.Component {
     await this.unitService.getOwnerUnitDetails(unit.UnitIdEncrypted)
       .then(async (response) => {       
         const profile = response.GetOwnerUnitDetailsResult;        
-        this.storageService.setOwnerUnitProfile(profile);
-        this.storageService.setSelectedUnit(unit);
+        StorageService.ownerUnitProfile = profile;
+        StorageService.unit = unit;
 
         const ownerFullName =  `${profile.Owner.OwnerFirstName || ''} ${profile.Owner.OwnerLastName || ''}`;
         const navigationParams = {
-          unit: unit,
           unitIdEncrypted: unit.UnitIdEncrypted,
           ownerFullName: ownerFullName,
           address: unit.UnitAddress,

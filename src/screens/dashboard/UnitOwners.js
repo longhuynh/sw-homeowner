@@ -24,7 +24,6 @@ export class UnitOwners extends React.Component {
     const units = this.props.navigation.getParam('units', {});
 
     this.unitService = new UnitService();
-    this.storageService = new StorageService();
 
     this.state = {
       original: units,
@@ -60,7 +59,7 @@ export class UnitOwners extends React.Component {
         const profile = response.GetOwnerUnitDetailsResult;      
         console.log(profile);  
 
-        this.storageService.setOwnerUnitProfile(profile); 
+        StorageService.ownerUnitProfile = profile; 
 
         const ownerFullName =  `${profile.Owner.OwnerFirstName || ''} ${profile.Owner.OwnerLastName || ''}`;
 
