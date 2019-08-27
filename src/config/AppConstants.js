@@ -25,6 +25,7 @@ export const PageNames = {
   ProfileSettings: 'ProfileSettings',
   Comments: 'Comments',
   Messages:'Messages',
+  ReplyMessage:'ReplyMessage',
   Documents: 'Documents',
   DocumentViewer: 'DocumentViewer',
   Settings: 'Settings',

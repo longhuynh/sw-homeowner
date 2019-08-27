@@ -194,6 +194,12 @@ export const MainRoutes = [
         screen: Screens.Messages,
         children: [],
       },
+      {
+        id: PageNames.ReplyMessage,
+        title: 'Reply Message',
+        screen: Screens.ReplyMessage,
+        children: [],
+      },
     ],
   },
   {

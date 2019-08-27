@@ -17,9 +17,9 @@ bootstrap();
 data.populateData();
 
 const RootStack = createStackNavigator({
-  First: {
-    screen: Screens.SplashScreen,
-  },
+  // First: {
+  //   screen: Screens.SplashScreen,
+  // },
   Home: {
     screen: createDrawerNavigator(
       {

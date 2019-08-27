@@ -12,7 +12,7 @@ export class LoginService {
     const data = { userName: username, userPass: password };
 
     const result = await HttpService.post(url, data);
-    const userResult = result.GetUserResult;
+    const userResult = result != null ? result.GetUserResult : null;
     Object.assign(User, userResult || {});
     
     return userResult;

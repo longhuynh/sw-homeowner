@@ -9,6 +9,7 @@ import { LoginService } from '../../services/LoginService';
 import { HttpService } from '../../services/config';
 import { UnitService } from '../../services/UnitService';
 import { StorageService } from '../../services/StorageService';
+const moment = require('moment');
 
 const { width, height } = Dimensions.get('window');
 
@@ -29,8 +30,8 @@ export class Login extends React.Component {
     this.unitService = new UnitService();
 
     this.state = {
-      username: '',
-      password: '',
+      username: 'TravisTesterton',
+      password: '123456',
       loginFailed: false,
       showLoading: false,
       hideTestFeature: true,
@@ -58,7 +59,7 @@ export class Login extends React.Component {
         password: ''
       });
     }
-    else {
+    else {     
       await this.login();
     }
   }
@@ -99,11 +100,13 @@ export class Login extends React.Component {
   }
 
   async login() {
+    this.setState({ showLoading: true });
+
+    var now = moment(new Date()); 
+   
     await this.loginService.login(this.state.username, this.state.password)
       .then(async (response) => {
-        console.log(response);
-
-        this.setState({ showLoading: true });
+        console.log(response);       
         if (response != null) {
           this.setState({ loginFailed: false });
 
@@ -112,14 +115,22 @@ export class Login extends React.Component {
           });  
         }
         else {
-          this.setState({ loginFailed: true });
+          var end = moment(new Date()); 
+          var duration = moment.duration(end.diff(now));
+          var seconds = duration.asSeconds();
+
+          if(seconds >= 5){
+            alert('Unable to contact Smartwebs servers.  Please try again later.');
+          }else{
+            this.setState({ loginFailed: true });
+          }         
+          this.setState({ showLoading: false });
         }
       })
       .catch((error) => {
         console.log(error);
+        this.setState({ showLoading: false });
       });
-
-    this.setState({ showLoading: false });
   }
 
   getImageBackgroundSource = () => (
@@ -164,6 +175,7 @@ export class Login extends React.Component {
                 />
                 <Button
                   title='Prod'
+                  disabled={this.state.showLoading}
                   clear
                   activeOpacity={0.5}
                   titleStyle={{ color: 'white', fontSize: 15 }}
@@ -183,7 +195,7 @@ export class Login extends React.Component {
         {
           this.state.loginFailed ? (
             <Text style={{ color: 'red' }}>Username or password incorrect.</Text>
-          ) : (
+          ):(
               <View />
             )
         }

@@ -3,11 +3,14 @@ import { View, ScrollView, RefreshControl } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { CornerLabel } from '../../components/index';
 import NavigationType from '../../config/navigation/NavigationType';
-import _ from 'lodash';
-import guid from '../../utils/guid';
 import { CurrentUser } from '../../services/LoginService';
 import { UnitService } from '../../services/UnitService';
 import { StorageService } from '../../services/StorageService';
+import { Icon } from 'react-native-elements'
+import _ from 'lodash';
+import guid from '../../utils/guid';
+import { PageNames } from '../../config/AppConstants';
+
 const moment = require('moment');
 
 export class Messages extends React.Component {
@@ -104,6 +107,10 @@ export class Messages extends React.Component {
       });
   }
 
+  async replyMessage(item){
+    this.props.navigation.navigate(PageNames.ReplyMessage, { message: item });
+  }
+
   renderItem = (item) => (
     <SwCard style={styles.itemContainer} key={item.Id}>
       <View style={styles.content}>
@@ -112,7 +119,7 @@ export class Messages extends React.Component {
         <View style={styles.detail}>
           <SwText swType='secondary2'>{item.CreatedDate}</SwText>
           <View style={styles.right}>
-
+            <Icon name='reply' type='font-awesome' color='#6AB33A' onPress={() => this.replyMessage(item)} />
           </View>
         </View>
       </View>
@@ -174,8 +181,9 @@ const styles = SwStyleSheet.create(theme => ({
   detail: {
     flexDirection: 'row',
     marginTop: 15,
+    justifyContent: 'space-between'
   },
   right: {
-    flex: 1
+    alignSelf: 'flex-end'
   },
 }));
