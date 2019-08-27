@@ -25,13 +25,29 @@ export class Profile extends React.Component {
     };
   }
 
-  async componentWillMount(){   
-    const profile = StorageService.ownerUnitProfile;
-    console.log(profile);
-    this.fillProfileInfo(profile);    
+  
+  shouldUpdate = false;
+
+  async shouldComponentUpdate(nextProps) {
+    let refresh = nextProps.navigation.state.params.refresh;
+    
+    if (!this.shouldUpdate) {
+      await this.bindData();
+      this.shouldUpdate = true;
+      console.log("Refresh ...");
+    }
+
+    return this.shouldUpdate;
   }
 
-  fillProfileInfo(profile){
+
+  async componentWillMount(){   
+    this.bindData();
+  }
+
+  bindData(){
+    const profile = StorageService.ownerUnitProfile;
+
     this.setState({
       firstName: profile.Owner.OwnerFirstName,
       lastName: profile.Owner.OwnerLastName,

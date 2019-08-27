@@ -6,8 +6,13 @@ import { UnitService } from '../../services/UnitService';
 import { CurrentUser } from '../../services/LoginService';
 import { PageNames } from '../../config/AppConstants';
 import { StorageService } from '../../services/StorageService';
+import NavigationType from '../../config/navigation/NavigationType';
 
 export class ProfileSettings extends React.Component {
+  static propTypes = {
+    navigation: NavigationType.isRequired,
+  };
+
   static navigationOptions = {
     title: 'Profile Settings',
   };
@@ -19,48 +24,26 @@ export class ProfileSettings extends React.Component {
 
     this.state = {
       profile: {},
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      homePhone: '',
-      mailingAddress: '',
-      mailingCity: '',
-      mailingState:'',
-      mailingZip: '', 
-      unitAddress: '',
-      unitCity: '',
-      unitState:'',
-      unitZip: '', 
+      firstName: this.profile.Owner.OwnerFirstName,
+      lastName: this.profile.Owner.OwnerLastName,
+      email: this.profile.Owner.OwnerEmail,
+      phone: this.profile.Owner.CellPhone1,
+      homePhone: this.profile.Owner.NightPhone,
+      mailingAddress: this.profile.Owner.MailingAddress,
+      mailingCity: this.profile.Owner.MailingCity,
+      mailingState: this.profile.Owner.MailingState,
+      mailingZip: this.profile.Owner.MailingZip,
+      unitAddress: this.profile.Unit.UnitAddress,
+      unitCity: this.profile.Unit.UnitCity,
+      unitState: this.profile.Unit.UnitState,
+      unitZip: this.profile.Unit.UnitZip
     };
   }
 
-  profile = {};
+  profile = StorageService.ownerUnitProfile;
 
-  async componentWillMount(){   
-    const profile = StorageService.ownerUnitProfile;
-    this.profile = profile;
-    this.updateState(profile);    
-  }
-
-  updateState(profile){
-    this.setState({
-      firstName: profile.Owner.OwnerFirstName,
-      lastName: profile.Owner.OwnerLastName,
-      email: profile.Owner.OwnerEmail,
-      phone: profile.Owner.CellPhone1,
-      homePhone: profile.Owner.NightPhone,
-      mailingAddress: profile.Owner.MailingAddress,
-      mailingCity: profile.Owner.MailingCity,
-      mailingState: profile.Owner.MailingState,
-      mailingZip: profile.Owner.MailingZip,
-      unitAddress: profile.Unit.UnitAddress,
-      unitCity: profile.Unit.UnitCity,
-      unitState: profile.Unit.UnitState,
-      unitZip: profile.Unit.UnitZip
-    });
-  }
-
+  async componentWillMount(){ }
+  
   onFirstNameInputChanged = (text) => {
     this.setState({ firstName: text });
     this.profile.Owner.OwnerFirstName = text;
@@ -130,14 +113,14 @@ export class ProfileSettings extends React.Component {
     await this.unitService.saveOwnerUnit(this.profile.Owner.AssociationIdEncrypted, 
                 CurrentUser.ManagementIdEncrypted, CurrentUser.UserIdEncrypted, 
                 this.profile.Owner, this.profile.Unit)
-      .then(async (response) => {
+      .then(response => {
         if(response != null){
           StorageService.ownerUnitProfile = response.SaveOwnerUnitResult;
           this.props.navigation.navigate(PageNames.Profile);
         }       
       })
       .catch(error => {
-
+        console.log(error);
       });
   };
 
