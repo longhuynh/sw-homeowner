@@ -25,7 +25,6 @@ export class Login extends React.Component {
 
   constructor(props) {
     super(props);
-
     this.loginService = new LoginService();
     this.unitService = new UnitService();
 

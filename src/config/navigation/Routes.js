@@ -102,7 +102,7 @@ export const MainRoutes = [
   {
     id: 'ArchitecturalMenu',
     title: 'Architecturals',
-    screen: Screens.Architectural,
+    screen: Screens.Architecturals,
     children: [
       {
         id: PageNames.Architecturals,
@@ -167,7 +167,7 @@ export const MainRoutes = [
   },
   {
     id: 'MessagingMenu',
-    title: 'Messaging',
+    title: 'Messages',
     screen: Screens.Messages,
     children: [
       {

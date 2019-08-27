@@ -44,7 +44,7 @@ export class Settings extends React.Component {
 
   render = () => (
     <ScrollView style={styles.container}>
-      <View style={styles.section}>
+      {/* <View style={styles.section}>
         <View style={[styles.row, styles.heading]}>
           <SwText swType='primary header6'>PROFILE SETTINGS</SwText>
         </View>
@@ -75,8 +75,8 @@ export class Settings extends React.Component {
             onValueChange={this.onOtherSettingChanged}
           />
         </View>
-      </View>
-      {/* <View style={styles.section}>
+      </View> 
+      <View style={styles.section}>
         <View style={[styles.row, styles.heading]}>
           <SwText swType='primary header6'>FIND FRIENDS</SwText>
         </View>
@@ -125,6 +125,11 @@ export class Settings extends React.Component {
         <View style={styles.row}>
           <TouchableOpacity style={styles.rowButton}>
             <SwText swType='header6'>Terms & Conditions</SwText>
+          </TouchableOpacity>
+        </View>
+        <View style={styles.row}>
+          <TouchableOpacity style={styles.rowButton}>
+            <SwText swType='header6'>Version 1.0.0 (Build 25)</SwText>
           </TouchableOpacity>
         </View>
       </View>

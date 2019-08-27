@@ -15,11 +15,6 @@ const MenuRoutes =  [
     icon: 'tachometer-alt',
   },
   {
-    id: 'MessagingMenu',
-    title: 'Recent Messages',
-    icon: 'comment-dots',
-  }, 
-  {
     id: 'AccountMenu',
     title: 'Account',
     icon: 'dollar-sign'
