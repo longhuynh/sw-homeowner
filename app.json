@@ -24,6 +24,9 @@
       "versionCode": 25,
       "permissions" : ["CAMERA"]
     },
+    "packagerOpts": {
+      "nonPersistent": "--nonPersistent"
+    },
     "version": "1.0.0",
     "description": ""
   }
