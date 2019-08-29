@@ -6,11 +6,11 @@ import { CurrentUser } from '../../services/LoginService';
 import { UnitService } from '../../services/UnitService';
 import { StorageService } from '../../services/StorageService';
 import { GradientButton } from '../../components/index';
-
-import _ from 'lodash';
 import { ArcService } from '../../services/ArcService';
 import { ViolationService } from '../../services/ViolationService';
 import { PageNames } from '../../config/AppConstants';
+
+import _ from 'lodash';
 const moment = require('moment');
 
 export class ReplyMessage extends React.Component {
@@ -76,7 +76,8 @@ export class ReplyMessage extends React.Component {
     }    
       
     const noteType = this.state.message.CornerLabel;
-
+    this.setState({disabledSendButton: true});   
+    
     let savedNote = null;
 
     switch (noteType) {
@@ -96,13 +97,15 @@ export class ReplyMessage extends React.Component {
     if(savedNote != null){
       this.props.navigation.navigate(PageNames.Messages, {refresh: true});
     }   
+
+    this.setState({disabledSendButton: false});   
   };
 
   async saveViolationNote() {
     let savedNote = null;
 
     await this.violationService.saveComment(this.state.message.ReferenceId,
-      this.state.comment, userIdEncrypted)
+      this.state.comment, CurrentUser.UserIdEncrypted)
       .then(response => {
         if(response != null){
           savedNote = response;
@@ -143,7 +146,8 @@ export class ReplyMessage extends React.Component {
   }
 
   async saveGeneralNote() {
-    let savedNote = null;    
+    let savedNote = null;     
+
     await this.unitService.saveNote(CurrentUser.UserIdEncrypted, this.state.comment,  
         this.state.unit.OwnerIdEncrypted, this.state.noteTypeIdEncrypted)
       .then(response => {
@@ -199,11 +203,11 @@ export class ReplyMessage extends React.Component {
         <View style={styles.messageTitle}>
           <SwText swType='header4'>Answer to {this.state.message.Title}</SwText>
           <SwText swType='secondary2'>
-            {this.state.message.CreatedByUserName} ( {moment(new Date(this.state.message.CreatedDate)).format('MM/DD/YY')}) :  {this.state.message.Notes} 
+            {this.state.message.CreatedByUserName} ({moment(new Date(this.state.message.CreatedDate)).format('MM/DD/YY')}) :  {this.state.message.Notes} 
           </SwText>
           <SwTextInput
             value={this.state.comment}
-            swType='bordered secondary2'
+            swType='bordered'
             returnKeyType='done'
             onChangeText={this.onCommentInputChanged}
             multiline={true}

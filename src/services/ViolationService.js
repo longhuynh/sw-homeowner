@@ -44,6 +44,7 @@ export class ViolationService {
     return _.flatMap(activity.Documents, (d) => [
       {
         IdEncrypted: d.DocumentId,
+        DocumentType: d.TypeName,
         Name: d.Name,
         Extension: d.Extension,
         Url: d.Href,
@@ -62,6 +63,8 @@ export class ViolationService {
       isResidentNote: true,
       userIdEnc: userIdEnc
     };
+
+    console.log(data);
 
     return HttpService.post(url, data);
   }

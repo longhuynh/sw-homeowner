@@ -29,8 +29,8 @@ export class Login extends React.Component {
     this.unitService = new UnitService();
 
     this.state = {
-      username: 'TravisTesterton',
-      password: '123456',
+      username: '',
+      password: '',
       loginFailed: false,
       showLoading: false,
       hideTestFeature: true,
@@ -53,7 +53,7 @@ export class Login extends React.Component {
 
     if (this.state.username == 'SHOWDEMO' && this.state.password == 'DEMO654') {
       this.setState({
-        hideTestFeature: true,
+        hideTestFeature: false,
         username: '',
         password: ''
       });
@@ -70,7 +70,7 @@ export class Login extends React.Component {
         StorageService.units = units;
 
         if(units.length > 0){
-          this.loadOwnerUnitDetails(units[0]);
+          this.loadOwnerUnitDetails(units[0], userIdEncrypted);         
         }else{
           alert("No unit to manage")
         }
@@ -79,7 +79,7 @@ export class Login extends React.Component {
       });
   }
 
-  async loadOwnerUnitDetails(unit) {
+  async loadOwnerUnitDetails(unit, userIdEncrypted) {
     await this.unitService.getOwnerUnitDetails(unit.UnitIdEncrypted)
       .then(async (response) => {       
         const profile = response.GetOwnerUnitDetailsResult;        
@@ -94,7 +94,24 @@ export class Login extends React.Component {
           units: this.state.units
         };
 
+        this.loadShortResidentUser(unit.AssociationIdEncrypted, userIdEncrypted);
+
         this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
+      }) 
+      .catch((error) => {
+        console.log(error);
+      });
+  }
+
+  async loadShortResidentUser(associationIdEncrypted, userIdEncrypted) {
+    await this.loginService.getShortResidentUser(associationIdEncrypted, userIdEncrypted)
+      .then(async (response) => {       
+        console.log(response)
+        if(response != null)
+          HttpService.environmentName = response.GetShortResidentUserResult.Environment;
+      }) 
+      .catch((error) => {
+        console.log(error);      
       });
   }
 
@@ -270,7 +287,6 @@ export class Login extends React.Component {
                 underlayColor='transparent'
                 onPress={this.submitLoginCredentials.bind(this)}
                 loading={showLoading}
-                disabled={showLoading}
                 loadingProps={{ size: 'small', color: 'transparent' }}
                 buttonStyle={{
                   height: 50,

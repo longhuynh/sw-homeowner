@@ -37,11 +37,24 @@ export class Messages extends React.Component {
     };
   }
 
+  
+  hasUpdate = false;
+
+  async shouldComponentUpdate(nextProps) {
+    let refresh = nextProps.navigation.state.params.refresh;
+
+    if (refresh != undefined && refresh && !this.hasUpdate) {
+      this.refreshData();
+      this.hasUpdate = true;
+    }
+
+    return this.hasUpdate;
+  }
+
   async componentWillMount() {
   }
 
-  bindData(data) {
-    
+  bindData(data) {    
     let messages = [];
 
     const projectNotes = data.ProjectNotes || [];
@@ -52,7 +65,7 @@ export class Messages extends React.Component {
         Title: t.Title,
         Notes: t.Notes,
         CreatedByUserName: t.CreatedByUserName,
-        CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
+        CreatedDate: t.CreatedDate,
         ReferenceId: t.ProjectIdEncrypted,
         Color: '#3498db',
         CornerLabel: 'Arc'
@@ -67,7 +80,7 @@ export class Messages extends React.Component {
         Title: t.Title,
         Notes: t.Notes,
         CreatedByUserName: t.CreatedByUserName,
-        CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
+        CreatedDate: t.CreatedDate,
         ReferenceId: t.ActivityIdEncrypted,
         Color: '#D3AC2B',
         CornerLabel: 'General'
@@ -82,7 +95,7 @@ export class Messages extends React.Component {
         Title: t.Title,
         Notes: t.Notes,
         CreatedByUserName: t.CreatedByUserName,
-        CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
+        CreatedDate: t.CreatedDate,
         ReferenceId: t.ActivityIdEncrypted,
         Color: '#6AB33A',
         CornerLabel: 'Violations'
@@ -101,10 +114,12 @@ export class Messages extends React.Component {
 
     await this.unitService.getResidentIncomingNotes(unit.UnitIdEncrypted, CurrentUser.UserIdEncrypted)
       .then(response => {
-        if (response != null) {
-          const messages = response.GetResidentIncomingNotesResult;
-          this.bindData(messages);
 
+        if (response != null) {
+          const data = response.GetResidentIncomingNotesResult;
+          const messages = this.bindData(data);
+
+          this.setState({ items: messages });
           this.setState({ refreshing: false });
         }
       })
@@ -115,6 +130,7 @@ export class Messages extends React.Component {
   }
 
   async replyMessage(item){
+    this.hasUpdate = false;
     this.props.navigation.navigate(PageNames.ReplyMessage, { message: item });
   }
 
@@ -124,7 +140,7 @@ export class Messages extends React.Component {
         <SwText swType='header4' numberOfLines={1}>{item.Title}</SwText>
         <SwText swType='secondary2' numberOfLines={3}>{item.Notes}</SwText>
         <View style={styles.detail}>
-          <SwText swType='secondary2'>{item.CreatedDate}</SwText>
+          <SwText swType='secondary2'>{moment(new Date(item.CreatedDate)).format('MM/DD/YY HH:mm A')}</SwText>
           <View style={styles.right}>
             <Icon name='reply' type='font-awesome' color='#6AB33A' onPress={() => this.replyMessage(item)} />
           </View>

@@ -1,10 +1,19 @@
 class BaseConfig {
-  baseUrl = 'https://resident.demo.smartwebs.net';
-  commonApiUrl = `${this.baseUrl}/SWWebservice/Services/Complex/CommonService.svc`;
-  residentApiUrl = `${this.baseUrl}/SWWebService/Services/ResidentPortal/ResidentialPortalService.svc`;
-  unitApiUrl = `${this.baseUrl}/SWWebservice/Services/UnitsArea/UnitsAreaService.svc`;
-  violationApiUrl = `${this.baseUrl}/SWWebservice/Services/ViolationArea/ViolationAreaService.svc`;
-  arcApiUrl = `${this.baseUrl}/SWWebservice/Services/ArcArea/ArcAreaService.svc`;
+  baseUrl = 'https://resident.smartwebs.net';
+  environmentName = '';
+  
+  constructor(){
+    this.setApi();
+  }
+  
+  setApi(){
+    this.commonApiUrl = `${this.baseUrl}/SWWebservice/Services/Complex/CommonService.svc`;
+    this.simpleApiUrl = `${this.baseUrl}/SWWebservice/Services/Simple/CommonService.svc`;
+    this.residentApiUrl = `${this.baseUrl}/SWWebService/Services/ResidentPortal/ResidentialPortalService.svc`;
+    this.unitApiUrl = `${this.baseUrl}/SWWebservice/Services/UnitsArea/UnitsAreaService.svc`;
+    this.violationApiUrl = `${this.baseUrl}/SWWebservice/Services/ViolationArea/ViolationAreaService.svc`;
+    this.arcApiUrl = `${this.baseUrl}/SWWebservice/Services/ArcArea/ArcAreaService.svc`;  
+  }
 
   authorizationKey = 'SwClassic eyJ1SWQiOiJVMVRaLU1oZFN3ekFGWDgwNUdvIiwibUlkIjoiSjJmQW1JRk91ZWtIQkEifQ==';
 
@@ -23,13 +32,16 @@ class BaseConfig {
   switchToEnvironment (name) {
     switch(name){
       case 'Dev': 
-        this.baseUrl = 'https://office.demo.smartwebs.net';
+        this.baseUrl = 'https://resident.demo.smartwebs.net';
+        this.setApi();
         break;
       case 'Demo':      
         this.baseUrl = 'https://resident.demo.smartwebs.net';
+        this.setApi();
         break;
       case 'Prod':      
         this.baseUrl = 'https://resident.smartwebs.net';
+        this.setApi();
         break;
       default:
         break;
@@ -79,8 +91,7 @@ class BaseConfig {
     catch (error) {
       console.log(error);
     }
-  }
-  
+  }  
 }
 
 export const HttpService = new BaseConfig();
