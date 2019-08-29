@@ -25,6 +25,7 @@ export class Messages extends React.Component {
   constructor(props) {
     super(props);   
     const data = this.props.navigation.getParam('messages', {});
+
     const messages = this.bindData(data);
 
     this.unitService = new UnitService();
@@ -50,7 +51,9 @@ export class Messages extends React.Component {
         Id: guid(),
         Title: t.Title,
         Notes: t.Notes,
+        CreatedByUserName: t.CreatedByUserName,
         CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
+        ReferenceId: t.ProjectIdEncrypted,
         Color: '#3498db',
         CornerLabel: 'Arc'
       });
@@ -63,7 +66,9 @@ export class Messages extends React.Component {
         Id: guid(),
         Title: t.Title,
         Notes: t.Notes,
+        CreatedByUserName: t.CreatedByUserName,
         CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
+        ReferenceId: t.ActivityIdEncrypted,
         Color: '#D3AC2B',
         CornerLabel: 'General'
       });
@@ -76,7 +81,9 @@ export class Messages extends React.Component {
         Id:  guid(),
         Title: t.Title,
         Notes: t.Notes,
+        CreatedByUserName: t.CreatedByUserName,
         CreatedDate: moment(new Date(t.CreatedDate)).format('MM/DD/YY HH:mm A'),
+        ReferenceId: t.ActivityIdEncrypted,
         Color: '#6AB33A',
         CornerLabel: 'Violations'
       });

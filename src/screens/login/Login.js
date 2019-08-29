@@ -53,7 +53,7 @@ export class Login extends React.Component {
 
     if (this.state.username == 'SHOWDEMO' && this.state.password == 'DEMO654') {
       this.setState({
-        hideTestFeature: false,
+        hideTestFeature: true,
         username: '',
         password: ''
       });
@@ -100,7 +100,7 @@ export class Login extends React.Component {
 
   async login() {
     this.setState({ showLoading: true });
-
+    
     var now = moment(new Date()); 
    
     await this.loginService.login(this.state.username, this.state.password)
@@ -160,7 +160,8 @@ export class Login extends React.Component {
                   title='Dev'
                   clear
                   activeOpacity={0.5}
-                  titleStyle={{ color: 'white', fontSize: 15 }}
+                  titleStyle={{ color: 'white', fontSize: 14 }}
+                  buttonStyle={{ height: 25, width: 60, backgroundColor: 'transparent' }}
                   containerStyle={{ marginTop: -10 }}
                   onPress={this.onDevButtonPressed}
                 />
@@ -168,16 +169,17 @@ export class Login extends React.Component {
                   title='Demo'
                   clear
                   activeOpacity={0.5}
-                  titleStyle={{ color: 'white', fontSize: 15 }}
+                  titleStyle={{ color: 'white', fontSize: 14 }}
+                  buttonStyle={{ height: 25, width: 60, backgroundColor: 'transparent' }}
                   containerStyle={{ marginTop: -10 }}
                   onPress={this.onDemoButtonPressed}
                 />
                 <Button
-                  title='Prod'
-                  disabled={this.state.showLoading}
+                  title='Prod'                  
                   clear
                   activeOpacity={0.5}
-                  titleStyle={{ color: 'white', fontSize: 15 }}
+                  titleStyle={{ color: 'white', fontSize: 14 }}
+                  buttonStyle={{ height: 25, width: 60, backgroundColor: 'transparent' }}
                   containerStyle={{ marginTop: -10 }}
                   onPress={this.onProdButtonPressed}
                 />
@@ -230,7 +232,7 @@ export class Login extends React.Component {
                   containerStyle={{ marginVertical: 10 }}
                   onChangeText={username => this.setState({ username: username, loginFailed: false })}
                   value={username}
-                  inputStyle={{ marginLeft: 10, color: 'white' }}
+                  inputStyle={{ marginLeft: 10, color: 'white', fontSize: 15 }}
                   keyboardAppearance='light'
                   placeholder='Username'
                   autoFocus={false}
@@ -249,7 +251,7 @@ export class Login extends React.Component {
                   containerStyle={{ marginVertical: 10 }}
                   onChangeText={password => this.setState({ password: password, loginFailed: false })}
                   value={password}
-                  inputStyle={{ marginLeft: 10, color: 'white' }}
+                  inputStyle={{ marginLeft: 10, color: 'white', fontSize: 15 }}
                   secureTextEntry={true}
                   keyboardAppearance='light'
                   placeholder='Password'
@@ -268,7 +270,8 @@ export class Login extends React.Component {
                 underlayColor='transparent'
                 onPress={this.submitLoginCredentials.bind(this)}
                 loading={showLoading}
-                loadingProps={{ size: 'small', color: 'white' }}
+                disabled={showLoading}
+                loadingProps={{ size: 'small', color: 'transparent' }}
                 buttonStyle={{
                   height: 50,
                   width: 250,

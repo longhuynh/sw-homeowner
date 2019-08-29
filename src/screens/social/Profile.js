@@ -5,8 +5,13 @@ import { Avatar, GradientButton } from '../../components/index';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { PageNames } from '../../config/AppConstants';
 import { StorageService } from '../../services/StorageService';
+import NavigationType from '../../config/navigation/NavigationType';
 
 export class Profile extends React.Component {
+  static propTypes = {
+    navigation: NavigationType.isRequired,
+  };
+
   static navigationOptions = {
     title: 'Profile',
   };
@@ -15,35 +20,32 @@ export class Profile extends React.Component {
     super(props);
 
     console.log("Profile constructor");
+    
+    const profile = StorageService.ownerUnitProfile;
 
     this.state = {
-      firstName: '',
-      lastName: '',
-      email: '',
-      phone: '',
-      homePhone: ''      
+      firstName: profile.Owner.OwnerFirstName,
+      lastName: profile.Owner.OwnerLastName,
+      email: profile.Owner.OwnerEmail,
+      phone: profile.Owner.CellPhone1,
+      homePhone: profile.Owner.NightPhone
     };
   }
-
   
-  shouldUpdate = false;
+  hasUpdate = false;
 
   async shouldComponentUpdate(nextProps) {
     let refresh = nextProps.navigation.state.params.refresh;
-    
-    if (!this.shouldUpdate) {
-      await this.bindData();
-      this.shouldUpdate = true;
-      console.log("Refresh ...");
+
+    if (refresh != undefined && refresh && !this.hasUpdate) {
+      this.bindData();
+      this.hasUpdate = true;
     }
 
-    return this.shouldUpdate;
+    return this.hasUpdate;
   }
 
-
-  async componentWillMount(){   
-    this.bindData();
-  }
+  async componentWillMount(){ }
 
   bindData(){
     const profile = StorageService.ownerUnitProfile;
@@ -58,6 +60,7 @@ export class Profile extends React.Component {
   }  
 
   onEditButtonPressed = () => {
+    this.hasUpdate = false;
     this.props.navigation.navigate(PageNames.ProfileSettings);
   };
 
@@ -67,7 +70,7 @@ export class Profile extends React.Component {
 
   onLogoutButtonPressed = () => {
     Alert.alert(
-      'Are you sure? ', 
+      'Confirm', 
       'Do you want to log out ?',
       [
         {
@@ -80,7 +83,7 @@ export class Profile extends React.Component {
           style: 'cancel',
         },
       ],
-      {cancelable: false},
+      { cancelable: false},
     );
    
   };

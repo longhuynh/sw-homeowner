@@ -170,10 +170,6 @@ export class Comments extends React.Component {
   render = () => (
     <View style={styles.screen} >
       <SwCard style={styles.container}>
-      {/* <Badge value={this.state.comments.length} status="success" textStyle={{ fontSize: 25 }}
-          badgeStyle={{ width: 50, height: 50, borderRadius: 300 }}
-          containerStyle={{ position: 'absolute', top: -15, right: -15 }} /> */}
-
         <View style={styles.comment}>
           <SwText swType='header5'>Add comment</SwText>
           <SwTextInput

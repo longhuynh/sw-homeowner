@@ -114,9 +114,10 @@ export class ProfileSettings extends React.Component {
                 CurrentUser.ManagementIdEncrypted, CurrentUser.UserIdEncrypted, 
                 this.profile.Owner, this.profile.Unit)
       .then(response => {
+        console.log(response)
         if(response != null){
           StorageService.ownerUnitProfile = response.SaveOwnerUnitResult;
-          this.props.navigation.navigate(PageNames.Profile);
+          this.props.navigation.navigate(PageNames.Profile, {refresh: true});
         }       
       })
       .catch(error => {

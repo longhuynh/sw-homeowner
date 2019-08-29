@@ -110,7 +110,7 @@ export class WorkOrder extends React.Component {
       <View>
         <View style={styles.header}>
           <SwText swType='header4 center' numberOfLines={1}>{name}</SwText>
-          <SwText swType='secondary2 secondaryColor center'>Detail</SwText>
+          <SwText swType='secondary2 center'>Detail</SwText>
         </View>
       </View>
     )

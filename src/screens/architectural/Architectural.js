@@ -40,18 +40,18 @@ export class Architectural extends React.Component {
     this.bindData();
   }
 
-  shouldUpdate = false;
+  hasUpdate = false;
 
   async shouldComponentUpdate(nextProps) {
     let refresh = nextProps.navigation.state.params.refresh;
     
-    if (refresh != undefined && refresh && !this.shouldUpdate) {
+    if (refresh != undefined && refresh && !this.hasUpdate) {
       await this.bindData();
-      this.shouldUpdate = true;
+      this.hasUpdate = true;
       console.log("Refresh ...");
     }
 
-    return this.shouldUpdate;
+    return this.hasUpdate;
   }
 
 
@@ -129,7 +129,7 @@ export class Architectural extends React.Component {
       <View>
         <View style={styles.header}>
           <SwText swType='header4 center' numberOfLines={1}>{name}</SwText>
-          <SwText swType='secondary2 secondaryColor center'>Detail</SwText>
+          <SwText swType='secondary2 center'>Detail</SwText>
         </View>
       </View>
     )

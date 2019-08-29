@@ -47,6 +47,15 @@ export class UnitService {
     return HttpService.post(url, data);
   }
 
+  async getServiceNoteTypes(managementIdEncrypted) {
+    const url = `${HttpService.unitApiUrl}/GetServiceNoteTypes`;
+    const data = {
+      managementIdEncrypted: managementIdEncrypted
+    };
+         
+    return HttpService.post(url, data);
+  }
+
   async saveOwnerUnit(associationIdEncrypted, managementIdEncrypted, userIdEncrypted, owner, unit) {
     const url = `${HttpService.unitApiUrl}/SaveOwnerUnit`;
     const data = {
@@ -59,6 +68,24 @@ export class UnitService {
       unit: unit
     };
          
+    return HttpService.post(url, data);
+  }  
+
+  async saveNote(userIdEncrypted, note, ownerIdEncrypted, serviceNotesTypeEidEncrypted) {
+    const url = `${HttpService.unitApiUrl}/SaveNote`;
+    const data = {
+      note: {
+        AppSpecificIdEncrypted: '6s_b0MBMZ9mzGHWFYTI',
+        IsActive: true,
+        IsPublic: true,
+        IsResidentNote: true,
+        LastUpdatedByUserIdEncrypted: userIdEncrypted,
+        Notes: note,
+        OwnerIdEncrypted: ownerIdEncrypted,
+        ServiceNotesTypeEidEncrypted: serviceNotesTypeEidEncrypted
+      }
+    };
+    console.log(data);
     return HttpService.post(url, data);
   }  
 }

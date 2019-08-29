@@ -82,7 +82,7 @@ export class SideMenu extends React.Component {
           <FontAwesome5 name={item.icon} size={20} style={styles.icon} />
           <SwText>{item.title}</SwText>
         </View>
-        <SwText swType='awesome secondaryColor small'>{FontAwesome.chevronRight}</SwText>
+        <SwText swType='awesome small'>{FontAwesome.chevronRight}</SwText>
       </View>
     </TouchableHighlight>
   );

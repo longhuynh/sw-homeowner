@@ -1,9 +1,7 @@
 import React from 'react';
 import { View, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
-import { Badge, Icon} from 'react-native-elements';
 import { ArcService } from '../../services/ArcService';
-import { DbStorageKey } from '../../services/storageKey';
 import { PageNames } from '../../config/AppConstants';
 import { StorageService } from '../../services/StorageService';
 
@@ -66,7 +64,7 @@ export class Architecturals extends React.Component {
       <View>
         <View style={styles.header}>
           <SwText swType='header4 center'>ARC/ARB</SwText>
-          <SwText swType='secondary2 secondaryColor center'>Overview</SwText>
+          <SwText swType='secondary2 center'>Overview</SwText>
         </View>
       </View>
     )
@@ -77,9 +75,6 @@ export class Architecturals extends React.Component {
       key={item.ProjectIdEncrypted}
       onPress={() => this.navigateToArc(item)}>
        <SwCard style={styles.itemContainer}>
-       {/* <Badge value={<Icon name={item.icon} />} status={item.iconStatus} textStyle={{ fontSize: 15  }}
-          badgeStyle={{ width: 30, height: 30, borderRadius: 300 }}
-          containerStyle={{ position: 'absolute', top: -10, right: -10, }} /> */}
         <View style={styles.content}>
           <SwText numberOfLines={1} swType='header4'>{`${item.ProjectTitle}`}</SwText>
           <View style={styles.detail}>

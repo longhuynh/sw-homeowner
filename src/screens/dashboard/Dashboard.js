@@ -43,7 +43,7 @@ export class Dashboard extends React.Component {
     this.bindData();
   }
 
-  shouldUpdate = false;
+  hasUpdate = false;
 
   async shouldComponentUpdate(nextProps) {
     const unitIdEncrypted = nextProps.navigation.state.params.unitIdEncrypted;    
@@ -59,15 +59,15 @@ export class Dashboard extends React.Component {
 
       console.log("Unit was changed " + unit.UnitAddress);
 
-      this.shouldUpdate = true;  
+      this.hasUpdate = true;  
       this.bindData();
     }
 
-    return this.shouldUpdate;
+    return this.hasUpdate;
   }
 
   componentWillUpdate() {
-    this.shouldUpdate = false;
+    this.hasUpdate = false;
   }
 
   async componentDidMount() { }
@@ -192,7 +192,7 @@ export class Dashboard extends React.Component {
       <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation, units)}>
         <View style={styles.header}>
           <SwText swType='header4 center'>{ownerFullName}</SwText>
-          <SwText swType='secondary2 secondaryColor center'>{address}</SwText>
+          <SwText swType='secondary2 center'>{address}</SwText>
         </View>
         <Badge value={numberOfUnit} status="success" textStyle={{ fontSize: 15 }}
           badgeStyle={{ width: 20, height: 20, borderRadius: 300 }}

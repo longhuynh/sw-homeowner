@@ -71,7 +71,7 @@ export class Violations extends React.Component {
       <View>
         <View style={styles.header}>
           <SwText swType='header4 center'>Violations</SwText>
-          <SwText swType='secondary2 secondaryColor center'>Overview</SwText>
+          <SwText swType='secondary2 center'>Overview</SwText>
         </View>
       </View>
     )
