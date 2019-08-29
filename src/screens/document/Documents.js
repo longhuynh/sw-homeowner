@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, Clipboard, Image, Share, Text } from 'react-native';
+import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator,  RefreshControl, Clipboard, Image, Share, Text } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -39,15 +39,39 @@ export class Documents extends React.Component {
 
     this.state = {
       showLoading: false,
+      refreshing: false,
       referenceId: referenceId,
       activityId: activityId,
       documents: documents,
       pageName: pageName
     };
   }
+  
+  
+  async refreshData() {
+    this.setState({ refreshing: true });
+
+    const unit = StorageService.unit;
+
+    switch (this.state.pageName) {
+      case PageNames.Violation:
+        await this.reloadViolationDocuments(unit.AssociationIdEncrypted);
+        break;
+      case PageNames.Architectural:
+        await this.reloadArcDocuments(unit.AssociationIdEncrypted);
+        break;
+      case PageNames.WorkOrder:
+      
+        break;
+      default:
+        break;
+    }   
+    this.setState({ refreshing: false });
+  }
+
 
   async uploadImageAsync(pickerResult) {
-    this.setState({ showLoading: true });
+    //this.setState({ showLoading: true });
 
     let uri = pickerResult.uri;
     const uriParts = uri.split('.');
@@ -83,102 +107,99 @@ export class Documents extends React.Component {
 
     const pageName = this.state.pageName;
     const unit = StorageService.unit;
-    let uploadUrl = false;
 
     switch (pageName) {
       case PageNames.Violation:
-        uploadUrl = await this.saveViolationDocument(formData, unit.AssociationIdEncrypted, CurrentUser.UserIdEncrypted, this.state.activityId);
+        await this.saveViolationDocument(formData, unit.AssociationIdEncrypted, this.state.activityId);
         break;
       case PageNames.Architectural:
-        uploadUrl = await this.saveArcDocument(formData, CurrentUser.UserIdEncrypted, this.state.referenceId);
+        await this.saveArcDocument(formData, unit.AssociationIdEncrypted, this.state.referenceId);
         break;
       case PageNames.WorkOrder:
-        uploadUrl = await this.saveWoDocument(formData, CurrentUser.UserIdEncrypted, this.state.referenceId);
+        await this.saveWoDocument(formData, this.state.referenceId);
         break;
       default:
         break;
-    }
-
-    if (uploadUrl) {
-      let documents = this.state.documents;
-      const id = this.state.referenceId;
-
-      switch (pageName) {
-        case PageNames.Violation:
-          await this.violationService.getViolationItemById(unit.AssociationIdEncrypted, id)
-            .then(async (respone) => {
-              const violation = respone.GetViolationItemByIdResult;
-              documents = this.violationService.getDocuments(violation);
-
-              this.setState({ documents: documents });
-              this.documentService.setDocuments(documents);
-            })
-            .catch(error => {
-              console.log(error);
-            });
-
-          break;
-        case PageNames.Architectural:
-          await this.arcService.getProjectDetails(unit.AssociationIdEncrypted, id)
-            .then(response => {
-              if (response != null) {
-                const data = response.GetProjectDetailsResult;
-                documents = this.arcService.mapToDocuments(data);
-
-                this.setState({ documents: documents });
-                this.documentService.setDocuments(documents);
-              }
-            })
-            .catch(error => {
-              console.log(error);
-            });
-
-          break;
-
-        case PageNames.WorkOrder:
-
-          break;
-        default:
-          break;
-      }
-    }
-    this.setState({ showLoading: false });
+    }   
+   
   }
 
-  async saveViolationDocument(formData, associationIdEncrypted, userIdEncrypted, activityId) {
-    await this.violationService.uploadPhoto(formData, associationIdEncrypted, userIdEncrypted, activityId)
+  async reloadViolationDocuments(associationIdEncrypted){
+    this.setState({ showLoading: true });
+
+    await this.violationService.getViolationItemById(associationIdEncrypted, this.state.referenceId)
+      .then(async (response) => {
+        console.log(response)
+        if(response != null){
+          const violation = response.GetViolationItemByIdResult;
+          const documents = this.violationService.getDocuments(violation);
+
+          this.setState({ documents: documents });
+          this.setState({ showLoading: false });
+
+          this.documentService.setDocuments(documents);        
+        }
+      })
+      .catch(error => {
+        console.log(error);
+      });
+  }  
+
+  async reloadArcDocuments(associationIdEncrypted){
+    this.setState({ showLoading: true });
+
+    await this.arcService.getProjectDetails(associationIdEncrypted, this.state.referenceId)
       .then(response => {
-        return response != null;
+        console.log(response);
+        if (response != null) {
+          const data = response.GetProjectDetailsResult;
+          const documents = this.arcService.mapToDocuments(data);
+
+          this.setState({ documents: documents });
+          this.setState({ showLoading: false });
+
+          this.documentService.setDocuments(documents);
+        }
       })
       .catch(error => {
         console.log(error);
       });
 
-    return false;
-  }
+  }  
 
-  async saveArcDocument(formData, userIdEncrypted, projectIdEncrypted) {
-    await this.arcService.uploadPhoto(formData, userIdEncrypted, projectIdEncrypted)
-      .then(response => {
-        return response != null;
+  async saveViolationDocument(formData, associationIdEncrypted, activityId) {
+    await this.violationService.uploadPhoto(formData, associationIdEncrypted, 
+        CurrentUser.UserIdEncrypted, activityId)
+      .then(async (response) => {
+        if(response.ok){
+          await this.reloadViolationDocuments(associationIdEncrypted);
+        }
       })
       .catch(error => {
         console.log(error);
       });
-
-    return false;
   }
 
-  async saveWoDocument(formData, userIdEncrypted, workOrderIdEncypted) {
-    await this.workOrderService.uploadPhoto(formData, userIdEncrypted, workOrderIdEncypted)
-      .then(response => {
-        return response != null;
+  async saveArcDocument(formData, associationIdEncrypted, projectIdEncrypted) {
+    await this.arcService.uploadPhoto(formData, CurrentUser.UserIdEncrypted, projectIdEncrypted)
+      .then(async (response) => {
+        if(response.ok){
+          await this.reloadArcDocuments(associationIdEncrypted)
+        }
       })
       .catch(error => {
         console.log(error);
       });
+  }
 
-    return false;
+  async saveWoDocument(formData, workOrderIdEncypted) {
+    await this.workOrderService.uploadPhoto(formData, CurrentUser.UserIdEncrypted, workOrderIdEncypted)
+      .then(response => {
+
+      })
+      .catch(error => {
+        console.log(error);
+      });
   }
 
   onViewFile(item) {
@@ -264,7 +285,6 @@ export class Documents extends React.Component {
       if (!pickerResult.cancelled) {
         uploadResponse = await this.uploadImageAsync(pickerResult);
         //uploadResult = await uploadResponse.json();
-
         //this.setState({ image: uploadResult.location });
       }
     } catch (e) {
@@ -285,47 +305,65 @@ export class Documents extends React.Component {
       <View style={styles.itemContainer}>
         <View style={styles.content}>
           <View style={styles.contentHeader}>
-            <SwText swType='header5' style={styles.link}> {`${item.Name}`} ({`${item.Extension}`})</SwText>
+            <SwText swType='header5' style={styles.link}> {item.Name} ({item.DocumentType})</SwText>
           </View>
-          <SwText swType='primary3 mediumLine'>{moment(new Date(item.CreatedDate.toString())).format('MM/DD/YYYY')} ({item.CreatedByUser})</SwText>
+          {this.renderItemDetail(item)}
         </View>
       </View>
     </TouchableOpacity>
   );
 
-  render = () => (
+  renderItemDetail(item){
+    if(item.CreatedByUser == null)
+      return <SwText swType='primary3 mediumLine'>{moment(new Date(item.CreatedDate.toString())).format('MM/DD/YYYY')}</SwText>;
 
-    <View style={styles.screen} >
-      <SwCard style={styles.container}>
-        <Badge value={this.state.documents.length} status="success" textStyle={{ fontSize: 25 }}
-          badgeStyle={{ width: 50, height: 50, borderRadius: 300 }}
-          containerStyle={{ position: 'absolute', top: -15, right: -15 }} />
+    return <SwText swType='primary3 mediumLine'>{moment(new Date(item.CreatedDate.toString())).format('MM/DD/YYYY')} ({item.CreatedByUser})</SwText>;
+  }
 
-        <View style={styles.top}>
-          <View style={styles.row}>
-            <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.takePhoto() }}>
-              <FontAwesome5 name='camera' size={35} style={styles.icon} />
-            </SwButton>
-            <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.pickImage() }}>
-              <FontAwesome5 name='upload' size={35} style={styles.icon} />
-            </SwButton>
+  refreshControl() {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={() => this.refreshData()} />
+    )
+  }  
+
+  render = () => {
+    if (this.state.showLoading)
+      return (<ActivityIndicator size="large" color="#00ff00" marginVertical={100} />);
+
+    return (
+      <View style={styles.screen}>
+        <SwCard style={styles.container}>
+          <Badge value={this.state.documents.length} status="success" textStyle={{ fontSize: 25 }}
+            badgeStyle={{ width: 50, height: 50, borderRadius: 300 }}
+            containerStyle={{ position: 'absolute', top: -15, right: -15 }} />
+
+          <View style={styles.top}>
+            <View style={styles.row}>
+              <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.takePhoto() }}>
+                <FontAwesome5 name='camera' size={35} style={styles.icon} />
+              </SwButton>
+              <SwButton style={styles.circleButton} swType='icon circle' onPress={() => { this.pickImage() }}>
+                <FontAwesome5 name='upload' size={35} style={styles.icon} />
+              </SwButton>
+            </View>
           </View>
-        </View>
-        {this.state.showLoading ? (
-      <ActivityIndicator size="large" color="#00ff00" />
-        ) : (
-            <FlatList
-          data={this.state.documents}
-          extraData={this.state}
-          ItemSeparatorComponent={this.renderSeparator}
-          keyExtractor={this.extractItemKey}
-          renderItem={this.renderItem}
-        />
-        )}
-          </SwCard>
-    </View>
-
-  )
+          {this.state.showLoading ? (
+            <ActivityIndicator size="large" color="#00ff00" />
+          ) : (
+            <FlatList refreshControl={this.refreshControl()}
+              data={this.state.documents}
+              extraData={this.state}
+              ItemSeparatorComponent={this.renderSeparator}
+              keyExtractor={this.extractItemKey}
+              renderItem={this.renderItem}
+            />
+          )}
+            </SwCard>
+      </View>
+    );
+  }
 }
 
 const styles = SwStyleSheet.create(theme => ({

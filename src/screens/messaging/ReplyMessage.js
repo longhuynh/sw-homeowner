@@ -203,7 +203,7 @@ export class ReplyMessage extends React.Component {
           </SwText>
           <SwTextInput
             value={this.state.comment}
-            swType='bordered secondary3'
+            swType='bordered'
             returnKeyType='done'
             onChangeText={this.onCommentInputChanged}
             multiline={true}

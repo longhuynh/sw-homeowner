@@ -49,11 +49,12 @@ export class ArcService {
       (d) => [
         {
           IdEncrypted: d.DocumentIdEncrypted,
+          DocumentType: d.DocumentType,
           Name: d.Name,
           Extension: d.PhysicalName.split('.')[1],
           Url: `/${d.PartialPath.split('\\').join('/')}${d.PhysicalName}`,
           CreatedDate: d.DateStamp,
-          CreatedByUser: `N/A`,
+          CreatedByUser: null,
         }
       ]);
   }
