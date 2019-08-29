@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, ScrollView, TouchableOpacity } from 'react-native';
+import { View, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { PageNames } from '../../config/AppConstants';
@@ -32,6 +32,7 @@ export class Architectural extends React.Component {
       projectIdEncrypted: projectIdEncrypted,
       associationIdEncrypted: associationIdEncrypted,
       items: [],
+      refreshing: false,
       projectHistories: [],
       comments: [],
       documents: []
@@ -71,6 +72,12 @@ export class Architectural extends React.Component {
       .catch(error => {
         console.log(error);
       });
+  }
+
+  refreshData() {
+    this.setState({ refreshing: true })
+    this.bindData();
+    this.setState({ refreshing: false });
   }
 
   generateData(data) {
@@ -149,9 +156,17 @@ export class Architectural extends React.Component {
     </TouchableOpacity>
   );
 
+  refreshControl() {
+    return (
+      <RefreshControl
+        refreshing={this.state.refreshing}
+        onRefresh={() => this.refreshData()} />
+    )
+  }
+
   render = () => {
     return (
-      <ScrollView style={styles.screen}>
+      <ScrollView style={styles.screen} refreshControl={this.refreshControl()}>
         <View style={styles.items} >
           {this.state.items.map(this.renderStatItem)}
         </View>

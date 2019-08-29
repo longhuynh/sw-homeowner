@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, View, StyleSheet, Alert } from 'react-native';
+import { FlatList, View, StyleSheet, ActivityIndicator } from 'react-native';
 import { SwStyleSheet, SwText, SwTextInput, SwCard } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
@@ -8,11 +8,11 @@ import { ViolationService } from '../../services/ViolationService';
 import { ArcService } from '../../services/ArcService';
 import { WorkOrderService } from '../../services/WorkOrderService';
 import { CommentService } from '../../services/CommentService';
-import guid from '../../utils/guid';
 import { CurrentUser } from '../../services/LoginService';
 import { StorageService } from '../../services/StorageService';
 
 const moment = require('moment');
+import guid from '../../utils/guid';
 
 export class Comments extends React.Component {
   static propTypes = {
@@ -39,72 +39,69 @@ export class Comments extends React.Component {
       referenceId: referenceId,
       comments: comments,
       pageName: pageName,
+      showLoading: false,
+      disabledSendButton: true,
       comment: ''
     };
   }
 
   onSaveButtonPressed = async () => {
     if(this.state.comment.trim() == ''){
-      Alert.alert('Please enter comment');
+      alert('Please enter comment');
       return;
     }    
-      
+
+    this.setState({ showLoading: true });
+    this.setState({disabledSendButton: true});     
+
     const pageName = this.state.pageName;
     const unit = StorageService.unit;
-   
-    let savedComment = null;
 
     switch (pageName) {
       case PageNames.Violation:      
-        savedComment = await this.saveViolationComment(CurrentUser.UserIdEncrypted);
+         await this.saveViolationComment(CurrentUser.UserIdEncrypted);
         break;
       case PageNames.Architectural:
-        savedComment = await this.saveArcComment(CurrentUser.UserIdEncrypted, unit.AssociationIdEncrypted);
+        await this.saveArcComment(CurrentUser.UserIdEncrypted, unit.AssociationIdEncrypted);
         break;
-      case PageNames.WorkOrder:
-        savedComment = await this.saveWoComment(CurrentUser.UserIdEncrypted);
-        break;
+      // case PageNames.WorkOrder:
+      //   await this.saveWoComment(CurrentUser.UserIdEncrypted);
+      //   break;
       default:
         break;
     }
 
-    console.log(savedComment);
-
-    if(savedComment != null){
-      let comments = this.state.comments;
-      comments.splice(0, 0, {
-        IdEncrypted: guid(),
-        CreatedDate: moment(new Date()).format('MM/DD/YYYY'),
-        CreatedByUser: `${CurrentUser.FirstName} ${CurrentUser.LastName}`,
-        Text: this.state.comment
-      });
-
-      this.setState({comments: comments});
-      this.commentService.setComments(comments);
-      
-      this.props.navigation.navigate(pageName, {refresh: true});
-    }   
+    this.setState({disabledSendButton: false});   
+    this.setState({ showLoading: false });
   };
 
-  async saveViolationComment(userIdEncrypted) {
-    let savedComment = null;
+  reloadComments(){
+    let comments = this.state.comments;
+    comments.splice(0, 0, {
+      IdEncrypted: guid(),
+      CreatedDate: moment(new Date()).format('MM/DD/YYYY'),
+      CreatedByUser: `${CurrentUser.FirstName} ${CurrentUser.LastName}`,
+      Text: this.state.comment
+    });
 
+    this.setState({comments: comments});
+    this.commentService.setComments(comments);    
+    this.setState({ comment: '' });
+  }
+
+  async saveViolationComment(userIdEncrypted) {
     await this.violationService.saveComment(this.state.referenceId, this.state.comment, userIdEncrypted)
       .then(response => {
         if(response != null){
-          savedComment = response;
+          this.reloadComments();
         }         
       })
       .catch(error => {
         console.log(error);
       });
-
-      return savedComment;
   }
 
   async saveArcComment(userIdEncrypted, associationIdEncrypted) {
-    let savedComment = null;
-
     const projectHistoryDto = {
       AssociationIdEncrypted: associationIdEncrypted,
       MakePublic: true,
@@ -119,41 +116,52 @@ export class Comments extends React.Component {
       .then(response => {
         console.log(response);
         if(response != null){
-          savedComment = response;
+          this.reloadComments();
         }         
       })
       .catch(error => {
         console.log(error);
       });
-
-      return savedComment;
   }
 
   async saveWoComment(userIdEncrypted) {
-    let savedComment = null;
-
     await this.workOrderService.saveComment(userIdEncrypted, 
             this.state.referenceId , this.state.comment)
       .then(response => {
-        savedComment = response;
-        console.log(JSON.stringify(response));
+        console.log(response);
+        if(response != null){
+          this.reloadComments();
+        }   
       })
       .catch(error => {
         console.log(error);
       });
-
-      return savedComment;
   }
 
   extractItemKey = (item) => guid();
 
   onCommentInputChanged = (text) => {
     this.setState({ comment: text });
+
+    const disabled = this.state.comment.trim() == '';
+    this.setState({disabledSendButton: disabled}); 
   };
 
   renderSeparator = () => (
     <View style={styles.separator} />
   );
+
+  renderLoading(){
+    if(this.state.showLoading)
+      return <ActivityIndicator size="large" color="#00ff00" />
+
+    return  <SwTextInput
+      value={this.state.comment}
+      swType='bordered'
+      onChangeText={this.onCommentInputChanged}
+      multiline={true}
+      numberOfLines={4} />
+  }
 
   renderItem = ({ item }) => (
     <View style={styles.itemContainer}>
@@ -172,23 +180,23 @@ export class Comments extends React.Component {
       <SwCard style={styles.container}>
         <View style={styles.comment}>
           <SwText swType='header5'>Add comment</SwText>
-          <SwTextInput
-            value={this.state.comment}
-            swType='bordered'
-            onChangeText={this.onCommentInputChanged}
-            multiline={true}
-            numberOfLines={4} />
-        </View>
+          {this.renderLoading()}
+        </View>      
 
-        <GradientButton swType='small' style={styles.saveButton} text='Save' onPress={this.onSaveButtonPressed} />
+        <GradientButton 
+          swType='small' 
+          disabled={this.state.disabledSendButton} 
+          style={styles.saveButton} text='Save' 
+          onPress={this.onSaveButtonPressed} />   
 
         <FlatList
-          data={this.state.comments}
-          extraData={this.state}
-          ItemSeparatorComponent={this.renderSeparator}
-          keyExtractor={this.extractItemKey}
-          renderItem={this.renderItem}
+            data={this.state.comments}
+            extraData={this.state}
+            ItemSeparatorComponent={this.renderSeparator}
+            keyExtractor={this.extractItemKey}
+            renderItem={this.renderItem}
         />
+        
       </SwCard>
     </View>
   );
@@ -215,6 +223,9 @@ const styles = SwStyleSheet.create(theme => ({
     paddingVertical: 12,
     flexDirection: 'row',
     alignItems: 'flex-start',
+  },
+  button:{
+    flexDirection: 'row',
   },
   content: {
     flex: 1,

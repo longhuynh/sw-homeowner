@@ -76,7 +76,8 @@ export class ReplyMessage extends React.Component {
     }    
       
     const noteType = this.state.message.CornerLabel;
-
+    this.setState({disabledSendButton: true});   
+    
     let savedNote = null;
 
     switch (noteType) {
@@ -96,6 +97,8 @@ export class ReplyMessage extends React.Component {
     if(savedNote != null){
       this.props.navigation.navigate(PageNames.Messages, {refresh: true});
     }   
+
+    this.setState({disabledSendButton: false});   
   };
 
   async saveViolationNote() {
@@ -143,7 +146,8 @@ export class ReplyMessage extends React.Component {
   }
 
   async saveGeneralNote() {
-    let savedNote = null;    
+    let savedNote = null;     
+
     await this.unitService.saveNote(CurrentUser.UserIdEncrypted, this.state.comment,  
         this.state.unit.OwnerIdEncrypted, this.state.noteTypeIdEncrypted)
       .then(response => {

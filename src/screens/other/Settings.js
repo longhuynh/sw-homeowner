@@ -1,8 +1,7 @@
 import React from 'react';
 import { ScrollView, View, TouchableOpacity, StyleSheet} from 'react-native';
 import { SwText, SwStyleSheet, SwTheme} from 'sw-react-native-ui';
-import { SwSwitch, FindFriends } from '../../components/index';
-import { FontAwesome } from '../../assets/icons';
+import { HttpService } from '../../services/config';
 
 export class Settings extends React.Component {
   static navigationOptions = {
@@ -13,9 +12,7 @@ export class Settings extends React.Component {
     sendPush: true,
     shouldRefresh: false,
     other: false,
-    twitterEnabled: true,
-    googleEnabled: false,
-    facebookEnabled: true,
+    environment: HttpService.environmentName
   };
 
   onPushNotificationsSettingChanged = (value) => {
@@ -30,84 +27,8 @@ export class Settings extends React.Component {
     this.setState({ other: value });
   };
 
-  onFindFriendsTwitterButtonPressed = () => {
-    this.setState({ twitterEnabled: !this.state.twitterEnabled });
-  };
-
-  onFindFriendsGoogleButtonPressed = () => {
-    this.setState({ googleEnabled: !this.state.googleEnabled });
-  };
-
-  onFindFriendsFacebookButtonPressed = () => {
-    this.setState({ facebookEnabled: !this.state.facebookEnabled });
-  };
-
   render = () => (
     <ScrollView style={styles.container}>
-      {/* <View style={styles.section}>
-        <View style={[styles.row, styles.heading]}>
-          <SwText swType='primary header6'>PROFILE SETTINGS</SwText>
-        </View>
-        <View style={styles.row}>
-          <SwText swType='header6'>Send Push Notifications</SwText>
-          <SwSwitch
-            style={styles.switch}
-            value={this.state.sendPush}
-            name='Push'
-            onValueChange={this.onPushNotificationsSettingChanged}
-          />
-        </View>
-        <View style={styles.row}>
-          <SwText swType='header6'>Refresh Automatically</SwText>
-          <SwSwitch
-            style={styles.switch}
-            value={this.state.shouldRefresh}
-            name='Refresh'
-            onValueChange={this.onRefreshAutomaticallySettingChanged}
-          />
-        </View>
-        <View style={styles.row}>
-          <SwText swType='header6'>Other settings</SwText>
-          <SwSwitch
-            style={styles.switch}
-            value={this.state.other}
-            name='Other'
-            onValueChange={this.onOtherSettingChanged}
-          />
-        </View>
-      </View> 
-      <View style={styles.section}>
-        <View style={[styles.row, styles.heading]}>
-          <SwText swType='primary header6'>FIND FRIENDS</SwText>
-        </View>
-        <View style={styles.row}>
-          <FindFriends
-            color={SwTheme.current.colors.twitter}
-            text='Twitter'
-            icon={FontAwesome.twitter}
-            selected={this.state.twitterEnabled}
-            onPress={this.onFindFriendsTwitterButtonPressed}
-          />
-        </View>
-        <View style={styles.row}>
-          <FindFriends
-            color={SwTheme.current.colors.google}
-            text='Google'
-            icon={FontAwesome.google}
-            selected={this.state.googleEnabled}
-            onPress={this.onFindFriendsGoogleButtonPressed}
-          />
-        </View>
-        <View style={styles.row}>
-          <FindFriends
-            color={SwTheme.current.colors.facebook}
-            text='Facebook'
-            icon={FontAwesome.facebook}
-            selected={this.state.facebookEnabled}
-            onPress={this.onFindFriendsFacebookButtonPressed}
-          />
-        </View>
-      </View> */}
       <View style={styles.section}>
         <View style={[styles.row, styles.heading]}>
           <SwText swType='primary header6'>SUPPORT</SwText>
@@ -129,7 +50,7 @@ export class Settings extends React.Component {
         </View>
         <View style={styles.row}>
           <TouchableOpacity style={styles.rowButton}>
-            <SwText swType='header6'>Version 1.0.0 (Build 25)</SwText>
+            <SwText swType='header6'>Version 1.0.0 (Build 26) - {this.state.environment}</SwText>
           </TouchableOpacity>
         </View>
       </View>
