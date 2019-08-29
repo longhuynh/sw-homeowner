@@ -270,7 +270,6 @@ export class Login extends React.Component {
                 underlayColor='transparent'
                 onPress={this.submitLoginCredentials.bind(this)}
                 loading={showLoading}
-                disabled={showLoading}
                 loadingProps={{ size: 'small', color: 'transparent' }}
                 buttonStyle={{
                   height: 50,

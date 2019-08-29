@@ -63,6 +63,8 @@ export class ViolationService {
       userIdEnc: userIdEnc
     };
 
+    console.log(data);
+
     return HttpService.post(url, data);
   }
 
