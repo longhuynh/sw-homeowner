@@ -23,10 +23,10 @@ export class ArchitecturalStatus extends React.Component {
     <View key={item.LastUpdatedDate}>
        <SwCard style={styles.card} >
         <View style={styles.content}>
-          <SwText swType='header2'>{`${item.Status}`}</SwText>
+          <SwText swType='header3'>{`${item.Status}`}</SwText>
           <View style={styles.detail}>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.LastUpdatedDate)).format('MM/DD/YY HH:mm A')}</SwText>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2 header5'>{moment(new Date(item.LastUpdatedDate)).format('MM/DD/YY hh:mm A')}</SwText>
             </View>
           </View>
         </View>

@@ -1,6 +1,7 @@
 import React from 'react';
-import { View, ScrollView, RefreshControl } from 'react-native';
-import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
+import { View, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
+import { SwText, SwStyleSheet, SwBadge, SwCard, SwButton } from 'sw-react-native-ui';
+import { Button } from 'react-native-elements';
 import { CornerLabel } from '../../components/index';
 import NavigationType from '../../config/navigation/NavigationType';
 import { CurrentUser } from '../../services/LoginService';
@@ -19,11 +20,11 @@ export class Messages extends React.Component {
   };
 
   static navigationOptions = {
-    title: 'Messages',
+    title: 'Recent Messages',
   };
 
   constructor(props) {
-    super(props);   
+    super(props);
     const data = this.props.navigation.getParam('messages', {});
 
     const messages = this.bindData(data);
@@ -37,7 +38,7 @@ export class Messages extends React.Component {
     };
   }
 
-  
+
   hasUpdate = false;
 
   async shouldComponentUpdate(nextProps) {
@@ -54,7 +55,7 @@ export class Messages extends React.Component {
   async componentWillMount() {
   }
 
-  bindData(data) {    
+  bindData(data) {
     let messages = [];
 
     const projectNotes = data.ProjectNotes || [];
@@ -73,7 +74,7 @@ export class Messages extends React.Component {
     });
 
     const serviceNotes = data.ServiceNotes || [];
-    
+
     serviceNotes.forEach(t => {
       messages.push({
         Id: guid(),
@@ -88,10 +89,10 @@ export class Messages extends React.Component {
     });
 
     const violationNotes = data.ViolationNotes || [];
-    
+
     violationNotes.forEach(t => {
       messages.push({
-        Id:  guid(),
+        Id: guid(),
         Title: t.Title,
         Notes: t.Notes,
         CreatedByUserName: t.CreatedByUserName,
@@ -129,31 +130,38 @@ export class Messages extends React.Component {
       });
   }
 
-  async replyMessage(item){
+  async replyMessage(item) {
     this.hasUpdate = false;
     this.props.navigation.navigate(PageNames.ReplyMessage, { message: item });
   }
 
   renderItem = (item) => (
-    <SwCard style={styles.itemContainer} key={item.Id}>
-      <View style={styles.content}>
-        <SwText swType='header4' numberOfLines={1}>{item.Title}</SwText>
-        <SwText swType='secondary2' numberOfLines={3}>{item.Notes}</SwText>
-        <View style={styles.detail}>
-          <SwText swType='secondary2'>{moment(new Date(item.CreatedDate)).format('MM/DD/YY HH:mm A')}</SwText>
-          <View style={styles.right}>
-            <Icon name='reply' type='font-awesome' color='#6AB33A' onPress={() => this.replyMessage(item)} />
+    <TouchableOpacity onPress={() => this.replyMessage(item)} key={item.Id}>
+      <SwCard style={styles.itemContainer}>
+        <View style={styles.content}>
+          <SwText swType='header4' numberOfLines={1}>{item.Title}</SwText>
+          <SwText swType='secondary2' numberOfLines={3}>{item.Notes}</SwText>
+          <View style={styles.detail}>
+            <SwText swType='secondary2 header6'>{moment(new Date(item.CreatedDate)).format('MM/DD/YY hh:mm A')}</SwText>
+            <View style={styles.right}>
+              <Button
+                buttonStyle={{ height: 25 }}
+                titleStyle={{fontSize: 13}}
+                onPress={() => this.replyMessage(item)}
+                title='Reply'
+              />
+            </View>
           </View>
         </View>
-      </View>
-      <CornerLabel
-        cornerRadius={70}
-        alignment={'right'}
-        style={{ backgroundColor: item.Color, height: 24, }}
-        textStyle={{ color: '#fff', fontSize: 12, }}>
-        {item.CornerLabel}
-      </CornerLabel>
-    </SwCard>
+        <CornerLabel
+          cornerRadius={70}
+          alignment={'right'}
+          style={{ backgroundColor: item.Color, height: 24, }}
+          textStyle={{ color: '#fff', fontSize: 12, }}>
+          {item.CornerLabel}
+        </CornerLabel>
+      </SwCard>
+    </TouchableOpacity>
   );
 
   refreshControl() {
@@ -193,7 +201,7 @@ const styles = SwStyleSheet.create(theme => ({
   itemContainer: {
     borderRadius: 3,
     paddingHorizontal: 15,
-    paddingVertical: 15,
+    paddingVertical: 12,
     marginBottom: 20,
     overflow: 'hidden'
   },

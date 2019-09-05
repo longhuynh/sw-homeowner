@@ -192,7 +192,7 @@ export class Dashboard extends React.Component {
       <TouchableOpacity onPress={() => Dashboard.onNavigationTitlePressed(navigation, units)}>
         <View style={styles.header}>
           <SwText swType='header4 center'>{ownerFullName}</SwText>
-          <SwText swType='secondary2 center'>{address}</SwText>
+          <SwText swType='secondary2 header5 center'>{address}</SwText>
         </View>
         <Badge value={numberOfUnit} status="success" textStyle={{ fontSize: 15 }}
           badgeStyle={{ width: 20, height: 20, borderRadius: 300 }}
@@ -212,7 +212,7 @@ export class Dashboard extends React.Component {
       <View style={[styles.item, { backgroundColor: item.background }]} >
         <View>
           <SwText swType='header3' style={styles.name}>{item.name}</SwText>
-          <SwText swType='secondary1' style={styles.value}>{item.value}</SwText>
+          <SwText swType='secondary2 header4' style={styles.value}>{item.value}</SwText>
         </View>
         <FontAwesome5 name={item.icon} size={50} style={styles.icon} />
       </View>
@@ -237,7 +237,6 @@ export class Dashboard extends React.Component {
           {this.state.items.map(this.renderStatItem)}
         </View>
       </ScrollView>
-
     );
   }
 }
@@ -262,7 +261,7 @@ const styles = SwStyleSheet.create(theme => ({
     justifyContent: 'space-between',
     borderRadius: 3,
     paddingHorizontal: 15,
-    paddingVertical: 15,
+    paddingVertical: 12,
     marginBottom: 20
   },
   icon: {
@@ -272,7 +271,7 @@ const styles = SwStyleSheet.create(theme => ({
   },
   value: {
     color: 'white',
-    marginTop: 10
+    marginTop: 5
   },
   name: {
     color: 'white',

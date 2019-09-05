@@ -71,7 +71,7 @@ export class Violations extends React.Component {
       <View>
         <View style={styles.header}>
           <SwText swType='header4 center'>Violations</SwText>
-          <SwText swType='secondary2 center'>Overview</SwText>
+          <SwText swType='secondary2 header5 center'>Overview</SwText>
         </View>
       </View>
     )
@@ -84,9 +84,11 @@ export class Violations extends React.Component {
         <View style={styles.content}>
           <SwText swType='header4' numberOfLines={1}>{item.ViolationType}</SwText>
           <View style={styles.detail}>
-            <SwText swType='secondary2'>{item.Stage}</SwText>
+            <SwText swType='secondary2 header5'>{item.Stage}</SwText>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.ActivityCreatedDate)).format('MM/DD/YYYY')}</SwText>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2 header5'>
+                { moment(new Date(item.ActivityCreatedDate)).format('MM/DD/YYYY') }
+              </SwText>
             </View>
           </View>
         </View>

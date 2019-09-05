@@ -97,14 +97,14 @@ export class Architectural extends React.Component {
       name: 'Status',
       screen: 'ArchitecturalStatus',
       value: data.Project.Status || '',
-      icon: 'star'
+      icon: 'hammer'
     });
 
     items.push({
       name: 'Pics/Docs',
       screen: 'Documents',
       value: documents.length.toString()  || '0',
-      icon: 'file'
+      icon: 'file-alt'
     });
 
     items.push({
@@ -136,7 +136,6 @@ export class Architectural extends React.Component {
       <View>
         <View style={styles.header}>
           <SwText swType='header4 center' numberOfLines={1}>{name}</SwText>
-          <SwText swType='secondary2 center'>Detail</SwText>
         </View>
       </View>
     )
@@ -147,8 +146,8 @@ export class Architectural extends React.Component {
       <SwCard style={styles.card}>
         <View style={styles.content} >
           <View>
-            <SwText swType='header2'>{item.name}</SwText>
-            <SwText swType='secondary2'>{item.value}</SwText>
+            <SwText swType='header3'>{item.name}</SwText>
+            <SwText swType='header4' style={styles.value}>{item.value}</SwText>
           </View>
           <FontAwesome5 name={item.icon} size={50} style={styles.icon} />
         </View>
@@ -178,11 +177,11 @@ export class Architectural extends React.Component {
 const styles = SwStyleSheet.create(theme => ({
   screen: {
     backgroundColor: theme.colors.screen.scroll,
-    paddingHorizontal: 20,
   },
   items: {
     justifyContent: 'space-between',
     marginVertical: 20,
+    paddingHorizontal: 20,
   },
   card: {
     borderRadius: 3,
@@ -196,6 +195,10 @@ const styles = SwStyleSheet.create(theme => ({
   },
   detail: {
     flexDirection: 'row'
+  },
+  value: {
+    color: 'white',
+    marginTop: 5
   },
   date: {
     flex: 1

@@ -60,7 +60,7 @@ export class WorkOrders extends React.Component {
       <View>
         <View style={styles.header}>
           <SwText swType='header4 center'>Work Orders</SwText>
-          <SwText swType='secondary2 center'>Overview</SwText>
+          <SwText swType='secondary2 header5 center'>Overview</SwText>
         </View>
       </View>
     )
@@ -76,9 +76,11 @@ export class WorkOrders extends React.Component {
         <View style={styles.content}>
           <SwText swType='header4'>{item.Name}</SwText>
           <View style={styles.detail}>
-            <SwText swType='secondary2'>{item.WoStatusTypeName }</SwText>
+            <SwText swType='secondary2 header5'>{ item.WoStatusTypeName }</SwText>
             <View style={styles.date}>
-            <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.CreatedDate)).format('MM/DD/YYYY h:mm A')}</SwText>
+            <SwText style={{ textAlign: 'right' }} swType='secondary2 header5'>
+              { moment(new Date(item.CreatedDate)).format('MM/DD/YYYY h:mm A') }
+            </SwText>
             </View>
           </View>
         </View>

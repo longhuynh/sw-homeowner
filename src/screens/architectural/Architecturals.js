@@ -64,7 +64,7 @@ export class Architecturals extends React.Component {
       <View>
         <View style={styles.header}>
           <SwText swType='header4 center'>ARC/ARB</SwText>
-          <SwText swType='secondary2 center'>Overview</SwText>
+          <SwText swType='secondary2 header5 center'>Overview</SwText>
         </View>
       </View>
     )
@@ -78,9 +78,11 @@ export class Architecturals extends React.Component {
         <View style={styles.content}>
           <SwText numberOfLines={1} swType='header4'>{`${item.ProjectTitle}`}</SwText>
           <View style={styles.detail}>
-            <SwText swType='secondary2'>{item.ProjectStatus}</SwText>
+            <SwText swType='secondary2 header5'>{item.ProjectStatus}</SwText>
             <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2'>{moment(new Date(item.CreatedDate)).format('MM/DD/YYYY')}</SwText>
+              <SwText style={{ textAlign: 'right' }} swType='secondary2 header5'>
+                {moment(new Date(item.CreatedDate)).format('MM/DD/YYYY')}
+              </SwText>
             </View>
           </View>
         </View>
