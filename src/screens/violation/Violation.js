@@ -59,7 +59,6 @@ export class Violation extends React.Component {
     return this.hasUpdate;
   }
 
-
   async componentWillMount(){   
     await this.bindData();
   }

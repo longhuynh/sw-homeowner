@@ -1,10 +1,9 @@
 
 import React from 'react';
 import { View, ScrollView, TouchableOpacity, RefreshControl } from 'react-native';
-import { SwText, SwStyleSheet, SwBadge, SwCard } from 'sw-react-native-ui';
+import { SwText, SwStyleSheet, SwCard } from 'sw-react-native-ui';
 import { FontAwesome5 } from '@expo/vector-icons';
 import { PageNames } from '../../config/AppConstants';
-import guid from '../../utils/guid';
 import _ from 'lodash';
 import { CommentService } from '../../services/CommentService';
 import { ArcService } from '../../services/ArcService';
@@ -31,6 +30,7 @@ export class Architectural extends React.Component {
     this.state = {
       projectIdEncrypted: projectIdEncrypted,
       associationIdEncrypted: associationIdEncrypted,
+      project: {},
       items: [],
       refreshing: false,
       projectHistories: [],
@@ -38,23 +38,22 @@ export class Architectural extends React.Component {
       documents: []
     };
 
-    this.bindData();
+    //this.bindData();
   }
 
   hasUpdate = false;
 
-  async shouldComponentUpdate(nextProps) {
-    let refresh = nextProps.navigation.state.params.refresh;
+  // async shouldComponentUpdate(nextProps) {
+  //   let refresh = nextProps.navigation.state.params.refresh;
     
-    if (refresh != undefined && refresh && !this.hasUpdate) {
-      await this.bindData();
-      this.hasUpdate = true;
-      console.log("Refresh ...");
-    }
+  //   if (refresh != undefined && refresh && !this.hasUpdate) {
+  //     await this.bindData();
+  //     this.hasUpdate = true;
+  //     console.log("Refresh ...");
+  //   }
 
-    return this.hasUpdate;
-  }
-
+  //   return this.hasUpdate;
+  // }
 
   async componentWillMount(){   
     await this.bindData();
@@ -62,9 +61,11 @@ export class Architectural extends React.Component {
 
   async bindData() {   
     await this.arcService.getProjectDetails(this.state.associationIdEncrypted, this.state.projectIdEncrypted)
-      .then(response => {  
+      .then(response => {         
         if (response != null) {
-          const data = response.GetProjectDetailsResult;
+          const data = response.GetProjectDetailsResult;         
+          this.setState({project: data.Project});
+
           const items = this.generateData(data);
           this.setState({ items: items, projectHistories: data.ProjectHistory });       
         }
@@ -119,8 +120,7 @@ export class Architectural extends React.Component {
 
   navigateToScreen(screen) {
     if(screen == 'ArchitecturalStatus'){
-      const projectHistories = _.reverse(_.sortBy(this.state.projectHistories, 'LastUpdatedDate'));
-      this.props.navigation.navigate(screen, {projectHistories: projectHistories});
+      this.props.navigation.navigate(screen, {project: this.state.project});
     }else{
       const params = {
         pageName: PageNames.Architectural,
@@ -147,7 +147,7 @@ export class Architectural extends React.Component {
         <View style={styles.content} >
           <View>
             <SwText swType='header3'>{item.name}</SwText>
-            <SwText swType='header4' style={styles.value}>{item.value}</SwText>
+            <SwText swType='header5' style={styles.value}>{item.value}</SwText>
           </View>
           <FontAwesome5 name={item.icon} size={50} style={styles.icon} />
         </View>
@@ -197,7 +197,6 @@ const styles = SwStyleSheet.create(theme => ({
     flexDirection: 'row'
   },
   value: {
-    color: 'white',
     marginTop: 5
   },
   date: {

@@ -1,7 +1,6 @@
 import React from 'react';
-import { View, ScrollView } from 'react-native';
+import { View } from 'react-native';
 import { SwText, SwStyleSheet, SwCard } from 'sw-react-native-ui';
-const moment = require('moment');
 
 export class ArchitecturalStatus extends React.Component {
   static navigationOptions = {
@@ -10,64 +9,101 @@ export class ArchitecturalStatus extends React.Component {
 
   constructor(props) {
     super(props);
-    const projectHistories = this.props.navigation.getParam('projectHistories', '');
+    const project = this.props.navigation.getParam('project', '');
 
-    console.log(projectHistories);
+    console.log(project);
 
     this.state = {
-      items: projectHistories,
+      project: project,
     };
   }
 
-  renderStatItem = (item) => (
-    <View key={item.LastUpdatedDate}>
-       <SwCard style={styles.card} >
-        <View style={styles.content}>
-          <SwText swType='header3'>{`${item.Status}`}</SwText>
-          <View style={styles.detail}>
-            <View style={styles.date}>
-              <SwText style={{ textAlign: 'right' }} swType='secondary2 header5'>{moment(new Date(item.LastUpdatedDate)).format('MM/DD/YY hh:mm A')}</SwText>
-            </View>
-          </View>
-        </View>
-      </SwCard>
-    </View>
-  );
+  async componentWillMount() {
+
+  }
 
   render = () => {
     return (
-      <ScrollView style={styles.screen}>
-        <View style={styles.items} >
-          {this.state.items.map(this.renderStatItem)}
-        </View>
-      </ScrollView>
-    );
+      <View style={styles.screen} >
+        <SwCard style={styles.container}>
+          <View style={styles.section}>
+            <View style={styles.heading}>
+              <SwText swType='primary header4'>Status</SwText>
+              <SwText swType='secondary2 header5'>{this.state.project.Status}</SwText>
+            </View>
+            <View style={styles.heading}>
+              <SwText swType='primary header4'>Ref</SwText>
+              <SwText swType='secondary2 header5'>{this.state.project.Key}</SwText>
+            </View>
+            <View style={styles.heading}>
+              <SwText swType='primary header4'>Application Fee</SwText>
+              <SwText swType='secondary2 header5'>{'$' + this.state.project.ApplicationFeeAmount}</SwText>
+            </View>
+            <View style={styles.heading}>
+              <SwText swType='primary header4'>Deposit</SwText>
+              <SwText swType='secondary2 header5'>{'$' + this.state.project.DepositAmount}</SwText>
+            </View>
+          </View>
+        </SwCard>
+      </View>
+    )
   }
 }
 
 const styles = SwStyleSheet.create(theme => ({
   screen: {
-    backgroundColor: theme.colors.screen.scroll,
-    paddingHorizontal: 20,
-  },
-  items: {
-    justifyContent: 'space-between',
+    flex: 1,
     marginVertical: 20,
+    backgroundColor: theme.colors.screen.scroll,
+    marginHorizontal: 20,
   },
-  card: {
+  container: {
+    flex: 1,
     borderRadius: 3,
     paddingHorizontal: 15,
-    paddingVertical: 15,
-    marginBottom: 20,
+    borderColor: theme.colors.border.card,
+    backgroundColor: theme.colors.screen.base,
   },
-  content: {
+  header: {
+    paddingVertical: 25,
+  },
+  section: {
+    marginVertical: 25,
+  },
+  heading: {
+    paddingBottom: 15,
+  },
+  row: {
+    flexDirection: 'row',
+    justifyContent: 'space-between',
+    paddingHorizontal: 17.5,
+    alignItems: 'center',
+  },
+  rowButton: {
     flex: 1,
-    alignItems: 'stretch'
+    paddingVertical: 24,
   },
-  detail: {
-    flexDirection: 'row'
+  switch: {
+    marginVertical: 14,
   },
-  date: {
-    flex: 1
+  circleButton: {
+    width: 65,
+    height: 65,
+    marginTop: 27.5,
+    alignSelf: 'center',
   },
+  stageButton: {
+    height: 40,
+    width: 40,
+    marginTop: 10
+  },
+  icon: {
+    alignSelf: 'center',
+    color: theme.colors.primary
+  },
+  bottom: {
+    flex: 1,
+    justifyContent: 'flex-end',
+    marginBottom: 20
+  }
 }));
