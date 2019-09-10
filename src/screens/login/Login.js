@@ -186,7 +186,7 @@ export class Login extends React.Component {
                   clear
                   activeOpacity={0.5}
                   titleStyle={{ color: 'white', fontSize: 14 }}
-                  buttonStyle={{ height: 25, width: 60, backgroundColor: 'transparent' }}
+                  buttonStyle={{ height: 35, width: 60, backgroundColor: 'transparent' }}
                   containerStyle={{ marginTop: -10 }}
                   onPress={this.onDevButtonPressed}
                 />
@@ -195,7 +195,7 @@ export class Login extends React.Component {
                   clear
                   activeOpacity={0.5}
                   titleStyle={{ color: 'white', fontSize: 14 }}
-                  buttonStyle={{ height: 25, width: 60, backgroundColor: 'transparent' }}
+                  buttonStyle={{ height: 35, width: 60, backgroundColor: 'transparent' }}
                   containerStyle={{ marginTop: -10 }}
                   onPress={this.onDemoButtonPressed}
                 />
@@ -204,7 +204,7 @@ export class Login extends React.Component {
                   clear
                   activeOpacity={0.5}
                   titleStyle={{ color: 'white', fontSize: 14 }}
-                  buttonStyle={{ height: 25, width: 60, backgroundColor: 'transparent' }}
+                  buttonStyle={{ height: 35, width: 60, backgroundColor: 'transparent' }}
                   containerStyle={{ marginTop: -10 }}
                   onPress={this.onProdButtonPressed}
                 />
