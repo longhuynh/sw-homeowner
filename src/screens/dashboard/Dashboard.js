@@ -130,7 +130,7 @@ export class Dashboard extends React.Component {
     });
 
     items.push({
-      name: 'Arc/Arb',
+      name: 'Architecturals',
       screen: 'Architecturals',
       value: data.ArcProjectsCount || 0,
       icon: 'hammer',

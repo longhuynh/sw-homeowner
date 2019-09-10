@@ -98,7 +98,7 @@ export class Login extends React.Component {
 
         this.loadShortResidentUser(unit.AssociationIdEncrypted, userIdEncrypted);
 
-        this.props.navigation.navigate(PageNames.Dashboard, navigationParams);
+        this.props.navigation.navigate(PageNames.Dashboard, navigationParams);        
       }) 
       .catch((error) => {
         console.log(error);
@@ -120,7 +120,7 @@ export class Login extends React.Component {
   async login() {
     this.setState({ showLoading: true });
     
-    var now = moment(new Date()); 
+    let now = moment(new Date()); 
    
     await this.loginService.login(this.state.username, this.state.password)
       .then(async (response) => {
@@ -131,11 +131,17 @@ export class Login extends React.Component {
           await this.loadOwnerUnits(response.UserIdEncrypted).then(r => {
             this.setState({ showLoading: false });
           });  
+
+          let end = moment(new Date()); 
+          let duration = moment.duration(end.diff(now));
+          let seconds = duration.asMilliseconds();
+
+          console.log(seconds);
         }
         else {
-          var end = moment(new Date()); 
-          var duration = moment.duration(end.diff(now));
-          var seconds = duration.asSeconds();
+          let end = moment(new Date()); 
+          let duration = moment.duration(end.diff(now));
+          let seconds = duration.asSeconds();
 
           if(seconds >= 5){
             alert('Unable to contact Smartwebs servers.  Please try again later.');

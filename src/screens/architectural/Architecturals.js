@@ -63,7 +63,7 @@ export class Architecturals extends React.Component {
     return (
       <View>
         <View style={styles.header}>
-          <SwText swType='header4 center'>ARC/ARB</SwText>
+          <SwText swType='header4 center'>Architecturals</SwText>
           <SwText swType='secondary2 header5 center'>Overview</SwText>
         </View>
       </View>
