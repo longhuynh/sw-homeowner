@@ -16,12 +16,18 @@ import { WorkOrderService } from '../../services/WorkOrderService';
 import { DocumentService } from '../../services/DocumentService';
 import { CurrentUser } from '../../services/LoginService';
 import { StorageService } from '../../services/StorageService';
+import { HeaderBackButton } from 'react-navigation';
 
 const moment = require('moment');
 
 export class Documents extends React.Component {
-  static navigationOptions = {
-    title: 'Documents',
+  static navigationOptions = ({ navigation }) => {
+    let pageName = navigation.state.params ? navigation.state.params.pageName : undefined;
+
+    return ({
+      headerTitle: 'Documents',
+      headerLeft: Documents.renderNavigation(navigation, pageName),
+    });
   };
 
   constructor(props) {
@@ -47,7 +53,6 @@ export class Documents extends React.Component {
     };
   }
   
-  
   async refreshData() {
     this.setState({ refreshing: true });
 
@@ -68,7 +73,6 @@ export class Documents extends React.Component {
     }   
     this.setState({ refreshing: false });
   }
-
 
   async uploadImageAsync(pickerResult) {
     //this.setState({ showLoading: true });
@@ -293,6 +297,10 @@ export class Documents extends React.Component {
       this.setState({ uploading: false });
     }
   };
+
+  static renderNavigation = (navigation, pageName) => (
+    <HeaderBackButton onPress={() => { navigation.navigate(pageName, {refresh: true});}}/>
+  );
 
   extractItemKey = (item) => guid();
 

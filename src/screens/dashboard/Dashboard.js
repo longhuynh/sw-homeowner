@@ -10,6 +10,7 @@ import { UnitService } from '../../services/UnitService';
 import { CurrentUser } from '../../services/LoginService';
 import _ from 'lodash';
 import { StorageService } from '../../services/StorageService';
+import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../config/navigation/BackButtonHandler';
 
 export class Dashboard extends React.Component {
   static propTypes = {
@@ -29,6 +30,7 @@ export class Dashboard extends React.Component {
 
   constructor(props) {
     super(props);
+    console.log(this.props.navigation);
     this.unitService = new UnitService();
 
     this.state = {
@@ -70,7 +72,16 @@ export class Dashboard extends React.Component {
     this.hasUpdate = false;
   }
 
-  async componentDidMount() { }
+  componentDidMount() {
+    handleAndroidBackButton(this.navigateBack);
+  }
+  componentWillUnmount() {
+    removeAndroidBackButtonHandler();
+  }
+
+  navigateBack(){
+    console.log(this.props.navigation);
+  }
 
   async bindData() {
     const unit = StorageService.unit;

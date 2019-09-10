@@ -20,15 +20,4 @@ const removeAndroidBackButtonHandler = () => {
   BackHandler.removeEventListener('hardwareBackPress', () => {});
 }
 
-const exitAlert = () => {
-    alert(
-      'Confirm exit',
-      'Do you want to quit the app?'
-      [
-        {text: 'CANCEL', style: 'cancel'},
-        {text: 'OK', onPress: () => BackHandler.exitApp()}
-      ]
-    );
-  };
-
-export {handleAndroidBackButton, removeAndroidBackButtonHandler, exitAlert};
+export {handleAndroidBackButton, removeAndroidBackButtonHandler};

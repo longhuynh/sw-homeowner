@@ -13,14 +13,20 @@ import { StorageService } from '../../services/StorageService';
 
 const moment = require('moment');
 import guid from '../../utils/guid';
+import { HeaderBackButton } from 'react-navigation';
 
 export class Comments extends React.Component {
   static propTypes = {
     navigation: NavigationType.isRequired,
   };
 
-  static navigationOptions = {
-    title: 'Comments',
+  static navigationOptions = ({ navigation }) => {
+    let pageName = navigation.state.params ? navigation.state.params.pageName : undefined;
+
+    return ({
+      headerTitle: 'Comments',
+      headerLeft: Comments.renderNavigation(navigation, pageName),
+    });
   };
   
   constructor(props) {
@@ -146,6 +152,10 @@ export class Comments extends React.Component {
     const disabled = this.state.comment.trim() == '';
     this.setState({disabledSendButton: disabled}); 
   };
+
+  static renderNavigation = (navigation, pageName) => (
+    <HeaderBackButton onPress={() => { navigation.navigate(pageName, {refresh: true});}}/>
+  );
 
   renderSeparator = () => (
     <View style={styles.separator} />

@@ -37,23 +37,21 @@ export class Architectural extends React.Component {
       comments: [],
       documents: []
     };
-
-    //this.bindData();
   }
 
   hasUpdate = false;
 
-  // async shouldComponentUpdate(nextProps) {
-  //   let refresh = nextProps.navigation.state.params.refresh;
-    
-  //   if (refresh != undefined && refresh && !this.hasUpdate) {
-  //     await this.bindData();
-  //     this.hasUpdate = true;
-  //     console.log("Refresh ...");
-  //   }
+  async shouldComponentUpdate(nextProps) {
+    let refresh = nextProps.navigation.state.params.refresh;
 
-  //   return this.hasUpdate;
-  // }
+    if (refresh != undefined && refresh && !this.hasUpdate) {
+      await this.bindData();
+      this.hasUpdate = true;
+      console.log("Refresh ...");
+    }
+
+    return this.hasUpdate;
+  }
 
   async componentWillMount(){   
     await this.bindData();
@@ -61,7 +59,7 @@ export class Architectural extends React.Component {
 
   async bindData() {   
     await this.arcService.getProjectDetails(this.state.associationIdEncrypted, this.state.projectIdEncrypted)
-      .then(response => {         
+      .then(response => { 
         if (response != null) {
           const data = response.GetProjectDetailsResult;         
           this.setState({project: data.Project});
@@ -119,6 +117,8 @@ export class Architectural extends React.Component {
   }
 
   navigateToScreen(screen) {
+    this.hasUpdate = false;
+
     if(screen == 'ArchitecturalStatus'){
       this.props.navigation.navigate(screen, {project: this.state.project});
     }else{
