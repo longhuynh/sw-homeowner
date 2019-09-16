@@ -10,7 +10,6 @@ import { UnitService } from '../../services/UnitService';
 import { CurrentUser } from '../../services/LoginService';
 import _ from 'lodash';
 import { StorageService } from '../../services/StorageService';
-import { handleAndroidBackButton, removeAndroidBackButtonHandler } from '../../config/navigation/BackButtonHandler';
 
 export class Dashboard extends React.Component {
   static propTypes = {
@@ -70,13 +69,6 @@ export class Dashboard extends React.Component {
 
   componentWillUpdate() {
     this.hasUpdate = false;
-  }
-
-  componentDidMount() {
-    handleAndroidBackButton(this.navigateBack);
-  }
-  componentWillUnmount() {
-    removeAndroidBackButtonHandler();
   }
 
   navigateBack(){

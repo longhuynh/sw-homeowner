@@ -1,5 +1,5 @@
 import React from 'react';
-import { FlatList, View, StyleSheet, ActivityIndicator } from 'react-native';
+import { FlatList, View, StyleSheet, ActivityIndicator, Platform } from 'react-native';
 import { SwStyleSheet, SwText, SwTextInput, SwCard } from 'sw-react-native-ui';
 import NavigationType from '../../config/navigation/NavigationType';
 import { GradientButton } from '../../components/index';
@@ -154,7 +154,7 @@ export class Comments extends React.Component {
   };
 
   static renderNavigation = (navigation, pageName) => (
-    <HeaderBackButton onPress={() => { navigation.navigate(pageName, {refresh: true});}}/>
+    <HeaderBackButton onPress={() => { navigation.navigate(pageName, {refresh: true});}} backTitleVisible={ Platform.OS === 'ios'}/>
   );
 
   renderSeparator = () => (
