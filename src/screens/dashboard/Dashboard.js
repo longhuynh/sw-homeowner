@@ -41,7 +41,7 @@ export class Dashboard extends React.Component {
       items: []
     };
 
-    this.bindData();
+    this.bindData();    
   }
 
   hasUpdate = false;
@@ -61,7 +61,14 @@ export class Dashboard extends React.Component {
       console.log("Unit was changed " + unit.UnitAddress);
 
       this.hasUpdate = true;  
-      this.bindData();
+      this.bindData();    
+    }
+
+    let refresh = nextProps.navigation.state.params.refresh;
+
+    if (refresh != undefined && refresh && !this.hasUpdate) {
+      this.bindData();    
+      this.hasUpdate = true;
     }
 
     return this.hasUpdate;
@@ -71,13 +78,9 @@ export class Dashboard extends React.Component {
     this.hasUpdate = false;
   }
 
-  navigateBack(){
-    console.log(this.props.navigation);
-  }
-
   async bindData() {
     const unit = StorageService.unit;
-
+   
     await this.loadMessages();
 
     await this.unitService.getUnitCounter(unit.AssociationIdEncrypted, unit.UnitIdEncrypted)

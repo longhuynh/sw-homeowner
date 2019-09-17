@@ -1,6 +1,7 @@
 
 import React from 'react';
-import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator,  RefreshControl, Clipboard, Image, Share, Text } from 'react-native';
+import { View, FlatList, StyleSheet, TouchableOpacity, ActivityIndicator, 
+  RefreshControl, Clipboard, Image, Share, Text, Platform } from 'react-native';
 import { SwText, SwStyleSheet, SwButton, SwCard } from 'sw-react-native-ui';
 import { Badge } from 'react-native-elements';
 import { FontAwesome5 } from '@expo/vector-icons';
@@ -299,7 +300,7 @@ export class Documents extends React.Component {
   };
 
   static renderNavigation = (navigation, pageName) => (
-    <HeaderBackButton onPress={() => { navigation.navigate(pageName, {refresh: true});}}/>
+    <HeaderBackButton onPress={() => { navigation.navigate(pageName, {refresh: true});}} backTitleVisible={ Platform.OS === 'ios'}/>
   );
 
   extractItemKey = (item) => guid();

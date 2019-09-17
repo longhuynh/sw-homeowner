@@ -1,5 +1,5 @@
 import React from 'react';
-import { View, ScrollView, RefreshControl, TouchableOpacity } from 'react-native';
+import { View, ScrollView, RefreshControl, TouchableOpacity, Platform } from 'react-native';
 import { SwText, SwStyleSheet, SwBadge, SwCard, SwButton } from 'sw-react-native-ui';
 import { Button } from 'react-native-elements';
 import { CornerLabel } from '../../components/index';
@@ -11,6 +11,7 @@ import { Icon } from 'react-native-elements'
 import _ from 'lodash';
 import guid from '../../utils/guid';
 import { PageNames } from '../../config/AppConstants';
+import { HeaderBackButton } from 'react-navigation';
 
 const moment = require('moment');
 
@@ -19,8 +20,11 @@ export class Messages extends React.Component {
     navigation: NavigationType.isRequired,
   };
 
-  static navigationOptions = {
-    title: 'Recent Messages',
+  static navigationOptions = ({ navigation }) => {
+    return ({
+      headerTitle: 'Recent Messages',
+      headerLeft: Messages.renderNavigation(navigation),
+    });
   };
 
   constructor(props) {
@@ -135,6 +139,10 @@ export class Messages extends React.Component {
     this.props.navigation.navigate(PageNames.ReplyMessage, { message: item });
   }
 
+  static renderNavigation = (navigation) => (
+    <HeaderBackButton onPress={() => { navigation.navigate(PageNames.Dashboard, {refresh: true});}} backTitleVisible={ Platform.OS === 'ios'}/>
+  );
+
   renderItem = (item) => (
     <TouchableOpacity onPress={() => this.replyMessage(item)} key={item.Id}>
       <SwCard style={styles.itemContainer}>
@@ -145,8 +153,8 @@ export class Messages extends React.Component {
             <SwText swType='secondary2 header6'>{moment(new Date(item.CreatedDate)).format('MM/DD/YY hh:mm A')}</SwText>
             <View style={styles.right}>
               <Button
-                buttonStyle={{ height: 25 }}
-                titleStyle={{fontSize: 13}}
+                buttonStyle={{ height: 27 }}
+                titleStyle={{fontSize: 13, marginTop: -5}}
                 onPress={() => this.replyMessage(item)}
                 title='Reply'
               />

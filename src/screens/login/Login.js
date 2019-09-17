@@ -29,10 +29,10 @@ export class Login extends React.Component {
     this.unitService = new UnitService();
 
     this.state = {
-      username: 'TravisTesterton',
-      password: '123456',
-      // username: '',
-      // password: ''
+      // username: 'TravisTesterton',
+      // password: '123456',
+      username: '',
+      password: '',
       loginFailed: false,
       showLoading: false,
       hideTestFeature: true,
@@ -185,7 +185,7 @@ export class Login extends React.Component {
                   title='Dev'
                   clear
                   activeOpacity={0.5}
-                  titleStyle={{ color: 'white', fontSize: 14 }}
+                  titleStyle={{ color: 'white', fontSize: 15 }}
                   buttonStyle={{ height: 35, width: 60, backgroundColor: 'transparent' }}
                   containerStyle={{ marginTop: -10 }}
                   onPress={this.onDevButtonPressed}
@@ -194,7 +194,7 @@ export class Login extends React.Component {
                   title='Demo'
                   clear
                   activeOpacity={0.5}
-                  titleStyle={{ color: 'white', fontSize: 14 }}
+                  titleStyle={{ color: 'white', fontSize: 15 }}
                   buttonStyle={{ height: 35, width: 60, backgroundColor: 'transparent' }}
                   containerStyle={{ marginTop: -10 }}
                   onPress={this.onDemoButtonPressed}
@@ -257,7 +257,7 @@ export class Login extends React.Component {
                   containerStyle={{ marginVertical: 10 }}
                   onChangeText={username => this.setState({ username: username, loginFailed: false })}
                   value={username}
-                  inputStyle={{ marginLeft: 10, color: 'white', fontSize: 15 }}
+                  inputStyle={{ marginLeft: 10, color: 'white', fontSize: 16 }}
                   keyboardAppearance='light'
                   placeholder='Username'
                   autoFocus={false}
@@ -276,7 +276,7 @@ export class Login extends React.Component {
                   containerStyle={{ marginVertical: 10 }}
                   onChangeText={password => this.setState({ password: password, loginFailed: false })}
                   value={password}
-                  inputStyle={{ marginLeft: 10, color: 'white', fontSize: 15 }}
+                  inputStyle={{ marginLeft: 10, color: 'white', fontSize: 16 }}
                   secureTextEntry={true}
                   keyboardAppearance='light'
                   placeholder='Password'
