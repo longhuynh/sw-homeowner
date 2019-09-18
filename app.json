@@ -13,7 +13,7 @@
     },
     "ios": {
       "bundleIdentifier": "net.smartwebs.HomeOwner",
-      "buildNumber": "29",
+      "buildNumber": "30",
       "supportsTablet": true,
       "infoPlist": {
         "NSCameraUsageDescription": "Allow this app uses the camera to take picture."
@@ -21,7 +21,7 @@
     },
     "android": {
       "package": "com.smartwebs.homeowner",
-      "versionCode": 29,
+      "versionCode": 30,
       "permissions" : ["CAMERA"]
     },
     "packagerOpts": {

@@ -13,4 +13,4 @@ export * from './PaginationIndicator';
 export * from './PasswordTextInput';
 export * from './CardInput';
 export * from './CornerLabel';
-export * from './PdfReader';
+//export * from './PdfReader';
