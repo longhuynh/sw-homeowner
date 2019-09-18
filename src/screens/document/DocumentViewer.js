@@ -3,7 +3,6 @@ import React from 'react';
 import { View, Image, WebView } from 'react-native';
 import { SwStyleSheet } from 'sw-react-native-ui';
 import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode'
-//import { PdfReader } from '../../components/index';
 
 export class DocumentViewer extends React.Component {
   static navigationOptions = {
