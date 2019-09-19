@@ -1,6 +1,6 @@
 
 import React from 'react';
-import { View, Image, WebView } from 'react-native';
+import { View, Image } from 'react-native';
 import { SwStyleSheet } from 'sw-react-native-ui';
 import ImageResizeMode from 'react-native/Libraries/Image/ImageResizeMode'
 
@@ -23,18 +23,18 @@ export class DocumentViewer extends React.Component {
   }
 
   render = () => {
-    if (this.state.extension == 'pdf')
-      return (
-        <View style={styles.container}>
-          <WebView 
-            useWebKit={true}
-            onLoad={()=>{ }}
-            originWhitelist={['http://*', 'https://*', 'file://*', 'data:*']}
-            style={styles.webview}
-            source={{ uri: this.state.url }}
-          />
-        </View>
-      )
+    // if (this.state.extension == 'pdf')
+    //   return (
+    //     <View style={styles.container}>
+    //       <WebView 
+    //         useWebKit={true}
+    //         onLoad={()=>{ }}
+    //         originWhitelist={['http://*', 'https://*', 'file://*', 'data:*']}
+    //         style={styles.webview}
+    //         source={{ uri: this.state.url }}
+    //       />
+    //     </View>
+    //   )
 
     return (
       <View style={styles.container}>

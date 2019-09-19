@@ -208,6 +208,9 @@ export class Documents extends React.Component {
   }
 
   onViewFile(item) {
+    if(item.Extension == 'pdf')
+      return;
+      
     const url = `${HttpService.baseUrl}${item.Url}`;
     this.props.navigation.navigate(PageNames.DocumentViewer, { url: url, extension: item.Extension });
   }
